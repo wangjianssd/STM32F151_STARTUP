@@ -18,10 +18,20 @@
 /* Define --------------------------------------------------------------------*/
     
 
-/**
-  * @brief This function provides accurate delay (in milliseconds) based 
 
-  */
+/*****************************************************************************
+ * Function      : Delay
+ * Description   : This function provides accurate delay (in milliseconds) based
+ * Input         : uint32_t delay  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void Delay(uint32_t delay)
 {
 #if(__RTOS_SUPPORT__ > 0)

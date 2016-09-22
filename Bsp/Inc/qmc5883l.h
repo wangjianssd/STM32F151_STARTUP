@@ -8,8 +8,8 @@
  *
  * Change Logs  :
  *
- * Date        Version      Author      Notes
- * 2016/09/12  v0.0.1       WangJian    first version
+ * Date         Version      Author      Notes
+ * 2016/09/12   v0.0.1       WangJian    first version
  */
 
 #ifndef __QMC_5883_H__
@@ -34,6 +34,6 @@ bool Qmc5883lConfig(void);
 bool Qmc5883lConfigEx(uint8_t reg_9);
 bool Qmc5883lSelfTest (void);
 bool Qmc5883lGetData (int16_t *magnet_raw);
-bool Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *filter_magnet);
+void Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *filter_magnet);
 
 #endif

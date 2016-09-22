@@ -21,9 +21,9 @@
 /* Private function prototypes -----------------------------------------------*/ 
 static bool Qmc5883lPowerOn(void);
 static bool Qmc5883lPowerOff(void);
-static bool  Qmc5883lI2cByteRead(uint8_t reg, uint8_t* data);
-static bool  Qmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size);
-static bool  Qmc5883lI2cByteWrite (uint8_t reg, uint8_t  data);
+static bool Qmc5883lI2cByteRead(uint8_t reg, uint8_t* data);
+static bool Qmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size);
+static bool Qmc5883lI2cByteWrite (uint8_t reg, uint8_t  data);
 
 
 /* Private variables ---------------------------------------------------------*/
@@ -31,18 +31,57 @@ static I2cHanderTypeDef I2cHander;
 static int16_t FilterArrary[__QMC5883L_AVG_FILTER_NUM__][3] = {0};
 static uint8_t FilterCount = 0;
 
+/*****************************************************************************
+ * Function      : Qmc5883lPowerOn
+ * Description   : power on device
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool Qmc5883lPowerOn(void)
 {
   //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
   Delay(2);
 }
 
+/*****************************************************************************
+ * Function      : Qmc5883lPowerOff
+ * Description   : Power off device
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool Qmc5883lPowerOff(void)
 {
   //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
   Delay(2);
 }
 
+/*****************************************************************************
+ * Function      : Qmc5883lInit
+ * Description   : 
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool Qmc5883lInit(void)
 {
   I2cHander.i2c = __QMC5883L_I2C_HANDLER__;
@@ -65,6 +104,19 @@ bool Qmc5883lInit(void)
   return true;
 }
 
+/*****************************************************************************
+ * Function      : Qmc5883lConfig
+ * Description   : Qmc5883 work mode config
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool Qmc5883lConfig(void)
 {
      bool ret;
@@ -97,6 +149,19 @@ bool Qmc5883lConfig(void)
     return false;
 }
 
+/*****************************************************************************
+ * Function      : Qmc5883lConfigEx
+ * Description   : 
+ * Input         : uint8_t reg_9  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool Qmc5883lConfigEx(uint8_t reg_9)
 {
      bool ret;
@@ -129,7 +194,19 @@ bool Qmc5883lConfigEx(uint8_t reg_9)
     return false;
 }
 
+/*****************************************************************************
+ * Function      : Qmc5883lSelfTest
+ * Description   : 
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
 
+*****************************************************************************/
 bool Qmc5883lSelfTest (void)
 {
     uint8_t count = 0;
@@ -232,6 +309,19 @@ bool Qmc5883lSelfTest (void)
 
 }
 
+/*****************************************************************************
+ * Function      : Qmc5883lGetData
+ * Description   : get raw data
+ * Input         : int16_t *magnet_raw  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool Qmc5883lGetData (int16_t *magnet_raw)
 {
     uint8_t buff[6];
@@ -268,7 +358,21 @@ bool Qmc5883lGetData (int16_t *magnet_raw)
     return true;
 }
 
-bool Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *filter_magnet)
+/*****************************************************************************
+ * Function      : Qmc5883lFilterGetData
+ * Description   : process data by average filter
+ * Input         : const int16_t *magnet_raw  raw magnet data   
+ * Output        : float   *magnet         filter data with uT     
+                   int16_t *filter_magnet  filter data  
+ * Return        : none
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *filter_magnet)
 {
     uint8_t i = 0;
     int32_t sum_x = 0;
@@ -320,11 +424,23 @@ bool Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *f
     magnet[0] = (float)filter_magnet[0] / 120.f;//uT
     magnet[1] = (float)filter_magnet[1] / 120.f;//uT
     magnet[2] = (float)filter_magnet[2] / 120.f;//uT
-
-    return true;
 }
 
-bool Qmc5883lI2cByteWrite(uint8_t reg,uint8_t  data)
+/*****************************************************************************
+ * Function      : Qmc5883lI2cByteWrite
+ * Description   : I2C byte write drive
+ * Input         : uint8_t reg    write reg
+                   uint8_t data   write data  
+ * Output        : None
+ * Return        : bool
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+bool Qmc5883lI2cByteWrite(uint8_t reg,uint8_t data)
 {
     if (I2cByteWrite(I2cHander, __QMC5883L_I2C_ADDRESS__, reg, data)  != HAL_OK)
      {
@@ -334,6 +450,20 @@ bool Qmc5883lI2cByteWrite(uint8_t reg,uint8_t  data)
     return true;
 }
 
+/*****************************************************************************
+ * Function      : Qmc5883lI2cBytesRead
+ * Description   : I2C bytes read drive
+ * Input         : uint8_t reg    read reg
+                   uint16_t size  read size
+ * Output        : uint8_t* data  read data
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool  Qmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size)
 {
    if (I2cBytesRead(I2cHander, __QMC5883L_I2C_ADDRESS__, reg, data, size)  != true)

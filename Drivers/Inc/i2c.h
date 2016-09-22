@@ -38,9 +38,9 @@ typedef struct
 
 /* Exported functions --------------------------------------------------------*/
 bool I2cInit(I2cHanderTypeDef hi2c);
-bool I2cByteRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* data);
-bool I2cBytesRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size);
-bool I2cByteWrite (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t  data);
+bool I2cByteRead (I2cHanderTypeDef hi2c, uint8_t addr, uint8_t reg, uint8_t* data);
+bool I2cBytesRead (I2cHanderTypeDef hi2c, uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size);
+bool I2cByteWrite (I2cHanderTypeDef hi2c, uint8_t addr, uint8_t reg, uint8_t data);
 
 #endif
 

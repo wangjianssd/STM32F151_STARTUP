@@ -98,7 +98,19 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 }
+/*****************************************************************************
+ * Function      : DeviceInit
+ * Description   : 
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
 
+*****************************************************************************/
 void DeviceInit (void)
 {
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */

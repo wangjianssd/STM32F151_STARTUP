@@ -2405,6 +2405,9 @@
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\i2c.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\uart.h</name>
+      </file>
     </group>
     <group>
       <name>Src</name>
@@ -2416,6 +2419,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\i2c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\uart.c</name>
       </file>
     </group>
   </group>

@@ -1,27 +1,38 @@
 /**
- * @brief       : 
+ *
+ * @brief       :  
  *
  * @file        : i2c.c
  * @author      : wangjian
- *
  * Version      : v0.0.1
- * Date         : 2016/09/21
+ * Date         : 2016-09-22
+ *
  * Change Logs  :
  *
- * Date          Version      Author        Notes
- * 2016/09/21    v0.0.1        wangjian    first version
- */
-
-/* Exported incluides --------------------------------------------------------*/
+ * Date                 Version           Author          Notes
+ * 2016-09-22           v0.1              wangjian        first version 
+*/
+/* Includes ------------------------------------------------------------------*/
 #include "device.h"
 
-/* Private variables ---------------------------------------------------------*/
+/* Variables -----------------------------------------------------------------*/
 static I2C_HandleTypeDef I2cHander1;
 
-/* Exported functions --------------------------------------------------------*/
+/*****************************************************************************
+ * Function      : I2cInit
+ * Description   : I2C device init
+ * Input         : I2cHanderTypeDef hi2c  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool I2cInit(I2cHanderTypeDef hi2c)
 {
-
  I2C_HandleTypeDef *hander;
 
   if (hi2c.i2c == DEVICE_I2C1)
@@ -59,8 +70,23 @@ bool I2cInit(I2cHanderTypeDef hi2c)
     
   return true;
 }
+		
+/*****************************************************************************
+ * Function      : I2cByteRead
+ * Description   : 
+ * Input         : I2cHanderTypeDef hi2c  
+	               uint8_t addr           
+	               uint8_t reg            
+ * Output        : uint8_t* data  
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
 
-bool  I2cByteRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* data)
+*****************************************************************************/
+bool I2cByteRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* data)
 {
     uint8_t count = 0;
    // HAL_StatusTypeDef temp;
@@ -99,10 +125,27 @@ bool  I2cByteRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* d
                   return false;
                 }
     }
+	
     return true;
 
 }
 
+/*****************************************************************************
+ * Function      : I2cBytesRead
+ * Description   : 
+ * Input         : I2cHanderTypeDef hi2c  
+                   uint8_t addr           
+                   uint8_t reg            
+                   uint16_t size          
+ * Output        : uint8_t* data 
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool  I2cBytesRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size)
 {
     uint8_t count = 0;
@@ -117,7 +160,6 @@ bool  I2cBytesRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* 
     {
         return false;
     }
-
     
     while(HAL_I2C_Master_Transmit(hander, addr, &reg, 1, 500) != HAL_OK)
     {
@@ -134,7 +176,6 @@ bool  I2cBytesRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* 
          }
     }
    
-   
     if(HAL_I2C_Master_Receive(hander,  (addr | 0x01), data, size, (size * 500) + 500) != HAL_OK)
     {
         if (HAL_I2C_GetError(hander) != HAL_I2C_ERROR_AF)
@@ -146,7 +187,23 @@ bool  I2cBytesRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* 
 
 }
 
-bool  I2cByteWrite (I2cHanderTypeDef hi2c , uint8_t addr, uint8_t reg, uint8_t  data)
+/*****************************************************************************
+ * Function      : I2cByteWrite
+ * Description   : 
+ * Input         : I2cHanderTypeDef hi2c  
+                   uint8_t addr           
+                   uint8_t reg            
+                   uint8_t data          
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20160922
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+bool  I2cByteWrite (I2cHanderTypeDef hi2c , uint8_t addr, uint8_t reg, uint8_t data)
 {
     uint8_t tx_data[2] = {reg, data};
     
