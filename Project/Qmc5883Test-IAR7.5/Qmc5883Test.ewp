@@ -322,6 +322,8 @@
           <state>$PROJ_DIR$/../../Drivers/Core/STM32L1xx_HAL_Driver/Config</state>
           <state>$PROJ_DIR$/../../Drivers/Core/STM32L1xx_HAL_Driver/Inc</state>
           <state>$PROJ_DIR$/../../Drivers/Core/STM32L1xx_HAL_Driver/Inc/Legacy</state>
+          <state>$PROJ_DIR$/../../Middlewares/Lib</state>
+          <state>$PROJ_DIR$/../../Middlewares/Lib/Inc</state>
           <state>$PROJ_DIR$/../../Middlewares/FreeRTOS/Source/portable/IAR/ARM_CM3</state>
           <state>$PROJ_DIR$/../../Middlewares/FreeRTOS/Source/include</state>
           <state>$PROJ_DIR$/../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS</state>
@@ -2433,6 +2435,27 @@
   </group>
   <group>
     <name>Middlewares</name>
+    <group>
+      <name>Lib</name>
+      <group>
+        <name>Inc</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\data_type_def.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\debug.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\lib.h</name>
+        </file>
+      </group>
+      <group>
+        <name>Src</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\debug.c</name>
+        </file>
+      </group>
+    </group>
   </group>
 </project>
 

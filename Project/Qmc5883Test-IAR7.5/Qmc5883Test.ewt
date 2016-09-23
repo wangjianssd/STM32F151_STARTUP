@@ -2600,6 +2600,27 @@
   </group>
   <group>
     <name>Middlewares</name>
+    <group>
+      <name>Lib</name>
+      <group>
+        <name>Inc</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\data_type_def.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\debug.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\lib.h</name>
+        </file>
+      </group>
+      <group>
+        <name>Src</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\debug.c</name>
+        </file>
+      </group>
+    </group>
   </group>
 </project>
 

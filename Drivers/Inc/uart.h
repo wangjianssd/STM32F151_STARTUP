@@ -18,27 +18,51 @@
 /* Exported types ------------------------------------------------------------*/
 typedef enum
 {
-  DEVICE_UART1, /*!< UART1 */
-  DEVICE_UART2, /*!< UART2 */
-  DEVICE_UART3  /*!< UART3 */
-} UartDeviceTypeDef;
+	DEV_UART1, /*!< UART1 */
+	DEV_UART2, /*!< UART2 */
+	DEV_UART3, /*!< UART3 */
+	DEV_UART_NUM
+} DevUartTypeDef;
 
-//typedef enum
-//{
-//  I2C_ADDRESS_MODE_7BIT,  /*!< I2C 7BIT ADDRESS MODE */
-//  I2C_ADDRESS_MODE_10BIT  /*!< I2C 10BIT ADDRESS MODE */
-//}I2cAddrModeTypeDef;
+typedef enum
+{
+	DEV_UART_WORDLENGTH_8B,  /*!< UART 8BIT WORD LENGTH */
+	DEV_UART_WORDLENGTH_9B   /*!< UART 9BIT WORD LENGTH */
+}DevUartWordLen;
+
+typedef enum
+{
+	DEV_UART_STOPBITS_1,  /*!< UART 1BIT STOP BITS */
+	DEV_UART_STOPBITS_2   /*!< UART 2BIT STOP BITS */
+}DevUartStopBit;
+
+typedef enum
+{
+	DEV_UART_PARITY_NONE,   /*!< UART NONE PARITY */
+	DEV_UART_PARITY_EVEN, 	/*!< UART EVEN PARITY */
+	DEV_UART_PARITY_ODD     /*!< UART ODD PARITY */
+}DevUartParity;
+
+typedef enum
+{
+	DEV_UART_MODE_RX,   	/*!< UART MODE RX  */
+	DEV_UART_MODE_TX,       /*!< UART MOED TX  */
+	DEV_UART_MODE_TX_RX     /*!< UART MODE TRX */
+}DevUartMode;
 
 typedef struct
 {
-  UartDeviceTypeDef   uart;       /*!< Specifies the I2C Hander */
-  uint32_t            baud;     /*!< Specifies the buad rate    */
-  //I2cAddrModeTypeDef addr_mode; /*!< Specifies the I2C address mode */
-}UartHanderTypeDef;
-
+	DevUartTypeDef   uart;      /*!< Specifies the UART hander */
+	uint32_t         baud;      /*!< Specifies the UART buad rate    */
+	DevUartWordLen   length;    /*!< Specifies the UART word length */
+	DevUartStopBit   stop_bit;  /*!< Specifies the UART stop bit */
+	DevUartParity    parity;    /*!< Specifies the UART parity */
+	DevUartMode    	 mode;      /*!< Specifies the UART parity */
+}DevUartHanderTypeDef;
 
 /* Exported functions --------------------------------------------------------*/
-
-
+bool UartInit(DevUartHanderTypeDef huart );
+bool UartSend(DevUartHanderTypeDef huart , uint8_t* data, uint16_t size );
+bool UartReceive(DevUartHanderTypeDef huart, uint8_t* data, uint16_t size );
 #endif
 

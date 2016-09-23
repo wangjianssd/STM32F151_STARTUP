@@ -16,7 +16,7 @@
 #include "bsp.h"
 
 /* Define --------------------------------------------------------------------*/
-#define ABS(n)                  (((n) < 0) ? -(n) : (n))
+//#define ABS(n)                  (((n) < 0) ? -(n) : (n))
     
 /* Private function prototypes -----------------------------------------------*/ 
 static bool Qmc5883lPowerOn(void);
