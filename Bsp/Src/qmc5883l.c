@@ -16,7 +16,7 @@
 #include "bsp.h"
 
 /* Define --------------------------------------------------------------------*/
-//#define ABS(n)                  (((n) < 0) ? -(n) : (n))
+
     
 /* Private function prototypes -----------------------------------------------*/ 
 static bool Qmc5883lPowerOn(void);
@@ -27,7 +27,7 @@ static bool Qmc5883lI2cByteWrite (uint8_t reg, uint8_t  data);
 
 
 /* Private variables ---------------------------------------------------------*/
-static I2cHanderTypeDef I2cHander;
+static DevI2cHander I2cHander;
 static int16_t FilterArrary[__QMC5883L_AVG_FILTER_NUM__][3] = {0};
 static uint8_t FilterCount = 0;
 
@@ -84,9 +84,9 @@ bool Qmc5883lPowerOff(void)
 *****************************************************************************/
 bool Qmc5883lInit(void)
 {
-  I2cHander.i2c = __QMC5883L_I2C_HANDLER__;
+  I2cHander.device = __QMC5883L_I2C_HANDLER__;
   I2cHander.clock = __QMC5883L_I2C_CLOCK__;
-  I2cHander.addr_mode = I2C_ADDRESS_MODE_7BIT;
+  I2cHander.addr_mode = DEV_I2C_ADDRESS_MODE_7BIT;
 
   if (I2cInit(I2cHander) != true)
   {

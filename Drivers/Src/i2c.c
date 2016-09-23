@@ -16,7 +16,7 @@
 #include "device.h"
 
 /* Variables -----------------------------------------------------------------*/
-static I2C_HandleTypeDef I2cHander1;
+static I2C_HandleTypeDef I2cHander[DEV_I2C_NUM];
 
 /*****************************************************************************
  * Function      : I2cInit
@@ -31,23 +31,22 @@ static I2C_HandleTypeDef I2cHander1;
  *   Modification: Created function
 
 *****************************************************************************/
-bool I2cInit(I2cHanderTypeDef hi2c)
+bool I2cInit(DevI2cHander hi2c)
 {
- I2C_HandleTypeDef *hander;
+	I2C_HandleTypeDef *hander;
 
-  if (hi2c.i2c == DEVICE_I2C1)
+	DBG_ASSERT(hi2c.device < DEV_I2C_NUM __DBG_LINE);
+
+	hander = &I2cHander[hi2c.device];
+
+    if (hi2c.device == DEV_I2C1)
     {
-        hander = &I2cHander1;
         hander->Instance = I2C1;
     }
-    else
-    {
-        return false;
-    }
-   
+	
     hander->Init.ClockSpeed = hi2c.clock;
 
-    if (hi2c.addr_mode == I2C_ADDRESS_MODE_7BIT)
+    if (hi2c.addr_mode == DEV_I2C_ADDRESS_MODE_7BIT)
     {
         hander->Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
     }
@@ -86,20 +85,21 @@ bool I2cInit(I2cHanderTypeDef hi2c)
  *   Modification: Created function
 
 *****************************************************************************/
-bool I2cByteRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* data)
+bool I2cByteRead (DevI2cHander hi2c,  uint8_t addr, uint8_t reg, uint8_t* data)
 {
     uint8_t count = 0;
    // HAL_StatusTypeDef temp;
-    I2C_HandleTypeDef *hander;
+   I2C_HandleTypeDef *hander;
+   
+   DBG_ASSERT(hi2c.device < DEV_I2C_NUM __DBG_LINE);
+   
+   hander = &I2cHander[hi2c.device];
+   
+   if (hi2c.device == DEV_I2C1)
+   {
+	   hander->Instance = I2C1;
+   }
 
-    if (hi2c.i2c == DEVICE_I2C1 )
-    {
-        hander = &I2cHander1;
-    }
-    else
-    {
-        return false;
-    }
   //  temp = HAL_I2C_Master_Transmit(hander, addr, &reg, 1, 500);
     while( HAL_I2C_Master_Transmit(hander, addr, &reg, 1, 500) != HAL_OK)
     {
@@ -146,20 +146,21 @@ bool I2cByteRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* da
  *   Modification: Created function
 
 *****************************************************************************/
-bool  I2cBytesRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size)
+bool  I2cBytesRead (DevI2cHander hi2c,  uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size)
 {
     uint8_t count = 0;
-    
-    I2C_HandleTypeDef *hander;
+	
+	I2C_HandleTypeDef *hander;
 
-    if (hi2c.i2c == DEVICE_I2C1 )
+	DBG_ASSERT(hi2c.device < DEV_I2C_NUM __DBG_LINE);
+
+	hander = &I2cHander[hi2c.device];
+
+    if (hi2c.device == DEV_I2C1)
     {
-        hander = &I2cHander1;
+        hander->Instance = I2C1;
     }
-    else
-    {
-        return false;
-    }
+
     
     while(HAL_I2C_Master_Transmit(hander, addr, &reg, 1, 500) != HAL_OK)
     {
@@ -203,22 +204,23 @@ bool  I2cBytesRead (I2cHanderTypeDef hi2c,  uint8_t addr, uint8_t reg, uint8_t* 
  *   Modification: Created function
 
 *****************************************************************************/
-bool  I2cByteWrite (I2cHanderTypeDef hi2c , uint8_t addr, uint8_t reg, uint8_t data)
+bool  I2cByteWrite (DevI2cHander hi2c , uint8_t addr, uint8_t reg, uint8_t data)
 {
     uint8_t tx_data[2] = {reg, data};
     
     uint8_t count = 0;
     
-    I2C_HandleTypeDef *hander;
+	I2C_HandleTypeDef *hander;
 
-    if (hi2c.i2c == DEVICE_I2C1 )
+	DBG_ASSERT(hi2c.device < DEV_I2C_NUM __DBG_LINE);
+
+	hander = &I2cHander[hi2c.device];
+
+    if (hi2c.device == DEV_I2C1)
     {
-        hander = &I2cHander1;
+        hander->Instance = I2C1;
     }
-    else
-    {
-        return false;
-    }
+
     
      while(HAL_I2C_Master_Transmit(hander, addr, (uint8_t*)tx_data, 2, 1000) != HAL_OK)
      {

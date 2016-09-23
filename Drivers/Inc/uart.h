@@ -22,7 +22,7 @@ typedef enum
 	DEV_UART2, /*!< UART2 */
 	DEV_UART3, /*!< UART3 */
 	DEV_UART_NUM
-} DevUartTypeDef;
+} DevUart;
 
 typedef enum
 {
@@ -52,17 +52,17 @@ typedef enum
 
 typedef struct
 {
-	DevUartTypeDef   uart;      /*!< Specifies the UART hander */
+	DevUart          device;    /*!< Specifies the UART device */
 	uint32_t         baud;      /*!< Specifies the UART buad rate    */
 	DevUartWordLen   length;    /*!< Specifies the UART word length */
 	DevUartStopBit   stop_bit;  /*!< Specifies the UART stop bit */
 	DevUartParity    parity;    /*!< Specifies the UART parity */
 	DevUartMode    	 mode;      /*!< Specifies the UART parity */
-}DevUartHanderTypeDef;
+}DevUartHander;
 
 /* Exported functions --------------------------------------------------------*/
-bool UartInit(DevUartHanderTypeDef huart );
-bool UartSend(DevUartHanderTypeDef huart , uint8_t* data, uint16_t size );
-bool UartReceive(DevUartHanderTypeDef huart, uint8_t* data, uint16_t size );
+bool UartInit(DevUartHander huart);
+bool UartSend(DevUartHander huart, uint8_t* data, uint16_t size);
+bool UartReceive(DevUartHander huart, uint8_t* data, uint16_t size);
 #endif
 

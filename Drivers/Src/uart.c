@@ -32,23 +32,23 @@ static UART_HandleTypeDef UartHander[DEV_UART_NUM];
  *   Modification: Created function
 
 *****************************************************************************/
-bool UartInit(DevUartHanderTypeDef huart )
+bool UartInit(DevUartHander huart )
 {
 	UART_HandleTypeDef *hander;
 
-	DBG_ASSERT(huart.uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(huart.device < DEV_UART_NUM __DBG_LINE);
 
-	hander = &UartHander[huart.uart];
+	hander = &UartHander[huart.device];
 
-	if (huart.uart == DEV_UART1)
+	if (huart.device == DEV_UART1)
     {
         hander->Instance = USART1;
 	}
-	else if (huart.uart == DEV_UART2)
+	else if (huart.device == DEV_UART2)
     {
 		hander->Instance = USART2;
 	}
-	else if (huart.uart == DEV_UART3)
+	else if (huart.device == DEV_UART3)
     {
 		hander->Instance = USART3;
 	}
@@ -125,13 +125,13 @@ bool UartInit(DevUartHanderTypeDef huart )
  *   Modification: Created function
 
 *****************************************************************************/
-bool UartSend(DevUartHanderTypeDef huart , uint8_t* data, uint16_t size )
+bool UartSend(DevUartHander huart , uint8_t* data, uint16_t size )
 {
     UART_HandleTypeDef *hander;
 
-    DBG_ASSERT(huart.uart < DEV_UART_NUM __DBG_LINE);
+    DBG_ASSERT(huart.device < DEV_UART_NUM __DBG_LINE);
 
-    hander = &UartHander[huart.uart];
+    hander = &UartHander[huart.device];
 
     if (HAL_UART_Transmit (hander, data, size, 500) != HAL_OK)
     {
@@ -155,13 +155,13 @@ bool UartSend(DevUartHanderTypeDef huart , uint8_t* data, uint16_t size )
  *   Modification: Created function
 
 *****************************************************************************/
-bool UartReceive(DevUartHanderTypeDef huart, uint8_t* data, uint16_t size )
+bool UartReceive(DevUartHander huart, uint8_t* data, uint16_t size )
 {
     UART_HandleTypeDef *hander;
 
-    DBG_ASSERT(huart.uart < DEV_UART_NUM __DBG_LINE);
+    DBG_ASSERT(huart.device < DEV_UART_NUM __DBG_LINE);
 
-    hander = &UartHander[huart.uart];
+    hander = &UartHander[huart.device];
 
     if (HAL_UART_Receive (hander, data, size, 1000) != HAL_OK)
     {

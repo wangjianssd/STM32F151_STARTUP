@@ -18,29 +18,29 @@
 /* Exported types ------------------------------------------------------------*/
 typedef enum
 {
-  DEVICE_I2C1, /*!< I2C1 */
-  //DEVICE_I2C2  /*!< I2C2 */
-}I2cDeviceTypeDef;
+  DEV_I2C1, /*!< I2C1 */
+  DEV_I2C_NUM	
+}DevI2c;
 
 typedef enum
 {
-  I2C_ADDRESS_MODE_7BIT,  /*!< I2C 7BIT ADDRESS MODE */
-  I2C_ADDRESS_MODE_10BIT  /*!< I2C 10BIT ADDRESS MODE */
-}I2cAddrModeTypeDef;
+	DEV_I2C_ADDRESS_MODE_7BIT,  /*!< I2C 7BIT ADDRESS MODE */
+	DEV_I2C_ADDRESS_MODE_10BIT  /*!< I2C 10BIT ADDRESS MODE */
+}DevI2cAddrMode;
 
 typedef struct
 {
-  I2cDeviceTypeDef   i2c;       /*!< Specifies the I2C Hander */
-  uint32_t           clock;     /*!< Specifies the clock frequency */
-  I2cAddrModeTypeDef addr_mode; /*!< Specifies the I2C address mode */
-}I2cHanderTypeDef;
+	DevI2c         device;    /*!< Specifies the I2C device */
+	uint32_t       clock;     /*!< Specifies the clock frequency */
+	DevI2cAddrMode addr_mode; /*!< Specifies the I2C address mode */
+}DevI2cHander;
 
 
 /* Exported functions --------------------------------------------------------*/
-bool I2cInit(I2cHanderTypeDef hi2c);
-bool I2cByteRead (I2cHanderTypeDef hi2c, uint8_t addr, uint8_t reg, uint8_t* data);
-bool I2cBytesRead (I2cHanderTypeDef hi2c, uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size);
-bool I2cByteWrite (I2cHanderTypeDef hi2c, uint8_t addr, uint8_t reg, uint8_t data);
+bool I2cInit(DevI2cHander hi2c);
+bool I2cByteRead (DevI2cHander hi2c, uint8_t addr, uint8_t reg, uint8_t* data);
+bool I2cBytesRead (DevI2cHander hi2c, uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size);
+bool I2cByteWrite (DevI2cHander hi2c, uint8_t addr, uint8_t reg, uint8_t data);
 
 #endif
 

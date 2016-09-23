@@ -15,7 +15,7 @@
 #include "device.h"
 
 /* Private variables ---------------------------------------------------------*/
-DevUartHanderTypeDef DevUart3;
+DevUartHander DevUart3;
 
 /* Exported functions --------------------------------------------------------*/
 static void UART_Init(void)
@@ -25,7 +25,7 @@ static void UART_Init(void)
 	DevUart3.mode = DEV_UART_MODE_TX_RX;
 	DevUart3.parity = DEV_UART_PARITY_NONE;
 	DevUart3.stop_bit = DEV_UART_STOPBITS_1;
-	DevUart3.uart = DEV_UART3;
+	DevUart3.device = DEV_UART3;
 
 	if (UartInit(DevUart3) != HAL_OK)
 	{

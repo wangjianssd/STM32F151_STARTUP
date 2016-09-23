@@ -16,7 +16,7 @@
 #define __QMC_5883_H__
 
 /* Define --------------------------------------------------------------------*/
-#define __QMC5883L_I2C_HANDLER__    DEVICE_I2C1
+#define __QMC5883L_I2C_HANDLER__    (DEV_I2C1)
 #define __QMC5883L_I2C_CLOCK__      (100000)
 #define __QMC5883L_I2C_ADDRESS__    0x1A
 

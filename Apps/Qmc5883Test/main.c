@@ -34,7 +34,7 @@
 #include "config.h"
 
 /* Public variables ---------------------------------------------------------*/
-extern DevUartHanderTypeDef DevUart3;
+extern DevUartHander DevUart3;
 
 /* Private variables ---------------------------------------------------------*/
 
