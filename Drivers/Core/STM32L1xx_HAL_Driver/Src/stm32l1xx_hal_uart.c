@@ -881,8 +881,8 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
   uint32_t tmp_state = 0;
   
   tmp_state = huart->State;
-//  if((tmp_state == HAL_UART_STATE_READY) || (tmp_state == HAL_UART_STATE_BUSY_TX))
-//  {
+  if((tmp_state == HAL_UART_STATE_READY) || (tmp_state == HAL_UART_STATE_BUSY_TX))
+  {
     if((pData == NULL ) || (Size == 0))
     {
       return HAL_ERROR;
@@ -910,20 +910,20 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
     __HAL_UNLOCK(huart);
 
     /* Enable the UART Parity Error Interrupt */
-   // __HAL_UART_ENABLE_IT(huart, UART_IT_PE); //WANGJIAN
+    __HAL_UART_ENABLE_IT(huart, UART_IT_PE);
 
     /* Enable the UART Error Interrupt: (Frame error, noise error, overrun error) */
-   // __HAL_UART_ENABLE_IT(huart, UART_IT_ERR);//WANGJIAN
+    __HAL_UART_ENABLE_IT(huart, UART_IT_ERR);
 
     /* Enable the UART Data Register not empty Interrupt */
     __HAL_UART_ENABLE_IT(huart, UART_IT_RXNE);
 
     return HAL_OK;
-//  }
-//  else
-//  {
-//    return HAL_BUSY;
-//  }
+  }
+  else
+  {
+    return HAL_BUSY;
+  }
 }
 
 /**
@@ -1191,45 +1191,42 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
 {
   uint32_t tmp_flag = 0, tmp_it_source = 0;
 
-//  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_PE);
-//  tmp_it_source = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_PE);  
-//  /* UART parity error interrupt occurred ------------------------------------*/
-//  if((tmp_flag != RESET) && (tmp_it_source != RESET))
-//  { 
-//    huart->ErrorCode |= HAL_UART_ERROR_PE;
-//  }
+  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_PE);
+  tmp_it_source = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_PE);  
+  /* UART parity error interrupt occurred ------------------------------------*/
+  if((tmp_flag != RESET) && (tmp_it_source != RESET))
+  { 
+    huart->ErrorCode |= HAL_UART_ERROR_PE;
+  }
   
-//  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_FE);
-//  tmp_it_source = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
-//  /* UART frame error interrupt occurred -------------------------------------*/
-//  if((tmp_flag != RESET) && (tmp_it_source != RESET))
-//  {
-//    huart->ErrorCode |= HAL_UART_ERROR_FE;
-//  }
+  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_FE);
+  tmp_it_source = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
+  /* UART frame error interrupt occurred -------------------------------------*/
+  if((tmp_flag != RESET) && (tmp_it_source != RESET))
+  {
+    huart->ErrorCode |= HAL_UART_ERROR_FE;
+  }
   
-//  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_NE);
-//  /* UART noise error interrupt occurred -------------------------------------*/
-//  if((tmp_flag != RESET) && (tmp_it_source != RESET))
-//  {
-//    huart->ErrorCode |= HAL_UART_ERROR_NE;
-//  }
+  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_NE);
+  /* UART noise error interrupt occurred -------------------------------------*/
+  if((tmp_flag != RESET) && (tmp_it_source != RESET))
+  {
+    huart->ErrorCode |= HAL_UART_ERROR_NE;
+  }
   
-//  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_ORE);
-//  /* UART Over-Run interrupt occurred ----------------------------------------*/
-//  if((tmp_flag != RESET) && (tmp_it_source != RESET))
-//  {
-//    huart->ErrorCode |= HAL_UART_ERROR_ORE;
-//  }
+  tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_ORE);
+  /* UART Over-Run interrupt occurred ----------------------------------------*/
+  if((tmp_flag != RESET) && (tmp_it_source != RESET))
+  {
+    huart->ErrorCode |= HAL_UART_ERROR_ORE;
+  }
   
   tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_RXNE);
   tmp_it_source = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_RXNE);
   /* UART in mode Receiver ---------------------------------------------------*/
   if((tmp_flag != RESET) && (tmp_it_source != RESET))
   { 
-    __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);
     UART_Receive_IT(huart);
-	__HAL_UART_ENABLE_IT(huart, UART_IT_RXNE);
-	//HAL_UART_Receive_IT(huart, pData, (sizeof(UartRxByteTab) / DEV_UART_NUM));
   }
   
   tmp_flag = __HAL_UART_GET_FLAG(huart, UART_FLAG_TXE);
@@ -1248,16 +1245,16 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
     UART_EndTransmit_IT(huart);
   }  
 
-//  if(huart->ErrorCode != HAL_UART_ERROR_NONE)
-//  {
-//    /* Clear all the error flag at once */
+  if(huart->ErrorCode != HAL_UART_ERROR_NONE)
+  {
+    /* Clear all the error flag at once */
     __HAL_UART_CLEAR_PEFLAG(huart);
-//    
-//    /* Set the UART state ready to be able to start again the process */
-//    huart->State = HAL_UART_STATE_READY;
-//    
-//    HAL_UART_ErrorCallback(huart);
-//  }  
+    
+    /* Set the UART state ready to be able to start again the process */
+    huart->State = HAL_UART_STATE_READY;
+    
+    HAL_UART_ErrorCallback(huart);
+  }  
 }
 
 /**
@@ -1681,7 +1678,7 @@ static HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, 
         {
           /* Disable TXE, RXNE, PE and ERR (Frame error, noise error, overrun error) interrupts for the interrupt process */
           __HAL_UART_DISABLE_IT(huart, UART_IT_TXE);
-          //__HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);//WANGJIAN
+          __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);
           __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
           __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
 
@@ -1706,7 +1703,7 @@ static HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, 
         {
           /* Disable TXE, RXNE, PE and ERR (Frame error, noise error, overrun error) interrupts for the interrupt process */
           __HAL_UART_DISABLE_IT(huart, UART_IT_TXE);
-         // __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);// WANGJIAN
+          __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);
           __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
           __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
 
@@ -1809,9 +1806,9 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
   uint16_t* tmp;
   uint32_t tmp_state = 0;
   
-//  tmp_state = huart->State; 
-//  if((tmp_state == HAL_UART_STATE_BUSY_RX) || (tmp_state == HAL_UART_STATE_BUSY_TX_RX))
-//  {
+  tmp_state = huart->State; 
+  if((tmp_state == HAL_UART_STATE_BUSY_RX) || (tmp_state == HAL_UART_STATE_BUSY_TX_RX))
+  {
     if(huart->Init.WordLength == UART_WORDLENGTH_9B)
     {
       tmp = (uint16_t*) huart->pRxBuffPtr;
@@ -1837,36 +1834,36 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
         *huart->pRxBuffPtr++ = (uint8_t)(huart->Instance->DR & (uint8_t)0x007F);
       }
     }
-    
-//    if(--huart->RxXferCount == 0)
- //   {
-      //__HAL_UART_DISABLE_IT(huart, UART_IT_RXNE); //WANGJIAN
+
+    if(--huart->RxXferCount == 0)
+    {
+      __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);
 
       /* Check if a transmit process is ongoing or not */
-//      if(huart->State == HAL_UART_STATE_BUSY_TX_RX) 
-//      {
-//        huart->State = HAL_UART_STATE_BUSY_TX;
-//      }
-//      else
-//      {
-//        /* Disable the UART Parity Error Interrupt */
-//        __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
+      if(huart->State == HAL_UART_STATE_BUSY_TX_RX) 
+      {
+        huart->State = HAL_UART_STATE_BUSY_TX;
+      }
+      else
+      {
+        /* Disable the UART Parity Error Interrupt */
+        __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
 
-//        /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
-//        __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
+        /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+        __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
 
-//        huart->State = HAL_UART_STATE_READY;
-//      }
+        huart->State = HAL_UART_STATE_READY;
+      }
       HAL_UART_RxCpltCallback(huart);
 
- //     return HAL_OK;
-//    }
+      return HAL_OK;
+    }
     return HAL_OK;
-//  }
-//  else
-//  {
-//    return HAL_BUSY; 
-//  }
+  }
+  else
+  {
+    return HAL_BUSY; 
+  }
 }
 
 /**
