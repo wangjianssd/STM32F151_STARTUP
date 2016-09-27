@@ -60,9 +60,13 @@ typedef struct
 	DevUartMode    	 mode;      /*!< Specifies the UART parity */
 }DevUartHander;
 
+typedef void (*DEV_UART_RX_FUNC_PTR)(uint8_t* data, uint16_t size);            
+
 /* Exported functions --------------------------------------------------------*/
-bool UartInit(DevUartHander huart);
-bool UartSend(DevUartHander huart, uint8_t* data, uint16_t size);
-bool UartReceive(DevUartHander huart, uint8_t* data, uint16_t size);
+bool DevUartInit(DevUartHander huart);
+bool DevUartTx(DevUart uart, uint8_t* data, uint16_t size);
+bool DevUartRx(DevUart uart, uint8_t* data, uint16_t size);
+void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr);
+void DevUartRxCbUnregister(DevUart uart);
 #endif
 

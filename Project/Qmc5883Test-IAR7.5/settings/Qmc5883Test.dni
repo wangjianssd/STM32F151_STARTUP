@@ -38,7 +38,7 @@ MultiCoreRunAll=1
 [JLinkDriver]
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=1677315571
+Checksum=-1333358936
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -54,10 +54,11 @@ Fmt0=uint8_t[6]	4	0
 mode=0
 [Breakpoints2]
 Bp0=_ 0 "EMUL_CODE" "0x20000000" 0 0 1 "" 0 "" 0
-Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_uart.c}.687.11" 0 0 1 "" 0 "" 0
-Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_i2c.c}.4586.7" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{}.687.11" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_i2c.c}.4586.7" 0 0 1 "" 0 "" 0
 Bp3=_ 0 "EMUL_DATA" "FilterArrary" 2 0 0 0 4294967295
-Count=4
+Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\uart.c}.281.3" 0 0 1 "" 0 "" 0
+Count=5
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

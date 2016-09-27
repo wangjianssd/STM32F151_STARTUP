@@ -25,11 +25,11 @@
 /* DATA TYPES (Compiler Specific) */
 typedef char           			char_t;  	/* char type */
 typedef unsigned char           bool_t;  	/* Boolean type */
-//typedef unsigned char           uint8_t; 	/* Unsigned  8 bit quantity  */
+//typedef uint8_t           uint8_t; 	/* Unsigned  8 bit quantity  */
 //typedef signed   char           int8_t;  	/* Signed    8 bit quantity  */
 //typedef unsigned int            uint16_t;	/* Unsigned 16 bit quantity  */
 //typedef signed   int            int16_t; 	/* Signed   16 bit quantity  */
-//typedef unsigned long           uint32_t;	/* Unsigned 32 bit quantity  */
+//typedef  unsigned long         uint32_t;	/* Unsigned 32 bit quantity  */
 //typedef signed   long           int32_t; 	/* Signed   32 bit quantity  */
 typedef unsigned int            uint;
 typedef float                   fp32_t;
@@ -39,7 +39,7 @@ typedef uint16_t                 nwk_id_t;
 
 #if HAVE_LONG_LONG > 0
 //typedef signed long long        int64_t;
-//typedef unsigned long long      uint64_t;
+//typedef  unsigned int long      uint64_t;
 #else
 typedef struct
 {
@@ -53,6 +53,8 @@ typedef struct
 } int64_t;
 typedef int64_t uint64_t;
 #endif
+
+typedef void (*FNCT_VOID)(void);            
 
 #ifndef STATIC
 #define STATIC                  

@@ -2611,13 +2611,31 @@
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\debug.h</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\fifo.h</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\lib.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\queue.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\util.h</name>
         </file>
       </group>
       <group>
         <name>Src</name>
         <file>
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\debug.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\fifo.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\queue.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\util.c</name>
         </file>
       </group>
     </group>
