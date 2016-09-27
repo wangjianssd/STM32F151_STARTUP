@@ -62,7 +62,7 @@ int main(void)
 void StartDefaultTask(void const * argument)
 {
   /* Infinite loop */
-   bool ret;
+  bool ret;
 
   float magnet[3] = {0};
   uint16_t magnet_raw[3];
