@@ -2567,13 +2567,13 @@
         <name>$PROJ_DIR$\..\..\Drivers\Inc\clock.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_uart.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\device.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\i2c.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Drivers\Inc\uart.h</name>
       </file>
     </group>
     <group>
@@ -2582,13 +2582,13 @@
         <name>$PROJ_DIR$\..\..\Drivers\Src\clock.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_uart.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\device.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\i2c.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Drivers\Src\uart.c</name>
       </file>
     </group>
   </group>

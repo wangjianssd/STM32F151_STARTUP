@@ -12,8 +12,8 @@
  * 2016/09/20  v0.0.1       WangJian    first version
  */
 
-#ifndef __UART_H__
-#define __UART_H__
+#ifndef __DEV_UART_H__
+#define __DEV_UART_H__
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum
@@ -68,5 +68,6 @@ bool DevUartTx(DevUart uart, uint8_t* data, uint16_t size);
 bool DevUartRx(DevUart uart, uint8_t* data, uint16_t size);
 void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr);
 void DevUartRxCbUnregister(DevUart uart);
+void DevUartIrqHander(DevUart uart);
 #endif
 

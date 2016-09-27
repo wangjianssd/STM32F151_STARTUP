@@ -36,7 +36,7 @@
 /* Public variables ---------------------------------------------------------*/
 extern DevUartHander DevUart3;
 
-#define __UART3_FIFO_SIZE__     512
+#define __UART3_FIFO_SIZE__     1024
 /* Private variables ---------------------------------------------------------*/
 static uint8_t Uart3RxFifo[__UART3_FIFO_SIZE__] = 0;
 
@@ -74,7 +74,7 @@ int main(void)
 		DevUartTx(DEV_UART3, &byte, 1);
    	}
    
-    HAL_Delay (100);
+    HAL_Delay (50);
 
   }
   StartDefaultTask((void *)0);

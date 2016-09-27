@@ -19,7 +19,7 @@
 UART_HandleTypeDef UartHander[DEV_UART_NUM];
 
 /*Static variables ---------------------------------------------------------*/
-static uint8_t UartRxByteTab[DEV_UART_NUM] = 0;
+//static uint8_t UartRxByteTab[DEV_UART_NUM] = 0;
 static DEV_UART_RX_FUNC_PTR DevUartRxCbTab[DEV_UART_NUM] = {NULL};
 
 /* Exported functions --------------------------------------------------------*/
@@ -112,7 +112,7 @@ bool DevUartInit(DevUartHander huart )
 	}
 
 	DevUartRxCbTab[huart.device] = NULL;
-	UartRxByteTab[huart.device] = 0;
+	//UartRxByteTab[huart.device] = 0;
 	//set RX IT config
 	//HAL_UART_Receive_IT(hander, &UartRxByte, 1);
 	
@@ -217,7 +217,9 @@ void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr )
 	
 	DevUartRxCbTab[uart] = isr;
 
-	HAL_UART_Receive_IT(&UartHander[uart], &UartRxByteTab[uart], (sizeof(UartRxByteTab) / DEV_UART_NUM));
+	__HAL_UART_ENABLE_IT(&UartHander[uart], UART_IT_RXNE);
+
+	//HAL_UART_Receive_IT(&UartHander[uart], &UartRxByteTab[uart], (sizeof(UartRxByteTab) / DEV_UART_NUM));
 }
 
 /*****************************************************************************
@@ -236,6 +238,8 @@ void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr )
 void DevUartRxCbUnregister(DevUart uart)
 {
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	
+	__HAL_UART_DISABLE_IT(&UartHander[uart], UART_IT_RXNE);
 
 	DevUartRxCbTab[uart] = NULL;
 }
@@ -255,110 +259,64 @@ void DevUartRxCbUnregister(DevUart uart)
 *****************************************************************************/
 void DevUartIrqHander(DevUart uart)
 {
-	uint32_t tmp_flag = 0;
-	uint32_t tmp_it_source = 0;
 	uint16_t data ;
 	uint8_t *tmp ;
-	uint8_t   size = 0;
-	
-    DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
-  
-  tmp_flag = __HAL_UART_GET_FLAG(&UartHander[uart], UART_FLAG_RXNE);
-  tmp_it_source = __HAL_UART_GET_IT_SOURCE(&UartHander[uart], UART_IT_RXNE);
-  
-  /* UART in mode Receiver ---------------------------------------------------*/
-  if((tmp_flag != RESET) && (tmp_it_source != RESET))
-  { 
-    __HAL_UART_DISABLE_IT(&UartHander[uart], UART_IT_RXNE);
+	uint8_t  size = 0;
 
-	data = (uint16_t)(UartHander[uart].Instance->DR & (uint16_t)0x01FF);
-	tmp = (uint8_t *)&data;
-	size = 1;
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	UART_HandleTypeDef *hander = &UartHander[uart];
+
+	/* UART in mode Receiver ---------------------------------------------------*/
+	if(	(__HAL_UART_GET_FLAG(hander, UART_FLAG_RXNE) != RESET) 
+	 && (__HAL_UART_GET_IT_SOURCE(hander, UART_IT_RXNE) != RESET))
+	{ 
+      __HAL_UART_DISABLE_IT(hander, UART_IT_RXNE);
+
+      data = (uint16_t)(hander->Instance->DR & (uint16_t)0x01FF);
+      tmp = (uint8_t *)&data;
+      size = 1;
+
+      if(hander->Init.WordLength == UART_WORDLENGTH_9B)
+      {		
+          if(hander->Init.Parity == UART_PARITY_NONE)
+          {
+              data &= (uint16_t)0x01FF;
+              size = 2;
+          }
+          else
+          {
+             data &= (uint16_t)0x00FF;
+          }
+      }
+      else
+      {
+          if(hander->Init.Parity == UART_PARITY_NONE)
+          {
+            data &= (uint8_t)0x00FF;
+          }
+          else
+          {
+            data &= (uint8_t)0x007F;
+          }
+      }
+
+      if (DevUartRxCbTab[uart] != NULL)
+      {
+          DevUartRxCbTab[uart](tmp, size);
+      }
+
+      __HAL_UART_CLEAR_FLAG(hander, UART_IT_RXNE);
+
+      __HAL_UART_ENABLE_IT(hander, UART_IT_RXNE);
     
-	if(UartHander[uart].Init.WordLength == UART_WORDLENGTH_9B)
-	{		
-		if(UartHander[uart].Init.Parity == UART_PARITY_NONE)
-		{
-            data &= (uint16_t)0x01FF;
-			size = 2;
-		}
-		else
-		{
-           data &= (uint16_t)0x00FF;
-		}
 	}
-	else
+
+	/* UART in mode Trans ---------------------------------------------------*/
+	if( (__HAL_UART_GET_FLAG(hander, UART_FLAG_TC) != RESET) 
+	 && (__HAL_UART_GET_IT_SOURCE(hander, UART_FLAG_TC) != RESET))
 	{
-	
-		if(UartHander[uart].Init.Parity == UART_PARITY_NONE)
-		{
-          data &= (uint8_t)0x00FF;
-		}
-		else
-		{
-          data &= (uint8_t)0x007F;
-		}
+	  __HAL_UART_CLEAR_FLAG(hander, UART_FLAG_TC);
 	}
-
-	if (DevUartRxCbTab[uart] != NULL)
-    {
-        DevUartRxCbTab[uart](tmp, size);
-    }
-	
-	__HAL_UART_ENABLE_IT(&UartHander[uart], UART_IT_RXNE);
-  }
-
-    //__HAL_UART_CLEAR_PEFLAG(&UartHander[uart]);
-
-}
-
-/**
-  * @brief  Tx Transfer completed callbacks.
-  * @param  huart: Pointer to a UART_HandleTypeDef structure that contains
-  *                the configuration information for the specified UART module.
-  * @retval None
-  */
- __weak void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(huart);
-
-  /* NOTE: This function should not be modified, when the callback is needed,
-           the HAL_UART_TxCpltCallback can be implemented in the user file
-   */
-	
-}
-/**
-  * @brief  Rx Transfer completed callbacks.
-  * @param  huart: Pointer to a UART_HandleTypeDef structure that contains
-  *                the configuration information for the specified UART module.
-  * @retval None
-  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  /* Prevent unused argument(s) compilation warning */
-  uint8_t *pData;
-  
-  if (huart->Instance == USART1)
-  {
-  	  pData = &UartRxByteTab[DEV_UART1];
-      DevUartRxCb(DEV_UART1,pData, (sizeof(UartRxByteTab) / DEV_UART_NUM));  
-  }
-  else if (huart->Instance == USART2)
-  {
-      pData = &UartRxByteTab[DEV_UART2];
-	  DevUartRxCb(DEV_UART2, pData, (sizeof(UartRxByteTab) / DEV_UART_NUM));  
-
-  }
-  else if (huart->Instance == USART3)
-  {
-      pData = &UartRxByteTab[DEV_UART3];
-      DevUartRxCb(DEV_UART3, pData, (sizeof(UartRxByteTab) / DEV_UART_NUM));  
-  }
-  
-  HAL_UART_Receive_IT(huart, pData, (sizeof(UartRxByteTab) / DEV_UART_NUM));
-  /* NOTE: This function should not be modified, when the callback is needed,
-           the HAL_UART_RxCpltCallback can be implemented in the user file
-   */
 }
 

@@ -42,7 +42,8 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern UART_HandleTypeDef UartHander[DEV_UART_NUM];
+//extern UART_HandleTypeDef UartHander[DEV_UART_NUM];
+extern void DevUartIrqHander(DevUart uart);
 
 /******************************************************************************/
 /*            Cortex-M3 Processor Interruption and Exception Handlers         */ 
