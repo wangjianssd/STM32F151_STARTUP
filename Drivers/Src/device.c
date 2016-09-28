@@ -15,23 +15,10 @@
 #include "device.h"
 
 /* Private variables ---------------------------------------------------------*/
-DevUartHander DevUart3;
+
 
 /* Exported functions --------------------------------------------------------*/
-static void UART_Init(void)
-{
-	DevUart3.baud = 115200;
-	DevUart3.length = DEV_UART_WORDLENGTH_8B;
-	DevUart3.mode = DEV_UART_MODE_TX_RX;
-	DevUart3.parity = DEV_UART_PARITY_NONE;
-	DevUart3.stop_bit = DEV_UART_STOPBITS_1;
-	DevUart3.device = DEV_UART3;
 
-	if (DevUartInit(DevUart3) != HAL_OK)
-	{
-
-	}
-}
 
 /** Configure pins as 
         * Analog 
@@ -98,6 +85,6 @@ void DeviceInit (void)
 
 	/* Initialize all configured peripherals */
 
-	UART_Init();
+	//UART_Init();
    
 }

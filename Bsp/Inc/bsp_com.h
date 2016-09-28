@@ -30,7 +30,7 @@
 #define	__COM1_CONFIG_STOP__                        DEV_UART_STOPBITS_1 
 #define	__COM1_CONFIG_BIT__                         DEV_UART_WORDLENGTH_8B
 #define	__COM1_CONFIG_PARITY__                      DEV_UART_PARITY_NONE
-    
+#define	__COM1_CONFIG_FLOW_CTL__                    UART_HWCONTROL_NONE
 #define	__COM1_TX_FIFO_SIZE__                       512
 #define	__COM1_RX_FIFO_SIZE__                       512
 
@@ -44,6 +44,7 @@ void BspCom1TxFIFOOut( void );
 bool BspCom1RxFIFOIsEmpty( void );
 void BspCom1RxFIFOClear( void );
 uint8_t BspCom1RxFIFOOut( void );
+void BspCom1RxDisable( void );
 
 /* Variables -----------------------------------------------------------------*/
 

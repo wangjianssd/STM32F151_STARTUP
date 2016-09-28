@@ -23,6 +23,12 @@ UART_HandleTypeDef UartHander[DEV_UART_NUM];
 static DEV_UART_RX_FUNC_PTR DevUartRxCbTab[DEV_UART_NUM] = {NULL};
 
 /* Exported functions --------------------------------------------------------*/
+static void DevUartIOInit( DevUart uart );
+static void DevUartIODeInit( DevUart uart );
+static void DevUartClockEnable( DevUart uart );
+static void DevUartClockDisable( DevUart uart );
+
+
 /*****************************************************************************
  * Function      : UartInit
  * Description   : Uart init
@@ -36,88 +42,85 @@ static DEV_UART_RX_FUNC_PTR DevUartRxCbTab[DEV_UART_NUM] = {NULL};
  *   Modification: Created function
 
 *****************************************************************************/
-bool DevUartInit(DevUartHander huart )
+bool DevUartInit(DevUart uart, DevUartConfig config )
 {
 	UART_HandleTypeDef *hander;
 
-	DBG_ASSERT(huart.device < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
-	hander = &UartHander[huart.device];
+	hander = &UartHander[uart];
 
-	if (huart.device == DEV_UART1)
+	if (uart == DEV_UART1)
     {
         hander->Instance = USART1;
 	}
-	else if (huart.device == DEV_UART2)
+	else if (uart == DEV_UART2)
     {
 		hander->Instance = USART2;
 	}
-	else if (huart.device == DEV_UART3)
+	else if (uart == DEV_UART3)
     {
 		hander->Instance = USART3;
 	}
 	
-    hander->Init.BaudRate = huart.baud;
+    hander->Init.BaudRate = config.baud;
+	hander->Init.WordLength = config.length;
+	hander->Init.StopBits = config.stop_bit;
+	hander->Init.Parity = config.parity;
+	hander->Init.Mode = config.mode;
+	hander->Init.HwFlowCtl = config.flow_contrl;
 
-	if (huart.length == DEV_UART_WORDLENGTH_8B)
-    {
-		hander->Init.WordLength = UART_WORDLENGTH_8B;
-	}
-	else if (huart.length == DEV_UART_WORDLENGTH_9B)
-    {
-		hander->Init.WordLength = UART_WORDLENGTH_9B;
-	}
-
-    if (huart.stop_bit == DEV_UART_STOPBITS_1)
-    {
-		hander->Init.StopBits = UART_STOPBITS_1;
-	}
-	else if (huart.stop_bit == DEV_UART_STOPBITS_2)
-    {
-		hander->Init.StopBits = UART_STOPBITS_2;
-	}
-
-    if (huart.parity == DEV_UART_PARITY_NONE)
-    {
-		hander->Init.Parity = UART_PARITY_NONE;
-	}
-	else if (huart.parity == DEV_UART_PARITY_EVEN)
-    {
-		hander->Init.Parity = UART_PARITY_EVEN;
-	}
-	else if (huart.parity == DEV_UART_PARITY_ODD)
-    {
-		hander->Init.Parity = UART_PARITY_ODD;
-	}
-	
-    if (huart.mode == DEV_UART_MODE_RX)
-    {
-		hander->Init.Mode = UART_MODE_RX;
-	}
-	else if (huart.mode == DEV_UART_MODE_TX)
-    {
-		hander->Init.Mode = UART_MODE_TX;
-	}
-	else if (huart.mode == DEV_UART_MODE_TX_RX)
-    {
-		hander->Init.Mode = UART_MODE_TX_RX;
-	}
-
-	hander->Init.HwFlowCtl = UART_HWCONTROL_NONE;
 	hander->Init.OverSampling = UART_OVERSAMPLING_16;
+
+	DevUartClockEnable(uart);
+
+	DevUartIOInit(uart);
 	
 	if (HAL_UART_Init(hander) != HAL_OK)
 	{
 	  return false;
 	}
 
-	DevUartRxCbTab[huart.device] = NULL;
-	//UartRxByteTab[huart.device] = 0;
-	//set RX IT config
-	//HAL_UART_Receive_IT(hander, &UartRxByte, 1);
+	DevUartRxCbTab[uart] = NULL;
 	
 	return true;
 }
+
+/*****************************************************************************
+ * Function      : UartDeInit
+ * Description   : Uart Deinit
+ * Input         : DevUart uart
+ * Output        : None
+ * Return        : bool
+ * Others        : 
+ * Record
+ * 1.Date        : 20160923
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+bool DevUartDeInit(DevUart uart )
+{
+	UART_HandleTypeDef *hander;
+
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	hander = &UartHander[uart];
+	
+	DevUartClockDisable(uart);
+
+	DevUartIODeInit(uart);
+	
+	if (HAL_UART_DeInit(hander) != HAL_OK)
+	{
+	  return false;
+	}
+
+	//DevUartRxCbTab[huart.device] = NULL;
+	
+	return true;
+}
+
 
 /*****************************************************************************
  * Function      : UartSend
@@ -173,29 +176,6 @@ bool DevUartRx(DevUart uart, uint8_t* data, uint16_t size )
 }
 
 /*****************************************************************************
- * Function      : DevUartRxCb
- * Description   : Call back function in interrupt mode
- * Input         : DevUart uart
- * Output        : None
- * Return        : void
- * Others        : 
- * Record
- * 1.Date        : 20160926
- *   Author      : wangjian
- *   Modification: Created function
-
-*****************************************************************************/
-void DevUartRxCb(DevUart uart, uint8_t* data, uint16_t size)
-{
-  	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
-
-    if (DevUartRxCbTab[uart] != NULL)
-    {
-        DevUartRxCbTab[uart](data, size);
-    }
-}
-
-/*****************************************************************************
  * Function      : DevUartRxCbRegister
  * Description   : Register callback function for uart rx isr
  * Input         : DevUart uart
@@ -217,7 +197,7 @@ void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr )
 	
 	DevUartRxCbTab[uart] = isr;
 
-	__HAL_UART_ENABLE_IT(&UartHander[uart], UART_IT_RXNE);
+	//__HAL_UART_ENABLE_IT(&UartHander[uart], UART_IT_RXNE);
 
 	//HAL_UART_Receive_IT(&UartHander[uart], &UartRxByteTab[uart], (sizeof(UartRxByteTab) / DEV_UART_NUM));
 }
@@ -319,4 +299,296 @@ void DevUartIrqHander(DevUart uart)
 	  __HAL_UART_CLEAR_FLAG(hander, UART_FLAG_TC);
 	}
 }
+
+/*****************************************************************************
+ * Function      : DevUartIrqEnable
+ * Description   : Enable uart interrupt
+ * Input         : DevUart uart
+                DevUartIrq irq
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160928
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUartIrqEnable( DevUart uart, DevUartIrq irq )
+{
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	UART_HandleTypeDef *hander = &UartHander[uart];
+	
+	/* Peripheral interrupt init */
+	HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(USART3_IRQn);
+	
+	__HAL_UART_ENABLE_IT(hander, irq);
+}
+
+/*****************************************************************************
+ * Function      : DevUartIrqDisable
+ * Description   : Disable uart interrupt
+ * Input         : DevUart uart
+                   DevUartIrq irq
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160928
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUartIrqDisable( DevUart uart, DevUartIrq irq )
+{
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	UART_HandleTypeDef *hander = &UartHander[uart];
+	
+	__HAL_UART_DISABLE_IT(hander, irq);
+}
+
+/*****************************************************************************
+ * Function      : DevUartClockEnable
+ * Description   : Enable uart clock
+ * Input         : DevUart uart
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160928
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUartClockEnable( DevUart uart )
+{
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	switch (uart)
+	{
+        case DEV_UART1: __HAL_RCC_USART1_CLK_ENABLE();
+			break;
+		case DEV_UART2: __HAL_RCC_USART2_CLK_ENABLE();
+			break;
+		case DEV_UART3: __HAL_RCC_USART3_CLK_ENABLE();
+			break;	
+		default: 
+			break;
+	}
+	
+}
+
+/*****************************************************************************
+ * Function      : DevUartClockDisable
+ * Description   : Disable uart clock
+ * Input         : DevUart uart
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160928
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUartClockDisable( DevUart uart )
+{
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	switch (uart)
+	{
+        case DEV_UART1: __HAL_RCC_USART1_CLK_DISABLE();
+			break;
+		case DEV_UART2: __HAL_RCC_USART2_CLK_DISABLE();
+			break;
+		case DEV_UART3: __HAL_RCC_USART3_CLK_DISABLE();
+			break;	
+		default: 
+			break;
+	}
+	
+}
+
+/*****************************************************************************
+ * Function      : DevUartIOInit
+ * Description   : config io for uart
+ * Input         : DevUart uart
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160928
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUartIOInit( DevUart uart )
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	UART_HandleTypeDef *hander = &UartHander[uart];
+	
+	  if(uart == DEV_UART3)
+	  {
+	  /* USER CODE BEGIN USART3_MspInit 0 */
+	
+	  /* USER CODE END USART3_MspInit 0 */
+		/* Peripheral clock enable */
+		//__HAL_RCC_USART3_CLK_ENABLE();
+		
+		 __HAL_RCC_GPIOD_CLK_ENABLE();
+		/**USART3 GPIO Configuration	
+		PD8 	------> USART3_TX
+		PD9 	------> USART3_RX 
+		*/
+		GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+		HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	  }
+}
+
+/*****************************************************************************
+ * Function      : DevUartIODeInit
+ * Description   : unconfig io for uart
+ * Input         : DevUart uart
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160928
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUartIODeInit( DevUart uart )
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+
+	UART_HandleTypeDef *hander = &UartHander[uart];
+
+	if(uart == DEV_UART3)
+	{
+		/**USART3 GPIO Configuration	
+		PD8 	------> USART3_TX
+		PD9 	------> USART3_RX 
+		*/
+		HAL_GPIO_DeInit(GPIOD, GPIO_PIN_8|GPIO_PIN_9);
+	}
+}
+
+
+//void HAL_UART_MspInit(UART_HandleTypeDef* huart)
+//{
+
+//  GPIO_InitTypeDef GPIO_InitStruct;
+//  if(huart->Instance==USART1)
+//  {
+//  /* USER CODE BEGIN USART1_MspInit 0 */
+
+//  /* USER CODE END USART1_MspInit 0 */
+//    /* Peripheral clock enable */
+//    __HAL_RCC_USART1_CLK_ENABLE();
+//  
+//    /**USART1 GPIO Configuration    
+//    PA9     ------> USART1_TX
+//    PA10     ------> USART1_RX 
+//    */
+//    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+//    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+//    GPIO_InitStruct.Pull = GPIO_PULLUP;
+//    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+//    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+//    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+//  /* USER CODE BEGIN USART1_MspInit 1 */
+
+//  /* USER CODE END USART1_MspInit 1 */
+//  }
+//  else if(huart->Instance==USART3)
+//  {
+//  /* USER CODE BEGIN USART3_MspInit 0 */
+
+//  /* USER CODE END USART3_MspInit 0 */
+//    /* Peripheral clock enable */
+//    __HAL_RCC_USART3_CLK_ENABLE();
+//    
+//     __HAL_RCC_GPIOD_CLK_ENABLE();
+//    /**USART3 GPIO Configuration    
+//    PD8     ------> USART3_TX
+//    PD9     ------> USART3_RX 
+//    */
+//    GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
+//    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+//    GPIO_InitStruct.Pull = GPIO_PULLUP;
+//    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+//    GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+//    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+//    /* Peripheral interrupt init */
+//    HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
+//    HAL_NVIC_EnableIRQ(USART3_IRQn);
+//  /* USER CODE BEGIN USART3_MspInit 1 */
+//  //__HAL_USART_ENABLE_IT(huart, USART_IT_RXNE);
+
+
+//  /* USER CODE END USART3_MspInit 1 */
+//  }
+
+//}
+
+//void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+//{
+
+//  if(huart->Instance==USART1)
+//  {
+//  /* USER CODE BEGIN USART1_MspDeInit 0 */
+
+//  /* USER CODE END USART1_MspDeInit 0 */
+//    /* Peripheral clock disable */
+//    __HAL_RCC_USART1_CLK_DISABLE();
+//  
+//    /**USART1 GPIO Configuration    
+//    PA9     ------> USART1_TX
+//    PA10     ------> USART1_RX 
+//    */
+//    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
+
+//  /* USER CODE BEGIN USART1_MspDeInit 1 */
+
+//  /* USER CODE END USART1_MspDeInit 1 */
+//  }
+//  else if(huart->Instance==USART3)
+//  {
+//  /* USER CODE BEGIN USART3_MspDeInit 0 */
+
+//  /* USER CODE END USART3_MspDeInit 0 */
+//    /* Peripheral clock disable */
+//    __HAL_RCC_USART3_CLK_DISABLE();
+//  
+//    /**USART3 GPIO Configuration    
+//    PD8     ------> USART3_TX
+//    PD9     ------> USART3_RX 
+//    */
+//    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_8|GPIO_PIN_9);
+
+//    /* Peripheral interrupt DeInit*/
+//    HAL_NVIC_DisableIRQ(USART3_IRQn);
+
+//  /* USER CODE BEGIN USART3_MspDeInit 1 */
+
+//  /* USER CODE END USART3_MspDeInit 1 */
+//  }
+
+//}
 

@@ -12,8 +12,8 @@
  * 2016/09/20  v0.0.1       WangJian    first version
  */
 
-#ifndef __I2C_H__
-#define __I2C_H__
+#ifndef __DEV_I2C_H__
+#define __DEV_I2C_H__
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum
@@ -37,10 +37,10 @@ typedef struct
 
 
 /* Exported functions --------------------------------------------------------*/
-bool I2cInit(DevI2cHander hi2c);
-bool I2cByteRead (DevI2cHander hi2c, uint8_t addr, uint8_t reg, uint8_t* data);
-bool I2cBytesRead (DevI2cHander hi2c, uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size);
-bool I2cByteWrite (DevI2cHander hi2c, uint8_t addr, uint8_t reg, uint8_t data);
+bool DevI2cInit(DevI2cHander hi2c);
+bool DevI2cByteRead (DevI2c i2c, uint8_t addr, uint8_t reg, uint8_t* data);
+bool DevI2cBytesRead (DevI2c i2c, uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size);
+bool DevI2cByteWrite (DevI2c i2c, uint8_t addr, uint8_t reg, uint8_t data);
 
 #endif
 

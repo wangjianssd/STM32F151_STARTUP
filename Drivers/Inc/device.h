@@ -20,7 +20,7 @@
 #include "stm32l1xx_hal.h"
 #include "cmsis_os.h"
 #include "clock.h"
-#include "i2c.h"
+#include "dev_i2c.h"
 #include "dev_uart.h"
 
 /* Exported functions --------------------------------------------------------*/

@@ -47,16 +47,16 @@ static uint8_t COM1RxFIFO[__COM1_RX_FIFO_SIZE__ + FIFO_INFO_SIZE] = {0};
 *****************************************************************************/
 bool BspCom1Init(uint32_t buad )
 {
-    DevUartHander huart;
+    DevUartConfig config;
     
-    huart.baud 		= buad;
-	huart.length 	= DEV_UART_WORDLENGTH_8B;
-	huart.mode 		= __COM1_RTX__;
-	huart.parity 	= __COM1_CONFIG_PARITY__;
-	huart.stop_bit 	= __COM1_CONFIG_STOP__;
-	huart.device 	= __BSP_COM1__;
+    config.baud 		= buad;
+	config.length 		= DEV_UART_WORDLENGTH_8B;
+	config.mode 		= __COM1_RTX__;
+	config.parity 		= __COM1_CONFIG_PARITY__;
+	config.stop_bit     = __COM1_CONFIG_STOP__;
+	config.flow_contrl 	= __COM1_CONFIG_FLOW_CTL__;
 
-	if (DevUartInit(huart) != true)
+	if (DevUartInit(__BSP_COM1__, config) != true)
 	{
 		return false;
 	}
@@ -65,7 +65,7 @@ bool BspCom1Init(uint32_t buad )
 	FIFOInit ((FIFODataTypeDef *)COM1RxFIFO);
 	
 	DevUartRxCbRegister(__BSP_COM1__, BspCom1RxHander);
-	
+	DevUartIrqEnable(__BSP_COM1__ , DEV_UART_IT_RXNE);
 	return true;
 }
 
@@ -222,4 +222,23 @@ void BspCom1RxHander( uint8_t* data, uint16_t size )
 void BspCom1RxFIFOClear( void )
 {
 	FIFOInit ((FIFODataTypeDef *)COM1RxFIFO);
+}
+/*****************************************************************************
+ * Function      : BspCom1RxDisable
+ * Description   : disable com1 rx
+ * Input         : void
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160928
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void BspCom1RxDisable( void )
+{
+	DevUartIrqDisable(__BSP_COM1__ , DEV_UART_IT_RXNE);
+
+	DevUartRxCbUnregister(__BSP_COM1__);
 }

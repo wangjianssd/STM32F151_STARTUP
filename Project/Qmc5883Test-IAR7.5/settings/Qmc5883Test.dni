@@ -38,7 +38,7 @@ MultiCoreRunAll=1
 [JLinkDriver]
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=1398934705
+Checksum=-611229727
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -58,14 +58,12 @@ Bp0=_ 0 "EMUL_CODE" "0x20000000" 0 0 1 "" 0 "" 0
 Bp1=_ 0 "EMUL_CODE" "{}.687.11" 0 0 1 "" 0 "" 0
 Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_i2c.c}.4586.7" 0 0 1 "" 0 "" 0
 Bp3=_ 0 "EMUL_DATA" "FilterArrary" 2 0 0 0 4294967295
-Count=4
+Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.196.10" 0 0 1 "" 0 "" 0
+Count=5
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
@@ -73,3 +71,6 @@ SuppressDialog=0
 Enabled=0
 [CallStackStripe]
 ShowTiming=1
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""

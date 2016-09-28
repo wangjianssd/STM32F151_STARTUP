@@ -46,13 +46,13 @@ void StartDefaultTask(void const * argument);
 /////
 int main(void)
 {
-  uint8_t byte;
+ // uint8_t byte;
   /* Configure the system clock */
   DeviceInit();
   
   /* Configure uart3 */
 
-  Qmc5883lInit();
+  BspQmc5883lInit();
 
   BspCom1Init(115200);
   
@@ -95,7 +95,7 @@ void StartDefaultTask(void const * argument)
   BspCom1SendData("\r\n--------------QMC5883 self test--------------------------\r\n",
                     sizeof( "\r\n--------------QMC5883 self test--------------------------\r\n"));
     
-  ret = Qmc5883lSelfTest();
+  ret = BspQmc5883lSelfTest();
 
   if (ret == true)
     {
@@ -153,24 +153,24 @@ BspCom1SendData( "\r\n \
     reg_9 = 0xc1;
    }
    
-   reg_9 = reg_9 | 0x04;
+   //reg_9 = reg_9 | 0x04;
    
    i = sprintf(temp, "Reg9 set:%02X\r\n", reg_9);
        
    BspCom1SendData(temp,  i);
 
-   ret =  Qmc5883lConfigEx(reg_9);
+   ret =  BspQmc5883lConfigEx(reg_9);
   
   for(;;)
   {
     HAL_Delay(100);
     //osDelay(100);
-    ret = Qmc5883lGetData(magnet_raw);
+    ret = BspQmc5883lGetData(magnet_raw);
     total_count++;
     
     if (ret == true)
     {
-         Qmc5883lFilterGetData (magnet_raw, magnet, filter_magnet);
+         BspQmc5883lFilterGetData (magnet_raw, magnet, filter_magnet);
 
          i = sprintf(temp, "Magnet X:%f, Y:%f, Z:%f\r\n", magnet[0], magnet[1], magnet[2]);
        
@@ -188,6 +188,17 @@ BspCom1SendData( "\r\n \
          i = sprintf(temp, "QMC5883_TEST total count:%d, success:%d\r\n", total_count, success_count);
 
          BspCom1SendData(temp,  i);
+         
+       if ((total_count -  success_count)> 10)
+        {
+        
+         
+         BspQmc5883lInit();
+          
+          ret =  BspQmc5883lConfigEx(reg_9);
+          
+        }
+
     }  
 
      HAL_GPIO_TogglePin(GPIOE,  GPIO_PIN_2);

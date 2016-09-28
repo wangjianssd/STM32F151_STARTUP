@@ -19,20 +19,20 @@
 
     
 /* Private function prototypes -----------------------------------------------*/ 
-static bool Qmc5883lPowerOn(void);
-static bool Qmc5883lPowerOff(void);
-static bool Qmc5883lI2cByteRead(uint8_t reg, uint8_t* data);
-static bool Qmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size);
-static bool Qmc5883lI2cByteWrite (uint8_t reg, uint8_t  data);
+static bool BspQmc5883lPowerOn(void);
+static bool BspQmc5883lPowerOff(void);
+static bool BspQmc5883lI2cByteRead(uint8_t reg, uint8_t* data);
+static bool BspQmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size);
+static bool BspQmc5883lI2cByteWrite (uint8_t reg, uint8_t  data);
 
 
 /* Private variables ---------------------------------------------------------*/
-static DevI2cHander I2cHander;
-static int16_t FilterArrary[__QMC5883L_AVG_FILTER_NUM__][3] = {0};
+//static DevI2cHander I2cHander;
+static int16_t FilterArrary[__BSP_QMC5883L_AVG_FILTER_NUM__][3] = {0};
 static uint8_t FilterCount = 0;
 
 /*****************************************************************************
- * Function      : Qmc5883lPowerOn
+ * Function      : BspQmc5883lPowerOn
  * Description   : power on device
  * Input         : void  
  * Output        : None
@@ -44,14 +44,14 @@ static uint8_t FilterCount = 0;
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lPowerOn(void)
+bool BspQmc5883lPowerOn(void)
 {
   //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
   Delay(2);
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lPowerOff
+ * Function      : BspQmc5883lPowerOff
  * Description   : Power off device
  * Input         : void  
  * Output        : None
@@ -63,7 +63,7 @@ bool Qmc5883lPowerOn(void)
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lPowerOff(void)
+bool BspQmc5883lPowerOff(void)
 {
   //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
   Delay(2);
@@ -82,36 +82,38 @@ bool Qmc5883lPowerOff(void)
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lInit(void)
+bool BspQmc5883lInit(void)
 {
-  I2cHander.device = __QMC5883L_I2C_HANDLER__;
-  I2cHander.clock = __QMC5883L_I2C_CLOCK__;
-  I2cHander.addr_mode = DEV_I2C_ADDRESS_MODE_7BIT;
+	DevI2cHander hander;
 
-  if (I2cInit(I2cHander) != true)
-  {
-    return false;
-  }
+	hander.device 		= __BSP_QMC5883L_I2C__;
+	hander.clock 		= __BSP_QMC5883L_I2C_CLOCK__;
+	hander.addr_mode 	= DEV_I2C_ADDRESS_MODE_7BIT;
 
-  memset(FilterArrary, 0, sizeof(FilterArrary));
-  
-  FilterCount = 0;
-  
-  Qmc5883lPowerOff();
-    
-  Qmc5883lPowerOn();  
-  
-  //0x09=1C    ( enter standby mode)
-  Qmc5883lI2cByteWrite(0x09, 0x1C);
-  
-  //0x0A=80    ( soft rest)
-  Qmc5883lI2cByteWrite(0x0A, 0x80);
-  
-  return true;
+	if (DevI2cInit(hander) != true)
+	{
+	return false;
+	}
+
+	memset(FilterArrary, 0, sizeof(FilterArrary));
+
+	FilterCount = 0;
+
+	BspQmc5883lPowerOff();
+
+	BspQmc5883lPowerOn();  
+
+	//0x09=1C    ( enter standby mode)
+	BspQmc5883lI2cByteWrite(0x09, 0x1C);
+
+	//0x0A=80    ( soft rest)
+	BspQmc5883lI2cByteWrite(0x0A, 0x80);
+
+	return true;
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lConfig
+ * Function      : BspQmc5883lConfig
  * Description   : Qmc5883 work mode config
  * Input         : void  
  * Output        : None
@@ -123,7 +125,7 @@ bool Qmc5883lInit(void)
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lConfig(void)
+bool BspQmc5883lConfig(void)
 {
      bool ret;
      
@@ -133,21 +135,21 @@ bool Qmc5883lConfig(void)
      
      memset(temp, 0 , sizeof(temp));
     
-    ret = Qmc5883lI2cBytesRead(0, temp, 0x0B);
+    ret = BspQmc5883lI2cBytesRead(0, temp, 0x0B);
     
-    Qmc5883lI2cByteWrite(0x0B, 0x01);
+    BspQmc5883lI2cByteWrite(0x0B, 0x01);
         
-    Qmc5883lI2cByteWrite(0x20, 0x40);
+    BspQmc5883lI2cByteWrite(0x20, 0x40);
 
-    Qmc5883lI2cByteWrite(0x21, 0x01);
+    BspQmc5883lI2cByteWrite(0x21, 0x01);
 
-    Qmc5883lI2cByteWrite(0x09, __QMC5883L_REG_09_VALUE__);    //10hz
+    BspQmc5883lI2cByteWrite(0x09, __BSP_QMC5883L_REG_09_VALUE__);    //10hz
 
    // osDelay(10);
     
-    ret = Qmc5883lI2cBytesRead(0, temp, 0x0B);
+    ret = BspQmc5883lI2cBytesRead(0, temp, 0x0B);
 
-    if (temp[0x09] == __QMC5883L_REG_09_VALUE__)
+    if (temp[0x09] == __BSP_QMC5883L_REG_09_VALUE__)
     {
         return true;
     }
@@ -156,7 +158,7 @@ bool Qmc5883lConfig(void)
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lConfigEx
+ * Function      : BspQmc5883lConfigEx
  * Description   : 
  * Input         : uint8_t reg_9  
  * Output        : None
@@ -168,7 +170,7 @@ bool Qmc5883lConfig(void)
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lConfigEx(uint8_t reg_9)
+bool BspQmc5883lConfigEx(uint8_t reg_9)
 {
      bool ret;
      
@@ -178,19 +180,19 @@ bool Qmc5883lConfigEx(uint8_t reg_9)
      
      memset(temp, 0 , sizeof(temp));
     
-    ret = Qmc5883lI2cBytesRead(0, temp, 0x0B);
+    ret = BspQmc5883lI2cBytesRead(0, temp, 0x0B);
 
-    Qmc5883lI2cByteWrite(0x0B, 0x01);
+    BspQmc5883lI2cByteWrite(0x0B, 0x01);
         
-    Qmc5883lI2cByteWrite(0x20, 0x40);
+    BspQmc5883lI2cByteWrite(0x20, 0x40);
 
-    Qmc5883lI2cByteWrite(0x21, 0x01);
+    BspQmc5883lI2cByteWrite(0x21, 0x01);
 
-    Qmc5883lI2cByteWrite(0x09, reg_9);    //10hz
+    BspQmc5883lI2cByteWrite(0x09, reg_9);    //10hz
 
    // osDelay(10);
     
-    ret = Qmc5883lI2cBytesRead(0, temp, 0x0B);
+    ret = BspQmc5883lI2cBytesRead(0x09, temp, 1);
 
     if (temp[0x09] == reg_9)
     {
@@ -201,7 +203,7 @@ bool Qmc5883lConfigEx(uint8_t reg_9)
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lSelfTest
+ * Function      : BspQmc5883lSelfTest
  * Description   : 
  * Input         : void  
  * Output        : None
@@ -213,7 +215,7 @@ bool Qmc5883lConfigEx(uint8_t reg_9)
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lSelfTest (void)
+bool BspQmc5883lSelfTest (void)
 {
     uint8_t count = 0;
     uint8_t temp = 0;
@@ -221,23 +223,23 @@ bool Qmc5883lSelfTest (void)
     int16_t magnet_row_b[3] = {0};
     
     //  1.  0x20 = 40,  0x21=1,  0x0B=1,   0x09=1D
-    Qmc5883lI2cByteWrite(0x20, 0x40);
-    Qmc5883lI2cByteWrite(0x21, 0x01);
-    Qmc5883lI2cByteWrite(0x0B, 0x01);
-    Qmc5883lI2cByteWrite(0x09, 0x1D);
+    BspQmc5883lI2cByteWrite(0x20, 0x40);
+    BspQmc5883lI2cByteWrite(0x21, 0x01);
+    BspQmc5883lI2cByteWrite(0x0B, 0x01);
+    BspQmc5883lI2cByteWrite(0x09, 0x1D);
 
     //  2.  Wait 10ms
     Delay(10);
     //osDelay(10);
 
     //  3.  0x09=1C    ( enter standby mode)
-    Qmc5883lI2cByteWrite(0x09, 0x1C);
+    BspQmc5883lI2cByteWrite(0x09, 0x1C);
 
     //  4.  0x0B=0      (turn off set/reset)
-    Qmc5883lI2cByteWrite(0x0B, 0x00);
+    BspQmc5883lI2cByteWrite(0x0B, 0x00);
 
     //  5.  0x09=12    (self-test mode,  do set)
-    Qmc5883lI2cByteWrite(0x09, 0x12);
+    BspQmc5883lI2cByteWrite(0x09, 0x12);
 
     //  6.  Wait 10ms and check whether 0x09=10 (wait until selftest done)
    // osDelay(10);
@@ -245,7 +247,7 @@ bool Qmc5883lSelfTest (void)
 
     do
     {
-        if ( Qmc5883lI2cBytesRead(0x09, &temp, 1) == false)
+        if ( BspQmc5883lI2cBytesRead(0x09, &temp, 1) == false)
         {
            return false;    
         }
@@ -264,13 +266,13 @@ bool Qmc5883lSelfTest (void)
     } while (temp != 0x10);
 
     //  7.  0x09=1D
-    Qmc5883lI2cByteWrite(0x09, 0x1D);
+    BspQmc5883lI2cByteWrite(0x09, 0x1D);
 
     //  8.  Read x/y/z data  ( data A )
-    Qmc5883lGetData(magnet_row_a);
+    BspQmc5883lGetData(magnet_row_a);
 
     //  9.  0x09=13     (self-test mode,  do reset)
-     Qmc5883lI2cByteWrite(0x09, 0x13);
+    BspQmc5883lI2cByteWrite(0x09, 0x13);
 
     //  10. Wait 10ms  and check whether 0x09=10 (wait until selftest done)
 
@@ -280,7 +282,7 @@ bool Qmc5883lSelfTest (void)
     do
     {
        // Qmc5883lI2cBytesRead(0x09, &temp, 1);
-        if ( Qmc5883lI2cBytesRead(0x09, &temp, 1) == false)
+        if ( BspQmc5883lI2cBytesRead(0x09, &temp, 1) == false)
         {
            return false;    
         }
@@ -296,10 +298,10 @@ bool Qmc5883lSelfTest (void)
     } while (temp != 0x10);
 
     //  11. 0x09=1D
-    Qmc5883lI2cByteWrite(0x09, 0x1D);
+    BspQmc5883lI2cByteWrite(0x09, 0x1D);
 
     //  12. Read x/y/z data  ( data B )
-    Qmc5883lGetData(magnet_row_b);
+    BspQmc5883lGetData(magnet_row_b);
 
     //  check data
     if ((ABS(magnet_row_a[0] + magnet_row_b[0]) < 120)
@@ -316,7 +318,7 @@ bool Qmc5883lSelfTest (void)
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lGetData
+ * Function      : BspQmc5883lGetData
  * Description   : get raw data
  * Input         : int16_t *magnet_raw  
  * Output        : None
@@ -328,7 +330,7 @@ bool Qmc5883lSelfTest (void)
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lGetData (int16_t *magnet_raw)
+bool BspQmc5883lGetData (int16_t *magnet_raw)
 {
     uint8_t buff[13];
     uint8_t i;
@@ -337,7 +339,7 @@ bool Qmc5883lGetData (int16_t *magnet_raw)
     uint8_t buff_temp[6];
     float magnet[3];
         
-    Qmc5883lI2cBytesRead(0x06, &temp, 1);
+    BspQmc5883lI2cBytesRead(0x06, &temp, 1);
         
     if (temp & 0x02)
     {
@@ -353,7 +355,7 @@ bool Qmc5883lGetData (int16_t *magnet_raw)
     }
 
     
-    Qmc5883lI2cBytesRead(0, buff, 6);
+    BspQmc5883lI2cBytesRead(0, buff, 6);
 
     magnet_raw[0] = ((int16_t)buff[1] << 8) | buff[0];
     magnet_raw[1] = ((int16_t)buff[3] << 8) | buff[2];
@@ -367,7 +369,7 @@ bool Qmc5883lGetData (int16_t *magnet_raw)
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lFilterGetData
+ * Function      : BspQmc5883lFilterGetData
  * Description   : process data by average filter
  * Input         : const int16_t *magnet_raw  raw magnet data   
  * Output        : float   *magnet         filter data with uT     
@@ -380,7 +382,7 @@ bool Qmc5883lGetData (int16_t *magnet_raw)
  *   Modification: Created function
 
 *****************************************************************************/
-void Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *filter_magnet)
+void BspQmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *filter_magnet)
 {
     uint8_t i = 0;
     int32_t sum_x = 0;
@@ -393,13 +395,13 @@ void Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *f
     
     FilterCount++;
 
-    if (FilterCount > __QMC5883L_AVG_FILTER_NUM__)
+    if (FilterCount > __BSP_QMC5883L_AVG_FILTER_NUM__)
     {
-        FilterCount = __QMC5883L_AVG_FILTER_NUM__;
+        FilterCount = __BSP_QMC5883L_AVG_FILTER_NUM__;
         
         for (i = 0; i < FilterCount - 1; i++)
         {
-            if (FilterCount == __QMC5883L_AVG_FILTER_NUM__)
+            if (FilterCount == __BSP_QMC5883L_AVG_FILTER_NUM__)
             {
               FilterArrary[i][0] = FilterArrary[i + 1][0];
               FilterArrary[i][1] = FilterArrary[i + 1][1];
@@ -435,7 +437,7 @@ void Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *f
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lI2cByteWrite
+ * Function      : BspQmc5883lI2cByteWrite
  * Description   : I2C byte write drive
  * Input         : uint8_t reg    write reg
                    uint8_t data   write data  
@@ -448,9 +450,9 @@ void Qmc5883lFilterGetData (const int16_t *magnet_raw, float *magnet, int16_t *f
  *   Modification: Created function
 
 *****************************************************************************/
-bool Qmc5883lI2cByteWrite(uint8_t reg,uint8_t data)
+bool BspQmc5883lI2cByteWrite(uint8_t reg,uint8_t data)
 {
-    if (I2cByteWrite(I2cHander, __QMC5883L_I2C_ADDRESS__, reg, data)  != HAL_OK)
+    if (DevI2cByteWrite(__BSP_QMC5883L_I2C__, __BSP_QMC5883L_I2C_ADDRESS__, reg, data)  != true)
      {
         return false;
     }
@@ -459,7 +461,7 @@ bool Qmc5883lI2cByteWrite(uint8_t reg,uint8_t data)
 }
 
 /*****************************************************************************
- * Function      : Qmc5883lI2cBytesRead
+ * Function      : BspQmc5883lI2cBytesRead
  * Description   : I2C bytes read drive
  * Input         : uint8_t reg    read reg
                    uint16_t size  read size
@@ -472,9 +474,9 @@ bool Qmc5883lI2cByteWrite(uint8_t reg,uint8_t data)
  *   Modification: Created function
 
 *****************************************************************************/
-bool  Qmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size)
+bool  BspQmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size)
 {
-   if (I2cBytesRead(I2cHander, __QMC5883L_I2C_ADDRESS__, reg, data, size)  != true)
+   if (DevI2cBytesRead(__BSP_QMC5883L_I2C__, __BSP_QMC5883L_I2C_ADDRESS__, reg, data, size)  != true)
     {
        return false;
    }
@@ -482,9 +484,9 @@ bool  Qmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size)
    return true;
 }
 
-bool  Qmc5883lI2cByteRead(uint8_t reg, uint8_t* data)
+bool  BspQmc5883lI2cByteRead(uint8_t reg, uint8_t* data)
 {
-   if (I2cByteRead(I2cHander, __QMC5883L_I2C_ADDRESS__, reg, data)  != true)
+   if (DevI2cByteRead(__BSP_QMC5883L_I2C__, __BSP_QMC5883L_I2C_ADDRESS__, reg, data)  != true)
     {
        return false;
    }
