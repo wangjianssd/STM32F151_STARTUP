@@ -351,7 +351,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -360,7 +360,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -1949,6 +1949,9 @@
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_com.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Bsp\Inc\qmc5883l.h</name>
       </file>
     </group>
@@ -1956,6 +1959,9 @@
       <name>Src</name>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_com.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\qmc5883l.c</name>

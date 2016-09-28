@@ -101,6 +101,12 @@ bool Qmc5883lInit(void)
     
   Qmc5883lPowerOn();  
   
+  //0x09=1C    ( enter standby mode)
+  Qmc5883lI2cByteWrite(0x09, 0x1C);
+  
+  //0x0A=80    ( soft rest)
+  Qmc5883lI2cByteWrite(0x0A, 0x80);
+  
   return true;
 }
 
@@ -324,15 +330,15 @@ bool Qmc5883lSelfTest (void)
 *****************************************************************************/
 bool Qmc5883lGetData (int16_t *magnet_raw)
 {
-    uint8_t buff[6];
+    uint8_t buff[13];
     uint8_t i;
     uint8_t temp;
     int16_t magnetRaw[3];
     uint8_t buff_temp[6];
     float magnet[3];
-    
+        
     Qmc5883lI2cBytesRead(0x06, &temp, 1);
-    
+        
     if (temp & 0x02)
     {
     	//LOG("output data OVL or ERROR!")
@@ -342,11 +348,13 @@ bool Qmc5883lGetData (int16_t *magnet_raw)
     if ((temp & 0x01) == 0)
     {
     	//LOG("output data not ready!")
+     
     	return false;
     }
 
-    Qmc5883lI2cBytesRead(0, buff, 6);
     
+    Qmc5883lI2cBytesRead(0, buff, 6);
+
     magnet_raw[0] = ((int16_t)buff[1] << 8) | buff[0];
     magnet_raw[1] = ((int16_t)buff[3] << 8) | buff[2];
     magnet_raw[2] = ((int16_t)buff[5] << 8) | buff[4];

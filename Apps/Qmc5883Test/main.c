@@ -34,22 +34,14 @@
 #include "config.h"
 
 /* Public variables ---------------------------------------------------------*/
-extern DevUartHander DevUart3;
 
-#define __UART3_FIFO_SIZE__     1024
 /* Private variables ---------------------------------------------------------*/
-static uint8_t Uart3RxFifo[__UART3_FIFO_SIZE__] = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 void StartDefaultTask(void const * argument);
-void Uart3RxIsr(uint8_t* data, uint16_t size);
 
 /* Private function prototypes -----------------------------------------------*/
 
-void Uart3RxIsr(uint8_t* data, uint16_t size)
-{
-	FIFOIn((FIFODataTypeDef *)Uart3RxFifo, data, __UART3_FIFO_SIZE__ - 12);
-}
 
 /////
 int main(void)
@@ -62,21 +54,21 @@ int main(void)
 
   Qmc5883lInit();
 
-  FIFOInit ((FIFODataTypeDef *)Uart3RxFifo);
-  DevUartRxCbRegister(DEV_UART3, Uart3RxIsr);
+  BspCom1Init(115200);
+  
+//  while (1)
+//  {
+//	while (BspCom1RxFIFOIsEmpty() == false)
+//	{
+//		byte = BspCom1RxFIFOOut();
+//		
+//		BspCom1TxFIFOIn(&byte, 1);
+//   	}
 
-  while (1)
-  {
-	while (FIFOIsEmpty ((FIFODataTypeDef *)Uart3RxFifo) == FALSE)
-	{
-		FIFOOut((FIFODataTypeDef *)Uart3RxFifo, &byte, __UART3_FIFO_SIZE__ - 12);
-			
-		DevUartTx(DEV_UART3, &byte, 1);
-   	}
-   
-    HAL_Delay (50);
+//   	BspCom1TxFIFOOut();
+//    HAL_Delay (50);
 
-  }
+//  }
   StartDefaultTask((void *)0);
 }
 
@@ -99,14 +91,8 @@ void StartDefaultTask(void const * argument)
    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
    HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET);  
 
-//while(1)
-//{
-//    HAL_Delay(100);
-//
-//    HAL_GPIO_TogglePin(GPIOE,  GPIO_PIN_2);
-//
-//}
-    DevUartTx(DEV_UART3, "\r\n--------------QMC5883 self test--------------------------\r\n",
+
+  BspCom1SendData("\r\n--------------QMC5883 self test--------------------------\r\n",
                     sizeof( "\r\n--------------QMC5883 self test--------------------------\r\n"));
     
   ret = Qmc5883lSelfTest();
@@ -114,14 +100,14 @@ void StartDefaultTask(void const * argument)
   if (ret == true)
     {
       //HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_RESET); 
-      DevUartTx(DEV_UART3, "\r\n--------------QMC5883 self test--ok----------------------\r\n",
+      BspCom1SendData( "\r\n--------------QMC5883 self test--ok----------------------\r\n",
                       sizeof( "\r\n--------------QMC5883 self test--ok----------------------\r\n"));
 
   }
   else
     {
      // HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET); 
-      DevUartTx(DEV_UART3, "\r\n--------------QMC5883 self test--fail----------------------\r\n",
+      BspCom1SendData( "\r\n--------------QMC5883 self test--fail----------------------\r\n",
                       sizeof( "\r\n--------------QMC5883 self test--fail----------------------\r\n"));
 
   }
@@ -129,7 +115,7 @@ void StartDefaultTask(void const * argument)
   // ret = Qmc5883lConfig();
 
   HAL_Delay(100);
-DevUartTx(DEV_UART3, "\r\n \
+BspCom1SendData( "\r\n \
 1 -> QMC5883L_REG_09_VALUE    (0x01)  512 2G  10HZ\r\n \
 2 -> QMC5883L_REG_09_VALUE    (0x41)  256 2G  10HZ\r\n \
 3 -> QMC5883L_REG_09_VALUE    (0x81)  128 2G  10HZ\r\n \
@@ -139,8 +125,13 @@ DevUartTx(DEV_UART3, "\r\n \
 2 -> QMC5883L_REG_09_VALUE    (0x41)  256 2G  10HZ\r\n \
 3 -> QMC5883L_REG_09_VALUE    (0x81)  128 2G  10HZ\r\n \
 4 -> QMC5883L_REG_09_VALUE    (0xC1)   64 2G  10HZ \r\n"));      
-  while (DevUartRx(DEV_UART3, &reg_9, 1) != true);
-   
+  //while (DevUartRx(DEV_UART3, &reg_9, 1) != true);
+  	BspCom1RxFIFOClear();
+ 	while (BspCom1RxFIFOIsEmpty() == true);
+	
+	reg_9 = BspCom1RxFIFOOut();
+ 	
+		
    if(reg_9 == '1')
    {
       reg_9 = 0x01;
@@ -166,7 +157,7 @@ DevUartTx(DEV_UART3, "\r\n \
    
    i = sprintf(temp, "Reg9 set:%02X\r\n", reg_9);
        
-   DevUartTx(DEV_UART3, temp,  i);
+   BspCom1SendData(temp,  i);
 
    ret =  Qmc5883lConfigEx(reg_9);
   
@@ -183,18 +174,24 @@ DevUartTx(DEV_UART3, "\r\n \
 
          i = sprintf(temp, "Magnet X:%f, Y:%f, Z:%f\r\n", magnet[0], magnet[1], magnet[2]);
        
-        DevUartTx(DEV_UART3, temp,  i);
+        BspCom1SendData(temp,  i);
         
         success_count++;    
+        
+        if (success_count > 5)
+        {
+	 HAL_NVIC_SystemReset();
+        }
     }
     else
     {
          i = sprintf(temp, "QMC5883_TEST total count:%d, success:%d\r\n", total_count, success_count);
 
-         DevUartTx(DEV_UART3, temp,  i);
+         BspCom1SendData(temp,  i);
     }  
 
      HAL_GPIO_TogglePin(GPIOE,  GPIO_PIN_2);
+
   }
   /* USER CODE END 5 */ 
 }
