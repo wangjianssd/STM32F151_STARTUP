@@ -21,7 +21,7 @@
 #include "cmsis_os.h"
 #include "clock.h"
 #include "i2c.h"
-#include "uart.h"
+#include "dev_uart.h"
 
 /* Exported functions --------------------------------------------------------*/
 void DeviceInit (void);

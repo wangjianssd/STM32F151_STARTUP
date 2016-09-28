@@ -27,7 +27,7 @@ static void UART_Init(void)
 	DevUart3.stop_bit = DEV_UART_STOPBITS_1;
 	DevUart3.device = DEV_UART3;
 
-	if (UartInit(DevUart3) != HAL_OK)
+	if (DevUartInit(DevUart3) != HAL_OK)
 	{
 
 	}

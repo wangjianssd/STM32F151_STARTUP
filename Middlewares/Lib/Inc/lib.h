@@ -23,6 +23,9 @@
 //#include <sqqueue.h>
 #include <debug.h>
 #include "stdbool.h"
+#include "fifo.h"
+#include "queue.h"
+#include "util.h"
 
 //#include <srandom.h>
 //#include <printf.h>

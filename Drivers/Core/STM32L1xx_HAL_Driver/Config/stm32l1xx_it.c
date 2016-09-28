@@ -35,13 +35,15 @@
 #include "stm32l1xx.h"
 #include "stm32l1xx_it.h"
 #include "cmsis_os.h"
+#include "device.h"
 
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-//extern UART_HandleTypeDef huart3;
+//extern UART_HandleTypeDef UartHander[DEV_UART_NUM];
+extern void DevUartIrqHander(DevUart uart);
 
 /******************************************************************************/
 /*            Cortex-M3 Processor Interruption and Exception Handlers         */ 
@@ -167,9 +169,12 @@ void USART3_IRQHandler(void)
   /* USER CODE BEGIN USART3_IRQn 0 */
 
   /* USER CODE END USART3_IRQn 0 */
-  //HAL_UART_IRQHandler(&huart3);
+ // HAL_UART_IRQHandler(&huart3);
+  
+ // HAL_UART_IRQHandler(&UartHander[DEV_UART3]);
   /* USER CODE BEGIN USART3_IRQn 1 */
-
+   
+  DevUartIrqHander(DEV_UART3);
   /* USER CODE END USART3_IRQn 1 */
 }
 
