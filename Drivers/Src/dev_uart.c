@@ -435,13 +435,9 @@ void DevUartIOInit( DevUart uart )
 	
 	  if(uart == DEV_UART3)
 	  {
-	  /* USER CODE BEGIN USART3_MspInit 0 */
-	
-	  /* USER CODE END USART3_MspInit 0 */
-		/* Peripheral clock enable */
-		//__HAL_RCC_USART3_CLK_ENABLE();
-		
+		/* Peripheral clock enable */		
 		 __HAL_RCC_GPIOD_CLK_ENABLE();
+		
 		/**USART3 GPIO Configuration	
 		PD8 	------> USART3_TX
 		PD9 	------> USART3_RX 
@@ -474,8 +470,6 @@ void DevUartIODeInit( DevUart uart )
 	GPIO_InitTypeDef GPIO_InitStruct;
 
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
-
-	UART_HandleTypeDef *hander = &UartHander[uart];
 
 	if(uart == DEV_UART3)
 	{

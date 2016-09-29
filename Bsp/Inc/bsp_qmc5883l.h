@@ -17,7 +17,7 @@
 
 /* Define --------------------------------------------------------------------*/
 #define __BSP_QMC5883L_I2C__    		(DEV_I2C1)
-#define __BSP_QMC5883L_I2C_CLOCK__      (100000)
+#define __BSP_QMC5883L_I2C_CLOCK__      (400000)
 #define __BSP_QMC5883L_I2C_ADDRESS__    (0x1A)
 //#define QMC5883L_REG_09_VALUE    (0x81)  //128 2G  10HZ
 //#define QMC5883L_REG_09_VALUE    (0xC1)  //64 2G  10HZ

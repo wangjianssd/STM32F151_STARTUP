@@ -18,10 +18,134 @@
 /* Variables -----------------------------------------------------------------*/
 static I2C_HandleTypeDef I2cHander[DEV_I2C_NUM];
 
+/* Exported functions --------------------------------------------------------*/
+static void DevI2cIOiInit( DevI2c i2c );
+static void DevI2cIODeInit( DevI2c i2c );
+static void DevI2cClockEnable( DevI2c i2c );
+static void DevI2cClockDisable( DevI2c i2c );
+
+/*****************************************************************************
+ * Function      : DevI2cIOInit
+ * Description   : Init I2C IO config
+ * Input         : DevI2c i2c
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160929
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevI2cIOInit( DevI2c i2c )
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+	
+	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	
+	if(i2c == DEV_I2C1)
+	{
+
+		/* Peripheral clock enable */		
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+	
+		/**I2C1 GPIO Configuration	 
+		PB8	   ------> I2C1_SCL
+		PB9	   ------> I2C1_SDA 
+		*/
+		GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+	
+}
+
+/*****************************************************************************
+ * Function      : DevI2cIODeInit
+ * Description   : Deinit I2c io config
+ * Input         : DevI2c i2c
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160929
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevI2cIODeInit( DevI2c i2c )
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+	
+	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	
+	if(i2c == DEV_I2C1)
+	{
+
+			/**I2C1 GPIO Configuration	 
+		PB8	   ------> I2C1_SCL
+		PB9	   ------> I2C1_SDA 
+		*/
+		HAL_GPIO_DeInit(GPIOB, GPIO_PIN_8|GPIO_PIN_9);
+	}
+}
+
+/*****************************************************************************
+ * Function      : DevI2cClockEnable
+ * Description   : Enable I2C clock
+ * Input         : DevI2c i2c
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160929
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevI2cClockEnable( DevI2c i2c )
+{
+	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+
+	if(i2c == DEV_I2C1)
+	{
+		/* Peripheral clock enable */
+		__HAL_RCC_I2C1_CLK_ENABLE();
+	}
+}
+
+/*****************************************************************************
+ * Function      : DevI2cClockDisable
+ * Description   : Disable I2C clock
+ * Input         : DevI2c i2c
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160929
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevI2cClockDisable( DevI2c i2c )
+{
+	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+
+	if(i2c == DEV_I2C1)
+	{
+		/* Peripheral clock enable */
+		__HAL_RCC_I2C1_CLK_DISABLE();
+	}
+
+}
 /*****************************************************************************
  * Function      : DevI2cInit
  * Description   : I2C device init
- * Input         : I2cHanderTypeDef hi2c  
+ * Input         : DevI2c i2c 
+ 				   DevI2cConfig config
  * Output        : None
  * Return        : 
  * Others        : 
@@ -31,29 +155,22 @@ static I2C_HandleTypeDef I2cHander[DEV_I2C_NUM];
  *   Modification: Created function
 
 *****************************************************************************/
-bool DevI2cInit(DevI2cHander hi2c)
+bool DevI2cInit(DevI2c i2c, DevI2cConfig config)
 {
 	I2C_HandleTypeDef *hander;
 
-	DBG_ASSERT(hi2c.device < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
 
-	hander = &I2cHander[hi2c.device];
+	hander = &I2cHander[i2c];
 
-    if (hi2c.device == DEV_I2C1)
+    if (i2c == DEV_I2C1)
     {
         hander->Instance = I2C1;
     }
-	
-    hander->Init.ClockSpeed = hi2c.clock;
+		
+    hander->Init.ClockSpeed = config.clock;
 
-    if (hi2c.addr_mode == DEV_I2C_ADDRESS_MODE_7BIT)
-    {
-        hander->Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-    }
-    else
-    {
-        hander->Init.AddressingMode = I2C_ADDRESSINGMODE_10BIT;
-    }
+	hander->Init.AddressingMode = config.addr_mode;
     
     hander->Init.DutyCycle = I2C_DUTYCYCLE_2;
     hander->Init.OwnAddress1 = 0;
@@ -61,7 +178,11 @@ bool DevI2cInit(DevI2cHander hi2c)
     hander->Init.OwnAddress2 = 0;
     hander->Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
     hander->Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-        
+
+	DevI2cClockEnable(i2c);
+
+	DevI2cIOInit(i2c);
+
     if (HAL_I2C_Init(hander) != HAL_OK)
     {
         return false;
@@ -69,7 +190,36 @@ bool DevI2cInit(DevI2cHander hi2c)
     
   return true;
 }
-		
+
+/*****************************************************************************
+ * Function      : DevI2cDeInit
+ * Description   : Deinit I2C device 
+ * Input          : DevI2c i2c
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160929
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevI2cDeInit( DevI2c i2c )
+{
+	I2C_HandleTypeDef *hander;
+
+	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+
+	hander = &I2cHander[i2c];
+
+	DevI2cIODeInit(i2c);
+
+	HAL_I2C_DeInit (hander);
+	
+	DevI2cClockDisable(i2c);
+
+}
+
 /*****************************************************************************
  * Function      : DevI2cByteRead
  * Description   : 

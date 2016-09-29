@@ -66,6 +66,7 @@ bool BspQmc5883lPowerOn(void)
 bool BspQmc5883lPowerOff(void)
 {
   //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+  
   Delay(2);
 }
 
@@ -84,13 +85,14 @@ bool BspQmc5883lPowerOff(void)
 *****************************************************************************/
 bool BspQmc5883lInit(void)
 {
-	DevI2cHander hander;
+	DevI2cConfig config;
 
-	hander.device 		= __BSP_QMC5883L_I2C__;
-	hander.clock 		= __BSP_QMC5883L_I2C_CLOCK__;
-	hander.addr_mode 	= DEV_I2C_ADDRESS_MODE_7BIT;
+	config.clock 		= __BSP_QMC5883L_I2C_CLOCK__;
+	config.addr_mode 	= DEV_I2C_ADDRESS_MODE_7BIT;
+	
+    DevI2cDeInit(__BSP_QMC5883L_I2C__);
 
-	if (DevI2cInit(hander) != true)
+	if (DevI2cInit(__BSP_QMC5883L_I2C__, config) != true)
 	{
 	return false;
 	}
@@ -247,19 +249,16 @@ bool BspQmc5883lSelfTest (void)
 
     do
     {
+       Delay(10);
+       
         if ( BspQmc5883lI2cBytesRead(0x09, &temp, 1) == false)
         {
            return false;    
         }
-//        if ( Qmc5883lI2cByteRead(0x09, &temp) == false)
-//        {
-//           return false;    
-//        }
-        Delay(1);
-       // osDelay(1);
+
        count++;
 
-        if (count >100)
+        if (count > 5)
         {
             return false;    
         }
@@ -281,16 +280,17 @@ bool BspQmc5883lSelfTest (void)
     
     do
     {
+       Delay(10);
        // Qmc5883lI2cBytesRead(0x09, &temp, 1);
         if ( BspQmc5883lI2cBytesRead(0x09, &temp, 1) == false)
         {
            return false;    
         }
        // osDelay(1);
-        Delay(1);
+       
         count++;
 
-        if (count >100)
+        if (count > 20)
         {
             return false;    
         }

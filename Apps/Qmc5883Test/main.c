@@ -180,7 +180,7 @@ BspCom1SendData( "\r\n \
         
         if (success_count > 5)
         {
-	 HAL_NVIC_SystemReset();
+	// HAL_NVIC_SystemReset();
         }
     }
     else
