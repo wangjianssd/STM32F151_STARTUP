@@ -22,6 +22,7 @@
 #include "clock.h"
 #include "dev_i2c.h"
 #include "dev_uart.h"
+#include "dev_gpio.h"
 
 /* Exported functions --------------------------------------------------------*/
 void DeviceInit (void);

@@ -201,7 +201,8 @@ BspCom1SendData( "\r\n \
 
     }  
 
-     HAL_GPIO_TogglePin(GPIOE,  GPIO_PIN_2);
+     DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN2);
+     DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN3);
 
   }
   /* USER CODE END 5 */ 

@@ -2408,6 +2408,9 @@
         <name>$PROJ_DIR$\..\..\Drivers\Inc\clock.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_gpio.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_i2c.h</name>
       </file>
       <file>
@@ -2421,6 +2424,9 @@
       <name>Src</name>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\clock.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_gpio.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_i2c.c</name>
