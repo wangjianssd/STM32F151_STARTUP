@@ -180,6 +180,9 @@ void DevGpioDeInit( DevGpioPort port, DevGpioPin pin );
 void DevGpioWrite( DevGpioPort port, DevGpioPin pin, DevGpioPinLevel level );
 DevGpioPinLevel DevGpioRead( DevGpioPort port, DevGpioPin pin );
 void DevGpioToggle( DevGpioPort port, DevGpioPin pin );
+void DevGpioIrqRegister( DevGpioPort port, DevGpioPin pin, DevGpioIntType type, DEV_GPIO_INT_FUNC_PTR isr );
+void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin );
+void DevGpioIrqDisable( DevGpioPort port, DevGpioPin pin );
 
 #ifdef __cplusplus
 }

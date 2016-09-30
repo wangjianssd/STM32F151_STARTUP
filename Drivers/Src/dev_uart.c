@@ -319,9 +319,9 @@ void DevUartIrqEnable( DevUart uart, DevUartIrq irq )
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
 	UART_HandleTypeDef *hander = &UartHander[uart];
-	
-	/* Peripheral interrupt init */
-	HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
+    
+	HAL_NVIC_ClearPendingIRQ(USART3_IRQn);
+    
 	HAL_NVIC_EnableIRQ(USART3_IRQn);
 	
 	__HAL_UART_ENABLE_IT(hander, irq);
@@ -346,7 +346,11 @@ void DevUartIrqDisable( DevUart uart, DevUartIrq irq )
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
 	UART_HandleTypeDef *hander = &UartHander[uart];
-	
+    
+	HAL_NVIC_ClearPendingIRQ(USART3_IRQn);
+    
+	//HAL_NVIC_DisableIRQ(USART3_IRQn);
+    
 	__HAL_UART_DISABLE_IT(hander, irq);
 }
 

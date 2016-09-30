@@ -169,10 +169,54 @@ void USART3_IRQHandler(void)
   DevUartIrqHander(DEV_UART3);
 }
 
+void EXTI0_IRQHandler(void)
+{
+    DevGpioIrqHander( DEV_GPIO_PIN0 );
+}
+
+void EXTI1_IRQHandler(void)
+{
+    DevGpioIrqHander( DEV_GPIO_PIN1 );
+}
+
 void EXTI2_IRQHandler(void)
 {
-    DevGpioIrqHander(DEV_GPIO_PORTE, DEV_GPIO_PIN2);
+    DevGpioIrqHander( DEV_GPIO_PIN2 );
 }
+
+void EXTI3_IRQHandler(void)
+{
+    DevGpioIrqHander( DEV_GPIO_PIN3 );
+}
+
+void EXTI4_IRQHandler(void)
+{
+    DevGpioIrqHander( DEV_GPIO_PIN4 );
+}
+
+void EXTI9_5_IRQHandler(void)
+{
+    DevGpioIrqHander( DEV_GPIO_PIN5 );
+    DevGpioIrqHander( DEV_GPIO_PIN6 );
+    DevGpioIrqHander( DEV_GPIO_PIN7 );
+    DevGpioIrqHander( DEV_GPIO_PIN8 );
+    DevGpioIrqHander( DEV_GPIO_PIN9 );
+}
+
+void EXTI15_10_IRQHandler(void)
+{
+    DevGpioIrqHander( DEV_GPIO_PIN10 );
+    DevGpioIrqHander( DEV_GPIO_PIN11 );
+    DevGpioIrqHander( DEV_GPIO_PIN12 );
+    DevGpioIrqHander( DEV_GPIO_PIN13 );
+    DevGpioIrqHander( DEV_GPIO_PIN14 );
+    DevGpioIrqHander( DEV_GPIO_PIN15 );
+}
+
+
+
+
+
 
 /* USER CODE BEGIN 1 */
 

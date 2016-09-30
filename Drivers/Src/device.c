@@ -19,7 +19,19 @@
 
 /* Exported functions --------------------------------------------------------*/
 
+static uint16_t count = 0;
+void GpioPE3ISR(void)
+{
+  uint16_t i;
+  uint8_t temp[128] = 0;
+    count++;
+    
+       i = sprintf(temp, "count:%d\r\n", count);
+       
+   BspCom1SendData(temp,  i);
+     // DevGpioIrqDisable(DEV_GPIO_PORTD, DEV_GPIO_PIN14);
 
+}
 /** Configure pins as 
         * Analog 
         * Input 
@@ -43,16 +55,19 @@ static void MX_GPIO_Init(void)
   
   DevGpioInit( port, pin, config );
 
-  port = DEV_GPIO_PORTE;
-  pin = DEV_GPIO_PIN3;
+  ////int
+  port = DEV_GPIO_PORTD;
+  pin = DEV_GPIO_PIN14;
 
-  config.level = DEV_GPIO_PIN_LEVEL_LOW;
-  config.pull = DEV_GPIO_NOPULL;
-  config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
-  config.mode = DEV_GPIO_MODE_OUTPUT_PP;
+//  config.level = DEV_GPIO_PIN_LEVEL_LOW;
+//  config.pull = DEV_GPIO_NOPULL;
+//  config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
+//  config.mode = DEV_GPIO_MODE_OUTPUT_PP;
   
-  DevGpioInit( port, pin, config );
-  
+//  DevGpioInit( port, pin, config );
+  DevGpioIrqRegister(port, pin, DEV_GPIO_MODE_IT_RISING_FALLING, GpioPE3ISR);
+  DevGpioIrqEnable(port, pin);
+  ///////
   port = DEV_GPIO_PORTC;
   pin = DEV_GPIO_PIN13;
 

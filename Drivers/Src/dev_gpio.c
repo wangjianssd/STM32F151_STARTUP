@@ -53,7 +53,7 @@ static const uint16_t GpioPinTab[DEV_GPIO_PIN_NUM] =
     GPIO_PIN_15
 };
 
-DEV_GPIO_INT_FUNC_PTR DevGpioIsrTab[DEV_GPIO_PORT_NUM][DEV_GPIO_PIN_NUM] = {NULL};
+DEV_GPIO_INT_FUNC_PTR DevGpioIsrTab[DEV_GPIO_PIN_NUM] = {NULL};
 
 //static DEV_GPIO_INT_FUNC_PTR DevGpioIsrTab[DEV_UART_NUM] = {NULL};
 
@@ -247,9 +247,10 @@ void DevGpioIrqRegister( DevGpioPort port, DevGpioPin pin, DevGpioIntType type, 
 
     gpio.Mode = type;
     
+    gpio.Pull= GPIO_NOPULL;
     HAL_GPIO_Init(GpioPortTab[port], &gpio);
 
-    DevGpioIsrTab[port][pin] = isr;
+    DevGpioIsrTab[pin] = isr;
 }
 /*****************************************************************************
  * Function      : DevGpioIrqHander
@@ -265,20 +266,18 @@ void DevGpioIrqRegister( DevGpioPort port, DevGpioPin pin, DevGpioIntType type, 
  *   Modification: Created function
 
 *****************************************************************************/
-void DevGpioIrqHander( DevGpioPort port, DevGpioPin pin )
+void DevGpioIrqHander( DevGpioPin pin )
 {
     /* EXTI line interrupt detected */
     if(__HAL_GPIO_EXTI_GET_IT(GpioPinTab[pin]) != RESET) 
     { 
       __HAL_GPIO_EXTI_CLEAR_IT(GpioPinTab[pin]);
       
-      if (DevGpioIsrTab[port][pin] != NULL)
+      if (DevGpioIsrTab[pin] != NULL)
       {
-          DevGpioIsrTab[port][pin]();
+          DevGpioIsrTab[pin]();
       }
     }
-
-
 }
 
 /*****************************************************************************
@@ -298,14 +297,69 @@ void DevGpioIrqHander( DevGpioPort port, DevGpioPin pin )
 void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin )
 {
     GPIO_InitTypeDef gpio;
+
+    IRQn_Type irq;
     
 	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
     
 	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
 	
 	/* Peripheral interrupt init */
-	HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
-	HAL_NVIC_EnableIRQ(USART3_IRQn);
+    if (pin < DEV_GPIO_PIN5)
+    {
+        irq = pin + EXTI0_IRQn;
+    }
+    else if (pin < DEV_GPIO_PIN10)
+    {
+        irq = EXTI9_5_IRQn;
+    }
+    else
+    {
+        irq = EXTI15_10_IRQn;
+    }
+    
+    HAL_NVIC_EnableIRQ(irq);
 	
-	__HAL_UART_ENABLE_IT(hander, irq);
+	//__HAL_UART_ENABLE_IT(hander, irq);
+}
+
+/*****************************************************************************
+ * Function      : DevGpioIrqDisable
+ * Description   : Disaple gpio interrupt
+ * Input         : DevGpioPort port
+                   DevGpioPin pin
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160930
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevGpioIrqDisable( DevGpioPort port, DevGpioPin pin )
+{
+    GPIO_InitTypeDef gpio;
+
+    IRQn_Type irq;
+    
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+    
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	
+	/* Peripheral interrupt init */
+    if (pin < DEV_GPIO_PIN5)
+    {
+        irq = pin + EXTI0_IRQn;
+    }
+    else if (pin < DEV_GPIO_PIN10)
+    {
+        irq = EXTI9_5_IRQn;
+    }
+    else
+    {
+        irq = EXTI15_10_IRQn;
+    }
+    
+    HAL_NVIC_DisableIRQ(irq);
 }

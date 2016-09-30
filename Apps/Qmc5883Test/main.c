@@ -89,7 +89,7 @@ void StartDefaultTask(void const * argument)
   uint8_t reg_9;
   
    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
-   HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET);  
+   //HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET);  
 
 
   BspCom1SendData("\r\n--------------QMC5883 self test--------------------------\r\n",
@@ -202,7 +202,7 @@ BspCom1SendData( "\r\n \
     }  
 
      DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN2);
-     DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN3);
+     //DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN3);
 
   }
   /* USER CODE END 5 */ 
