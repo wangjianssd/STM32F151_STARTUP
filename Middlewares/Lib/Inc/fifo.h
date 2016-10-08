@@ -34,6 +34,7 @@ typedef struct
    uint32_t front;
    uint32_t rear; 
    uint32_t flag;    
+   uint32_t fifo_size;
 } FIFOInfoTypeDef;  
 
 typedef struct
@@ -48,7 +49,7 @@ typedef struct
 /*************************************************************************************************************
 *                                            FUNCTION STATEMENT                                              *
 *************************************************************************************************************/  
-void FIFOInit (FIFODataTypeDef *pfifo);
+void FIFOInit (FIFODataTypeDef *pfifo, uint32_t fifo_size);
 uint8_t FIFOIn (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size);
 uint8_t FIFOOut (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size);
 uint8_t FIFOIsEmpty (FIFODataTypeDef *pfifo);
