@@ -7,14 +7,15 @@
 /*************************************************************************************************************
 *                                            FUNCTION PROTOTYPES                                             *
 *************************************************************************************************************/
-void FIFOInit (FIFODataTypeDef *pfifo)
+void FIFOInit (FIFODataTypeDef *pfifo, uint32_t fifo_size)
 {
     pfifo->info.front = 0;
     pfifo->info.rear = 0;
     pfifo->info.flag = FIFO_STATUS_EMPTY;
+    pfifo->info.fifo_size = fifo_size;
 }
 
-uint8_t FIFOIn (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size)
+uint8_t FIFOIn (FIFODataTypeDef *pfifo, uint8_t *byte)
 {   
     uint8_t *p;
     
@@ -27,7 +28,7 @@ uint8_t FIFOIn (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size)
 
     *p = *byte;
     
-    pfifo->info.rear = (pfifo->info.rear + 1) % size;
+    pfifo->info.rear = (pfifo->info.rear + 1) % pfifo->info.fifo_size;
     
     if (pfifo->info.rear == pfifo->info.front)
     {
@@ -41,7 +42,7 @@ uint8_t FIFOIn (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size)
     return FIFO_OK;
 }
 
-uint8_t FIFOOut (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size)
+uint8_t FIFOOut (FIFODataTypeDef *pfifo, uint8_t *byte)
 {
     uint8_t *p;
     
@@ -54,7 +55,7 @@ uint8_t FIFOOut (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size)
     
     *byte = *p;
     
-    pfifo->info.front = (pfifo->info.front + 1) % size;
+    pfifo->info.front = (pfifo->info.front + 1) % pfifo->info.fifo_size;
     
     if (pfifo->info.rear == pfifo->info.front)
     {
@@ -80,7 +81,7 @@ uint8_t FIFOIsEmpty (FIFODataTypeDef *pfifo)
     }
 }
 
-uint8_t FIFOIsFull (FIFODataTypeDef *pfifo,uint32_t size)
+uint8_t FIFOIsFull (FIFODataTypeDef *pfifo)
 {
     if (pfifo->info.flag == FIFO_STATUS_FULL)
     {
@@ -92,19 +93,19 @@ uint8_t FIFOIsFull (FIFODataTypeDef *pfifo,uint32_t size)
     }
 }
 
-uint32_t GetFIFOCount (FIFODataTypeDef *pfifo,uint32_t size)
+uint32_t GetFIFOCount (FIFODataTypeDef *pfifo)
 {
    uint32_t count;
     
     if (pfifo->info.rear < pfifo->info.front)
     {
-        count = pfifo->info.rear + size - pfifo->info.front;
+        count = pfifo->info.rear + pfifo->info.fifo_size - pfifo->info.front;
     }
     else if (pfifo->info.rear == pfifo->info.front)
     {
         if (pfifo->info.flag == FIFO_STATUS_FULL)
         {
-            count = size;
+            count = pfifo->info.fifo_size;
         }
         else
         {

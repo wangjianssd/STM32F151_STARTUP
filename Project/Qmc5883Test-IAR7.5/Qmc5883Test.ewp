@@ -742,7 +742,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>D:\01work\proj\&#x5730;&#x78C1;\Code\Link\stm32l151xd_flash.icf</state>
+          <state>$PROJ_DIR$/../../Link/stm32l151xd_flash.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>

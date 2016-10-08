@@ -38,7 +38,7 @@ MultiCoreRunAll=1
 [JLinkDriver]
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=835229372
+Checksum=-393547483
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0

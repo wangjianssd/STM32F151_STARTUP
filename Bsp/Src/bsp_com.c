@@ -63,8 +63,8 @@ bool BspCom1Init(uint32_t buad )
 		return false;
 	}
 
-	FIFOInit ((FIFODataTypeDef *)COM1TxFIFO);
-	FIFOInit ((FIFODataTypeDef *)COM1RxFIFO);
+	FIFOInit ((FIFODataTypeDef *)COM1TxFIFO, __COM1_TX_FIFO_SIZE__);
+	FIFOInit ((FIFODataTypeDef *)COM1RxFIFO, __COM1_RX_FIFO_SIZE__);
 	
 	DevUartRxCbRegister(__BSP_COM1__, BspCom1RxHander);
 	DevUartIrqEnable(__BSP_COM1__ , DEV_UART_IT_RXNE);
@@ -106,16 +106,15 @@ void BspCom1SendData( uint8_t *data, uint32_t len )
 *****************************************************************************/
 bool BspCom1TxFIFOIn( uint8_t *data, uint16_t len )
 {
-	if (__COM1_TX_FIFO_SIZE__ - GetFIFOCount((FIFODataTypeDef *)COM1TxFIFO, __COM1_TX_FIFO_SIZE__) < len)
+	if (__COM1_TX_FIFO_SIZE__ - GetFIFOCount((FIFODataTypeDef *)COM1TxFIFO) < len)
 	{
         return false;
 	}
 
-	if (FIFOIn((FIFODataTypeDef *)COM1TxFIFO, data, __COM1_TX_FIFO_SIZE__)
-		!= FIFO_OK)
-	{
-		return false;
-	}
+    for (uint32_t i = 0; i < len; i++)
+    {
+        FIFOIn((FIFODataTypeDef *)COM1TxFIFO, &data[i]);
+    }
 
 	return true;
 }
@@ -139,7 +138,7 @@ void BspCom1TxFIFOOut( void )
     
     while (!FIFOIsEmpty((FIFODataTypeDef *)COM1TxFIFO))
     {
-        FIFOOut((FIFODataTypeDef *)COM1TxFIFO, &byte, __COM1_TX_FIFO_SIZE__);
+        FIFOOut((FIFODataTypeDef *)COM1TxFIFO, &byte);
         DevUartTx(__BSP_COM1__, &byte, 1);
     }
 }
@@ -179,7 +178,7 @@ uint8_t BspCom1RxFIFOOut( void )
 {
     uint8_t byte;
 
-	FIFOOut((FIFODataTypeDef *)COM1RxFIFO, &byte, __COM1_RX_FIFO_SIZE__);
+	FIFOOut((FIFODataTypeDef *)COM1RxFIFO, &byte);
 
 	return byte;
 }
@@ -204,7 +203,7 @@ void BspCom1RxHander( uint8_t* data, uint16_t size )
 	
 	for (i = 0; i < size; i++)
 	{
-		FIFOIn((FIFODataTypeDef *)COM1RxFIFO, &data[i], __COM1_RX_FIFO_SIZE__);
+		FIFOIn((FIFODataTypeDef *)COM1RxFIFO, &data[i]);
 	}
 }
 
@@ -223,7 +222,7 @@ void BspCom1RxHander( uint8_t* data, uint16_t size )
 *****************************************************************************/
 void BspCom1RxFIFOClear( void )
 {
-	FIFOInit ((FIFODataTypeDef *)COM1RxFIFO);
+	FIFOInit ((FIFODataTypeDef *)COM1RxFIFO, __COM1_RX_FIFO_SIZE__);
 }
 /*****************************************************************************
  * Function      : BspCom1RxDisable

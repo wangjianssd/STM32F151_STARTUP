@@ -17,7 +17,7 @@ extern "C" {
 #define	FIFO_ERROR_EMPTY                        2
 #define	FIFO_ERROR_COUNT                        3
 
-#define	FIFO_INFO_SIZE                          12
+#define	FIFO_INFO_SIZE                          (sizeof(FIFOInfoTypeDef))
     
 #define	FIFO_STATUS_FULL                        1
 #define	FIFO_STATUS_EMPTY                       2
@@ -50,11 +50,11 @@ typedef struct
 *                                            FUNCTION STATEMENT                                              *
 *************************************************************************************************************/  
 void FIFOInit (FIFODataTypeDef *pfifo, uint32_t fifo_size);
-uint8_t FIFOIn (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size);
-uint8_t FIFOOut (FIFODataTypeDef *pfifo, uint8_t *byte,uint32_t size);
+uint8_t FIFOIn (FIFODataTypeDef *pfifo, uint8_t *byte);
+uint8_t FIFOOut (FIFODataTypeDef *pfifo, uint8_t *byte);
 uint8_t FIFOIsEmpty (FIFODataTypeDef *pfifo);
-uint8_t FIFOIsFull (FIFODataTypeDef *pfifo,uint32_t size);
-uint32_t GetFIFOCount (FIFODataTypeDef *pfifo,uint32_t size);
+uint8_t FIFOIsFull (FIFODataTypeDef *pfifo);
+uint32_t GetFIFOCount (FIFODataTypeDef *pfifo);
 
 
 /*************************************************************************************************************

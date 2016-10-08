@@ -39,39 +39,45 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void StartDefaultTask(void const * argument);
+void StartTaskGpioIntToggle(void const * argument);
 
 /* Private function prototypes -----------------------------------------------*/
 
-
-/////
 int main(void)
 {
- // uint8_t byte;
-  /* Configure the system clock */
   DeviceInit();
   
-  /* Configure uart3 */
-
   BspQmc5883lInit();
 
   BspCom1Init(115200);
   
-//  while (1)
-//  {
-//	while (BspCom1RxFIFOIsEmpty() == false)
-//	{
-//		byte = BspCom1RxFIFOOut();
-//		
-//		BspCom1TxFIFOIn(&byte, 1);
-//   	}
+  StartTaskGpioIntToggle((void *)0);
 
-//   	BspCom1TxFIFOOut();
-//    HAL_Delay (50);
-
-//  }
-  StartDefaultTask((void *)0);
+  //StartDefaultTask((void *)0);
 }
 
+void StartTaskGpioIntToggle(void const * argument)
+{
+    uint8_t byte;
+
+    while (1)
+    {
+      while (BspCom1RxFIFOIsEmpty() == false)
+      {
+          byte = BspCom1RxFIFOOut();
+          
+          if (byte == 'c')
+          {
+              DevGpioToggle(DEV_GPIO_PORTC,  DEV_GPIO_PIN6);
+          }
+      }
+    
+      BspCom1TxFIFOOut();
+      HAL_Delay (50);
+    
+    }
+
+}
 
 /* StartDefaultTask function */
 void StartDefaultTask(void const * argument)
@@ -205,17 +211,7 @@ BspCom1SendData( "\r\n \
      //DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN3);
 
   }
-  /* USER CODE END 5 */ 
 }
 
-
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-*/ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

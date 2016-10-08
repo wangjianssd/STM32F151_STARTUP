@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "D:\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.general.xcl" --backend -f "D:\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "D:\WSN\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.general.xcl" --backend -f "D:\WSN\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "D:\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "D:\WSN\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\WSN\01work\proj\地磁\Code\Project\Qmc5883Test-IAR7.5\settings\Qmc5883Test.Debug.driver.xcl" 
 
 @echo off 
 :end
