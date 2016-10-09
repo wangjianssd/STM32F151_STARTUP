@@ -34,7 +34,7 @@ void GpioPE3ISR(void)
 
 static void MX_GPIO_Init(void)
 {
-    DevGpioPin port;
+    DevGpioPort port;
     DevGpioPin pin;
     DevGpioConfig config;
 
@@ -85,8 +85,14 @@ static void MX_GPIO_Init(void)
 *****************************************************************************/
 void DeviceInit (void)
 {
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
+//≥ı ºªØvector
+    IntInit();
+//
+    CM3VectTabSetOffset(SRAM_BASE, INT_VECT_TABLE_OFFSET_ADDR);
+
+
+/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	//HAL_Init();
 
 	/* Configure the system clock */
 	ClockInit ();

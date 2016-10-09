@@ -27,6 +27,9 @@ static void DevUartIOInit( DevUart uart );
 static void DevUartIODeInit( DevUart uart );
 static void DevUartClockEnable( DevUart uart );
 static void DevUartClockDisable( DevUart uart );
+static void DevUart1IrqHander(void);
+static void DevUart2IrqHander(void);
+static void DevUart3IrqHander(void);
 
 
 /*****************************************************************************
@@ -225,7 +228,7 @@ void DevUartRxCbUnregister(DevUart uart)
 }
 
 /*****************************************************************************
- * Function      : UartIrqHander()
+ * Function      : Uart1IrqHander()
  * Description   : Uart irq hander
  * Input         : DevUart uart
  * Output        : None
@@ -237,15 +240,13 @@ void DevUartRxCbUnregister(DevUart uart)
  *   Modification: Created function
 
 *****************************************************************************/
-void DevUartIrqHander(DevUart uart)
+void DevUart1IrqHander(void)
 {
 	uint16_t data ;
 	uint8_t *tmp ;
 	uint8_t  size = 0;
 
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
-
-	UART_HandleTypeDef *hander = &UartHander[uart];
+	UART_HandleTypeDef *hander = &UartHander[DEV_UART1];
 
 	/* UART in mode Receiver ---------------------------------------------------*/
 	if(	(__HAL_UART_GET_FLAG(hander, UART_FLAG_RXNE) != RESET) 
@@ -281,9 +282,9 @@ void DevUartIrqHander(DevUart uart)
           }
       }
 
-      if (DevUartRxCbTab[uart] != NULL)
+      if (DevUartRxCbTab[DEV_UART1] != NULL)
       {
-          DevUartRxCbTab[uart](tmp, size);
+          DevUartRxCbTab[DEV_UART1](tmp, size);
       }
 
       __HAL_UART_CLEAR_FLAG(hander, UART_IT_RXNE);
@@ -299,6 +300,155 @@ void DevUartIrqHander(DevUart uart)
 	  __HAL_UART_CLEAR_FLAG(hander, UART_FLAG_TC);
 	}
 }
+
+/*****************************************************************************
+ * Function      : Uart2IrqHander()
+ * Description   : Uart irq hander
+ * Input         : DevUart uart
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160927
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUart2IrqHander(void)
+{
+	uint16_t data ;
+	uint8_t *tmp ;
+	uint8_t  size = 0;
+
+	UART_HandleTypeDef *hander = &UartHander[DEV_UART2];
+
+	/* UART in mode Receiver ---------------------------------------------------*/
+	if(	(__HAL_UART_GET_FLAG(hander, UART_FLAG_RXNE) != RESET) 
+	 && (__HAL_UART_GET_IT_SOURCE(hander, UART_IT_RXNE) != RESET))
+	{ 
+      __HAL_UART_DISABLE_IT(hander, UART_IT_RXNE);
+
+      data = (uint16_t)(hander->Instance->DR & (uint16_t)0x01FF);
+      tmp = (uint8_t *)&data;
+      size = 1;
+
+      if(hander->Init.WordLength == UART_WORDLENGTH_9B)
+      {		
+          if(hander->Init.Parity == UART_PARITY_NONE)
+          {
+              data &= (uint16_t)0x01FF;
+              size = 2;
+          }
+          else
+          {
+             data &= (uint16_t)0x00FF;
+          }
+      }
+      else
+      {
+          if(hander->Init.Parity == UART_PARITY_NONE)
+          {
+            data &= (uint8_t)0x00FF;
+          }
+          else
+          {
+            data &= (uint8_t)0x007F;
+          }
+      }
+
+      if (DevUartRxCbTab[DEV_UART2] != NULL)
+      {
+          DevUartRxCbTab[DEV_UART2](tmp, size);
+      }
+
+      __HAL_UART_CLEAR_FLAG(hander, UART_IT_RXNE);
+
+      __HAL_UART_ENABLE_IT(hander, UART_IT_RXNE);
+    
+	}
+
+	/* UART in mode Trans ---------------------------------------------------*/
+	if( (__HAL_UART_GET_FLAG(hander, UART_FLAG_TC) != RESET) 
+	 && (__HAL_UART_GET_IT_SOURCE(hander, UART_FLAG_TC) != RESET))
+	{
+	  __HAL_UART_CLEAR_FLAG(hander, UART_FLAG_TC);
+	}
+}
+
+/*****************************************************************************
+ * Function      : UartIrqHander()
+ * Description   : Uart irq hander
+ * Input         : DevUart uart
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20160927
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void DevUart3IrqHander(void)
+{
+	uint16_t data ;
+	uint8_t *tmp ;
+	uint8_t  size = 0;
+
+	UART_HandleTypeDef *hander = &UartHander[DEV_UART3];
+
+	/* UART in mode Receiver ---------------------------------------------------*/
+	if(	(__HAL_UART_GET_FLAG(hander, UART_FLAG_RXNE) != RESET) 
+	 && (__HAL_UART_GET_IT_SOURCE(hander, UART_IT_RXNE) != RESET))
+	{ 
+      __HAL_UART_DISABLE_IT(hander, UART_IT_RXNE);
+
+      data = (uint16_t)(hander->Instance->DR & (uint16_t)0x01FF);
+      tmp = (uint8_t *)&data;
+      size = 1;
+
+      if(hander->Init.WordLength == UART_WORDLENGTH_9B)
+      {		
+          if(hander->Init.Parity == UART_PARITY_NONE)
+          {
+              data &= (uint16_t)0x01FF;
+              size = 2;
+          }
+          else
+          {
+             data &= (uint16_t)0x00FF;
+          }
+      }
+      else
+      {
+          if(hander->Init.Parity == UART_PARITY_NONE)
+          {
+            data &= (uint8_t)0x00FF;
+          }
+          else
+          {
+            data &= (uint8_t)0x007F;
+          }
+      }
+
+      if (DevUartRxCbTab[DEV_UART3] != NULL)
+      {
+          DevUartRxCbTab[DEV_UART3](tmp, size);
+      }
+
+      __HAL_UART_CLEAR_FLAG(hander, UART_IT_RXNE);
+
+      __HAL_UART_ENABLE_IT(hander, UART_IT_RXNE);
+    
+	}
+
+	/* UART in mode Trans ---------------------------------------------------*/
+	if( (__HAL_UART_GET_FLAG(hander, UART_FLAG_TC) != RESET) 
+	 && (__HAL_UART_GET_IT_SOURCE(hander, UART_FLAG_TC) != RESET))
+	{
+	  __HAL_UART_CLEAR_FLAG(hander, UART_FLAG_TC);
+	}
+}
+
 
 /*****************************************************************************
  * Function      : DevUartIrqEnable
@@ -319,10 +469,21 @@ void DevUartIrqEnable( DevUart uart, DevUartIrq irq )
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
 	UART_HandleTypeDef *hander = &UartHander[uart];
-    
-	HAL_NVIC_ClearPendingIRQ(USART3_IRQn);
-    
-	HAL_NVIC_EnableIRQ(USART3_IRQn);
+
+    switch (uart)
+    {
+        case DEV_UART1:    IntVectRegister(USART1_IRQn, (FNCT_VOID)DevUart1IrqHander);
+                           IntEnable(USART1_IRQn);
+                           break;
+        case DEV_UART2:    IntVectRegister(USART2_IRQn, (FNCT_VOID)DevUart2IrqHander);
+                           IntEnable(USART2_IRQn);
+                           break;
+        case DEV_UART3:    IntVectRegister(USART3_IRQn, (FNCT_VOID)DevUart3IrqHander);
+                           IntEnable(USART3_IRQn);
+                           break;
+        default:            break;
+    }
+
 	
 	__HAL_UART_ENABLE_IT(hander, irq);
 }

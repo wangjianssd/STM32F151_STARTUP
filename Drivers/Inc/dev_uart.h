@@ -90,7 +90,6 @@ void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr);
 void DevUartRxCbUnregister(DevUart uart);
 void DevUartIrqEnable( DevUart uart, DevUartIrq irq );
 void DevUartIrqDisable( DevUart uart, DevUartIrq irq );
-void DevUartIrqHander(DevUart uart);
 
 #endif
 

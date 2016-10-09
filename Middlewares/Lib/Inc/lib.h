@@ -18,10 +18,12 @@
 #ifndef __LIB_H
 #define __LIB_H
 
-#include <data_type_def.h>
+//#include <data_type_def.h>
+
+#include "cpu.h"
 //#include <list.h>
 //#include <sqqueue.h>
-#include <debug.h>
+#include "debug.h"
 #include "stdbool.h"
 #include "fifo.h"
 #include "queue.h"

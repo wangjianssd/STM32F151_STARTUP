@@ -175,6 +175,16 @@ typedef struct
 typedef void (*DEV_GPIO_INT_FUNC_PTR)(void);
 
 /* Function prototypes -------------------------------------------------------*/
+__STATIC_INLINE uint16_t DevGpioGetITFlag(void)
+{   
+    return (uint16_t)(EXTI->PR);
+}
+
+__STATIC_INLINE void DevGpioClearITFlag(uint16_t flag)
+{   
+    (EXTI->PR) = flag;
+}
+
 void DevGpioInit( DevGpioPort port, DevGpioPin pin, DevGpioConfig config );
 void DevGpioDeInit( DevGpioPort port, DevGpioPin pin );
 void DevGpioWrite( DevGpioPort port, DevGpioPin pin, DevGpioPinLevel level );

@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <data_type_def.h>
+#include <lib.h>
 
 #define DEBUG_INFO_PRINT_EN                 (1)
 

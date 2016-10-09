@@ -31,18 +31,21 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
+#pragma message("Compiled on " __DATE__ " at " __TIME__ )
+#pragma message("File on " __FILE__ " at " )
+
 #include "config.h"
 
 /* Public variables ---------------------------------------------------------*/
-
+    
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+void StartTaskCompileTimePrint(void const * argument);
 void StartDefaultTask(void const * argument);
 void StartTaskGpioIntToggle(void const * argument);
 
 /* Private function prototypes -----------------------------------------------*/
-
 int main(void)
 {
   DeviceInit();
@@ -51,11 +54,21 @@ int main(void)
 
   BspCom1Init(115200);
   
+  StartTaskCompileTimePrint((void *)0);
+  
   StartTaskGpioIntToggle((void *)0);
 
   //StartDefaultTask((void *)0);
 }
 
+void StartTaskCompileTimePrint(void const * argument)
+{
+  uint8_t  temp[64];
+  uint8_t i;
+  
+  i = sprintf(temp, "Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
+  BspCom1SendData(temp,  i);
+}
 void StartTaskGpioIntToggle(void const * argument)
 {
     uint8_t byte;

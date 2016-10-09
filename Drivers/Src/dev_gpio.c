@@ -22,6 +22,7 @@
 /* Function prototypes -------------------------------------------------------*/
 
 /* Variables -----------------------------------------------------------------*/
+extern uint8_t const MapTbl[256];
 static GPIO_TypeDef *GpioPortTab[DEV_GPIO_PORT_NUM] =
 {
     GPIOA,
@@ -54,8 +55,7 @@ static const uint16_t GpioPinTab[DEV_GPIO_PIN_NUM] =
 };
 
 DEV_GPIO_INT_FUNC_PTR DevGpioIsrTab[DEV_GPIO_PIN_NUM] = {NULL};
-
-//static DEV_GPIO_INT_FUNC_PTR DevGpioIsrTab[DEV_UART_NUM] = {NULL};
+static DEF_IO uint16_t DevGpioRegisterFlag = 0;
 
 /*****************************************************************************
  * Function      : DevGpioInit
@@ -266,18 +266,42 @@ void DevGpioIrqRegister( DevGpioPort port, DevGpioPin pin, DevGpioIntType type, 
  *   Modification: Created function
 
 *****************************************************************************/
-void DevGpioIrqHander( DevGpioPin pin )
+void DevGpioIrqHander()
 {
+    uint16_t flag;
+    uint8_t high;
+    uint8_t low;
+    DevGpioPin pin;
+
+    flag = DevGpioGetITFlag() & DevGpioRegisterFlag;
+    
+    DevGpioClearITFlag(flag);
+
+    low  = (uint8_t)flag;
+    high = (uint8_t)(flag >> 8);
+
     /* EXTI line interrupt detected */
-    if(__HAL_GPIO_EXTI_GET_IT(GpioPinTab[pin]) != RESET) 
-    { 
-      __HAL_GPIO_EXTI_CLEAR_IT(GpioPinTab[pin]);
-      
-      if (DevGpioIsrTab[pin] != NULL)
-      {
-          DevGpioIsrTab[pin]();
-      }
+    while (low != 0)
+    {
+        pin = MapTbl[low];
+        
+        DevGpioIsrTab[pin]();
+        
+        low &= ~(1 << pin);
     }
+    
+    /* EXTI line interrupt detected */
+    while (high != 0)
+    {
+        pin = MapTbl[high];
+        
+        DevGpioIsrTab[pin + 8]();
+        
+        high &= ~(1 << pin);
+    }
+
+    
+
 }
 
 /*****************************************************************************
@@ -299,6 +323,7 @@ void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin )
     GPIO_InitTypeDef gpio;
 
     IRQn_Type irq;
+    FNCT_VOID isr;
     
 	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
     
@@ -318,7 +343,12 @@ void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin )
         irq = EXTI15_10_IRQn;
     }
     
-    HAL_NVIC_EnableIRQ(irq);
+    DevGpioRegisterFlag |= (1 << pin);
+
+    IntVectRegister(irq, (FNCT_VOID)DevGpioIrqHander);
+
+    IntEnable(irq);
+    //HAL_NVIC_EnableIRQ(irq);
 	
 	//__HAL_UART_ENABLE_IT(hander, irq);
 }
@@ -361,5 +391,11 @@ void DevGpioIrqDisable( DevGpioPort port, DevGpioPin pin )
         irq = EXTI15_10_IRQn;
     }
     
-    HAL_NVIC_DisableIRQ(irq);
+    DevGpioRegisterFlag &= ~(1 << pin);
+    
+    IntVectUnregister(irq);
+
+    IntDisable(irq);
+
+   // HAL_NVIC_DisableIRQ(irq);
 }

@@ -317,6 +317,8 @@
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$/../../Apps/Config</state>
           <state>$PROJ_DIR$/../../Drivers\Inc</state>
+          <state>$PROJ_DIR$/../../Drivers\Core\CMSIS\Device</state>
+          <state>$PROJ_DIR$/../../Drivers\Core\CMSIS\CortexM3\Inc</state>
           <state>$PROJ_DIR$/../../Drivers\Core\CMSIS\RTOS\Template</state>
           <state>$PROJ_DIR$/../../Drivers/Core/CMSIS/Device/ST/STM32L1xx/Include</state>
           <state>$PROJ_DIR$/../../Drivers/Core/STM32L1xx_HAL_Driver/Config</state>
@@ -653,7 +655,7 @@
       <name>BUILDACTION</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <prebuild></prebuild>
+        <prebuild>$PROJ_DIR$\Script\clear_cpu_obj.bat $PROJ_DIR$\Debug\Obj\</prebuild>
         <postbuild></postbuild>
       </data>
     </settings>
@@ -1975,21 +1977,30 @@
       <group>
         <name>CMSIS</name>
         <group>
+          <name>CortecM3</name>
+          <group>
+            <name>Inc</name>
+            <file>
+              <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\CortexM3\Inc\core_cm3.h</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\CortexM3\Inc\interrupt.h</name>
+            </file>
+          </group>
+          <group>
+            <name>Src</name>
+            <file>
+              <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\CortexM3\Src\interrupt.c</name>
+            </file>
+            <file>
+              <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\CortexM3\Src\startup_cm3.s</name>
+            </file>
+          </group>
+        </group>
+        <group>
           <name>Device</name>
           <file>
-            <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\Device\ST\STM32L1xx\Source\Templates\system_stm32l1xx.c</name>
-          </file>
-        </group>
-        <group>
-          <name>RTOS</name>
-          <file>
-            <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\RTOS\Template\cmsis_os.h</name>
-          </file>
-        </group>
-        <group>
-          <name>Startup</name>
-          <file>
-            <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\Device\ST\STM32L1xx\Source\Templates\iar\startup_stm32l151xd.s</name>
+            <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\Device\stm32l151xd.h</name>
           </file>
         </group>
       </group>
@@ -2004,10 +2015,10 @@
             <name>$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Config\stm32l1xx_hal_msp.c</name>
           </file>
           <file>
-            <name>$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Config\stm32l1xx_it.c</name>
+            <name>$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Config\system_stm32l1xx.c</name>
           </file>
           <file>
-            <name>$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Config\stm32l1xx_it.h</name>
+            <name>$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Config\system_stm32l1xx.h</name>
           </file>
         </group>
         <group>
@@ -2452,7 +2463,7 @@
       <group>
         <name>Inc</name>
         <file>
-          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\data_type_def.h</name>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\cpu.h</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\debug.h</name>
@@ -2472,6 +2483,9 @@
       </group>
       <group>
         <name>Src</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\cpu.c</name>
+        </file>
         <file>
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\debug.c</name>
         </file>
