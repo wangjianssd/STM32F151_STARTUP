@@ -38,7 +38,10 @@ void Delay(uint32_t delay)
 #if(__RTOS_SUPPORT__ > 0)
   osDelay(delay);
 #else
-  HAL_Delay(delay);
+  //HAL_Delay(delay);
+
+  SysTickDelay(delay);
+
 #endif
 }
 

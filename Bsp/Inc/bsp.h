@@ -21,6 +21,8 @@
 
 /* Define --------------------------------------------------------------------*/
 #define __RTOS_SUPPORT__                           0
+#define __SYSTEM_TICK_PER_SEC__                    1000
+#define __SYSTEM_CORE_CLOCK__                      
 
 /* Exported functions --------------------------------------------------------*/
 void Delay(uint32_t delay);

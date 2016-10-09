@@ -26,6 +26,7 @@
 extern const uVectorEntry __vector_table[];
 extern void __iar_program_start (void);
 __no_init uVectorEntry IntVectTbl[CORE_INT_SRC_NBR + PERIPH_INT_SRC_NBR] @ INT_VECT_TABLE_ADDR;
+__IO uint32_t SystemTick;
 
 
 /* Function prototypes -------------------------------------------------------*/
@@ -148,11 +149,72 @@ void SysTickISR (void)
 //#else
 //    SysTickTimimg();
 //#endif  
-    HAL_IncTick();
+    //HAL_IncTick();
+    if (SystemTick > 0)
+    {
+      SystemTick--;
+    }
 
 }
 
+/*****************************************************************************
+ * Function      : SysTickInit
+ * Description   : Init system tick
+ * Input         : uint32_t tick
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20161009
+ *   Author      : wangjian
+ *   Modification: Created function
 
-/*************************************************************************************************************
-*                                                  END FILE                                                  *
-*************************************************************************************************************/
+*****************************************************************************/
+void SysTickInit( uint32_t tick )
+{
+    /*Configure the SysTick to have interrupt in 1ms time basis*/
+    SysTick_Config(tick);
+    
+    /*Configure the SysTick IRQ priority */
+    HAL_NVIC_SetPriority(SysTick_IRQn, 15 ,0);
+}
+
+/*****************************************************************************
+ * Function      : SysTickGet
+ * Description   : Get system tick count
+ * Input         : void
+ * Output        : None
+ * Return        : uint32_t 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161009
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+uint32_t  SysTickGet( void )
+{
+    return SystemTick;
+}
+
+/*****************************************************************************
+ * Function      : SysTickDelay
+ * Description   : Using system tick timer to make delay function
+ * Input         : __IO uint32_t delay in milliseconds
+ * Output        : None
+ * Return        : void
+ * Others        : 
+ * Record
+ * 1.Date        : 20161009
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void SysTickDelay(uint32_t tick)
+{
+    SystemTick = tick;
+    
+    while(SystemTick)
+    {
+    }
+}

@@ -2579,7 +2579,7 @@
     <group>
       <name>Inc</name>
       <file>
-        <name>$PROJ_DIR$\..\..\Drivers\Inc\clock.h</name>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_clock.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_gpio.h</name>
@@ -2597,7 +2597,7 @@
     <group>
       <name>Src</name>
       <file>
-        <name>$PROJ_DIR$\..\..\Drivers\Src\clock.c</name>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_clock.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_gpio.c</name>

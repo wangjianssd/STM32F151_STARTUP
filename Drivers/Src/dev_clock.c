@@ -17,7 +17,7 @@
 /* Exported functions --------------------------------------------------------*/
 /** System Clock Configuration
 */
-bool ClockInit(void)
+bool DevClockInit(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
@@ -62,6 +62,8 @@ bool ClockInit(void)
     //Error_Handler();
     return false;
   }
+  
+  SystemCoreClockUpdate();
 
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 

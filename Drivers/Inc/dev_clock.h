@@ -12,15 +12,15 @@
  * 2016/09/20  v0.0.1       WangJian    first version
  */
 
-#ifndef __CLOCK_H__
-#define __CLOCK_H__
+#ifndef __DEV_CLOCK_H__
+#define __DEV_CLOCK_H__
 
 /* Exported types ------------------------------------------------------------*/
 
 
 
 /* Exported functions --------------------------------------------------------*/
-bool ClockInit(void);
+bool DevClockInit(void);
 
 #endif
 

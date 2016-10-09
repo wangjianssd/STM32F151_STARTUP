@@ -41,6 +41,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+void StartTaskSysTickTest(void const * argument);
 void StartTaskCompileTimePrint(void const * argument);
 void StartDefaultTask(void const * argument);
 void StartTaskGpioIntToggle(void const * argument);
@@ -50,15 +51,28 @@ int main(void)
 {
   DeviceInit();
   
-  BspQmc5883lInit();
-
   BspCom1Init(115200);
   
   StartTaskCompileTimePrint((void *)0);
+
+  StartTaskSysTickTest((void *)0);
   
   StartTaskGpioIntToggle((void *)0);
 
   //StartDefaultTask((void *)0);
+}
+
+void StartTaskSysTickTest(void const * argument)
+{
+     SysTickInit(HAL_RCC_GetHCLKFreq() / 2000);
+     
+     while (1)
+     {
+       SysTickDelay(1000);
+
+       DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN2);
+     }
+
 }
 
 void StartTaskCompileTimePrint(void const * argument)
@@ -109,6 +123,7 @@ void StartDefaultTask(void const * argument)
   
    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
    //HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET);  
+  BspQmc5883lInit();
 
 
   BspCom1SendData("\r\n--------------QMC5883 self test--------------------------\r\n",

@@ -46,6 +46,9 @@ void PendSVISR (void);
 void SysTickISR (void);
 void SvcISR (void);
 void DebugMonISR (void);
+void SysTickInit( uint32_t tick );
+uint32_t  SysTickGet( void );
+void SysTickDelay(uint32_t tick);
 
 
 /*************************************************************************************************************

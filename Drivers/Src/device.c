@@ -95,7 +95,7 @@ void DeviceInit (void)
 	//HAL_Init();
 
 	/* Configure the system clock */
-	ClockInit ();
+	DevClockInit ();
 
 	MX_GPIO_Init();
 
@@ -104,3 +104,4 @@ void DeviceInit (void)
 	//UART_Init();
    
 }
+
