@@ -15,61 +15,14 @@
 #include "device.h"
 
 /* Private variables ---------------------------------------------------------*/
+static uint16_t count = 0;
 
 
 /* Exported functions --------------------------------------------------------*/
+void GpioPE3ISR(void);
 
-static uint16_t count = 0;
-void GpioPE3ISR(void)
-{
-    uint16_t i;
-    uint8_t temp[128] = 0;
-    count++;
 
-    i = sprintf(temp, "count:%d\r\n", count);
-    BspCom1TxFIFOIn(temp, i);
-   //BspCom1SendData(temp,  i);
 
-}
-
-static void MX_GPIO_Init(void)
-{
-    DevGpioPort port;
-    DevGpioPin pin;
-    DevGpioConfig config;
-
-    port = DEV_GPIO_PORTE;
-    pin = DEV_GPIO_PIN2;
-    config.level = DEV_GPIO_PIN_LEVEL_LOW;
-    config.pull = DEV_GPIO_NOPULL;
-    config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
-    config.mode = DEV_GPIO_MODE_OUTPUT_PP;
-    DevGpioInit( port, pin, config );
-
-    port = DEV_GPIO_PORTC;
-    pin = DEV_GPIO_PIN6;
-    config.level = DEV_GPIO_PIN_LEVEL_LOW;
-    config.pull = DEV_GPIO_NOPULL;
-    config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
-    config.mode = DEV_GPIO_MODE_OUTPUT_PP;
-    DevGpioInit( port, pin, config );
-
-    port = DEV_GPIO_PORTC;
-    pin = DEV_GPIO_PIN13;
-    config.level = DEV_GPIO_PIN_LEVEL_LOW;
-    config.pull = DEV_GPIO_NOPULL;
-    config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
-    config.mode = DEV_GPIO_MODE_OUTPUT_PP;
-    DevGpioInit( port, pin, config );
-
-    ////int
-    port = DEV_GPIO_PORTD;
-    pin = DEV_GPIO_PIN14;
-    DevGpioIrqRegister(port, pin, DEV_GPIO_MODE_IT_RISING_FALLING, GpioPE3ISR);
-    DevGpioIrqEnable(port, pin);
-///////
-
-}
 /*****************************************************************************
  * Function      : DeviceInit
  * Description   : 
@@ -85,6 +38,10 @@ static void MX_GPIO_Init(void)
 *****************************************************************************/
 void DeviceInit (void)
 {
+    DevGpioPort port;
+    DevGpioPin pin;
+    DevGpioConfig config;
+
     //≥ı ºªØvector
     IntInit();
     CM3VectTabSetOffset(SRAM_BASE, INT_VECT_TABLE_OFFSET_ADDR);
@@ -92,11 +49,58 @@ void DeviceInit (void)
 	/* Configure the system clock */
 	DevClockInit ();
     
-	/* Configure the MCO */
-    DevClockMCOEnable();
+	/* Configure the system tick */
+    SysTickInit(HAL_RCC_GetHCLKFreq() / 1000);
+    
+	/* enable MCO pin output*/
+    //DevClockMCOEnable();
 
-	MX_GPIO_Init();
+    /* Configure gpio pin*/
+    //PE2 OUTPUT
+	port = DEV_GPIO_PORTE;
+    pin = DEV_GPIO_PIN2;
+    config.level = DEV_GPIO_PIN_LEVEL_LOW;
+    config.pull = DEV_GPIO_NOPULL;
+    config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
+    config.mode = DEV_GPIO_MODE_OUTPUT_PP;
+    DevGpioInit( port, pin, config );
+    
+    //PC6 OUTPUT
+    port = DEV_GPIO_PORTC;
+    pin = DEV_GPIO_PIN6;
+    config.level = DEV_GPIO_PIN_LEVEL_LOW;
+    config.pull = DEV_GPIO_NOPULL;
+    config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
+    config.mode = DEV_GPIO_MODE_OUTPUT_PP;
+    DevGpioInit( port, pin, config );
+    
+    //PC13 OUTPUT
+    port = DEV_GPIO_PORTC;
+    pin = DEV_GPIO_PIN13;
+    config.level = DEV_GPIO_PIN_LEVEL_LOW;
+    config.pull = DEV_GPIO_NOPULL;
+    config.speed = DEV_GPIO_SPEED_FREQ_HIGH;
+    config.mode = DEV_GPIO_MODE_OUTPUT_PP;
+    DevGpioInit( port, pin, config );
+
+    //PD14 INT 
+    port = DEV_GPIO_PORTD;
+    pin = DEV_GPIO_PIN14;
+    DevGpioIrqRegister(port, pin, DEV_GPIO_MODE_IT_RISING_FALLING, GpioPE3ISR);
+    DevGpioIrqEnable(port, pin);
 
    
+}
+
+void GpioPE3ISR(void)
+{
+    uint16_t i;
+    uint8_t temp[128] = 0;
+    count++;
+
+    i = sprintf(temp, "count:%d\r\n", count);
+    BspCom1TxFIFOIn(temp, i);
+   //BspCom1SendData(temp,  i);
+
 }
 

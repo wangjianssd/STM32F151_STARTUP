@@ -41,30 +41,76 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-void StartTaskSysTickTest(void const * argument);
-void StartTaskCompileTimePrint(void const * argument);
-void StartDefaultTask(void const * argument);
-void StartTaskGpioIntToggle(void const * argument);
+void TaskSysTickTest(void const * argument);
+void TaskCompileTimePrint(void const * argument);
+void TaskQmc5883lTest(void const * argument);
+void TaskMCOTest(void const * argument);
+void TaskDeviceFlashTest(void const * argument);
 
 /* Private function prototypes -----------------------------------------------*/
 int main(void)
 {
   DeviceInit();
+    
+  TaskCompileTimePrint((void *)0);
+
+  //StartTaskSysTickTest((void *)0);
+  TaskDeviceFlashTest((void *)0);
+  //TaskMCOTest((void *)0);
+
+  //TaskQmc5883lTest((void *)0);
+  while(1);
+}
+
+void TaskDeviceFlashTest(void const * argument)
+{
+  uint32_t addr;
+  uint8_t  data[512] = {0};
+  uint32_t len;
+  uint32_t i;
+  uint8_t  temp[512] = {0};
   
   BspCom1Init(256000);
   
-  StartTaskCompileTimePrint((void *)0);
-
-  //StartTaskSysTickTest((void *)0);
+  addr = (uint32_t)ComiledDateGet();
   
-  StartTaskGpioIntToggle((void *)0);
+  len = 20;
 
-  //StartDefaultTask((void *)0);
+  DevFlashRead(addr, data, len);
+
+    i = sprintf(temp, "addr:%02x: %s\r\n", addr, data);
+       
+    BspCom1SendData(temp,  i);
+    
+    DevFlashUnlock();
+    addr += __DEVICE_FLASH_BANK_SIZE__;
+    DevFlashErase(addr);
+
+    DevFlashLock();
+    
+    DevFlashRead(addr, data, len);
+    
+      i = sprintf(temp, "read addr:%02x: %s\r\n", addr, data);
+         
+      BspCom1SendData(temp,  i);
+
+
+    DevFlashUnlock();
+    
+    DevFlashWrite(addr, temp, strlen(temp));
+
+    DevFlashLock();
+    
+    DevFlashRead(addr, data, len);
+    
+      i = sprintf(temp, "read addr:%02x: %s\r\n", addr, data);
+         
+      BspCom1SendData(temp,  i);
 }
 
-void StartTaskSysTickTest(void const * argument)
+void TaskSysTickTest(void const * argument)
 {
-     SysTickInit(HAL_RCC_GetHCLKFreq() / 2000);
+     SysTickInit(HAL_RCC_GetHCLKFreq() / 1000);
      
      while (1)
      {
@@ -75,17 +121,37 @@ void StartTaskSysTickTest(void const * argument)
 
 }
 
-void StartTaskCompileTimePrint(void const * argument)
+void TaskCompileTimePrint(void const * argument)
 {
   uint8_t  temp[64];
   uint8_t i;
   
+  BspCom1Init(256000);
+
   i = sprintf(temp, "Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
+  
   BspCom1SendData(temp,  i);
 }
-void StartTaskGpioIntToggle(void const * argument)
+
+void TaskMCOTest(void const * argument)
 {
     uint8_t byte;
+    
+    BspCom1Init(256000);
+    BspCom1SendData(( "\r\n \
+    s -> stop mco out\r\n \
+    1 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1\r\n \
+    2 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_16\r\n \
+    3 -> 2m-RCC_MCO1SOURCE_MSI, RCC_MCODIV_1\r\n \
+    4 -> 37k-RCC_MCO1SOURCE_LSI, RCC_MCODIV_1 \r\n \
+    5 -> 16mRCC_MCO1SOURCE_HSI, RCC_MCODIV_1 \r\n"),
+    sizeof("\r\n \
+    s -> stop mco out\r\n \
+    1 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1\r\n \
+    2 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_16\r\n \
+    3 -> 2m-RCC_MCO1SOURCE_MSI, RCC_MCODIV_1\r\n \
+    4 -> 37k-RCC_MCO1SOURCE_LSI, RCC_MCODIV_1 \r\n \
+    5 -> 16mRCC_MCO1SOURCE_HSI, RCC_MCODIV_1 \r\n")); 
 
     while (1)
     {
@@ -96,13 +162,36 @@ void StartTaskGpioIntToggle(void const * argument)
           if (byte == 'c')
           {
               DevGpioToggle(DEV_GPIO_PORTC,  DEV_GPIO_PIN6);
-
+          }
+          else if (byte == '1')
+          {
+            HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
+          }
+          else if (byte == '2')
+          {
+            HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_16);
+          }
+          else if (byte == '3')
+          {
+            HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_MSI, RCC_MCODIV_1);
+          }
+          else if (byte == '4')
+          {
+            HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_LSI, RCC_MCODIV_1);
+          }
+          else if (byte == '5')
+          {
+            HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI, RCC_MCODIV_1);
+          } 
+          else if (byte == 's')
+          {
               DevClockMCODisnable();
           }
+            
       }
       
       Delay (1000);
-     DevClockMCODisnable();
+      DevGpioToggle(DEV_GPIO_PORTE,  DEV_GPIO_PIN2);
       BspCom1TxFIFOOut();
       
    
@@ -110,8 +199,7 @@ void StartTaskGpioIntToggle(void const * argument)
 
 }
 
-/* StartDefaultTask function */
-void StartDefaultTask(void const * argument)
+void TaskQmc5883lTest(void const * argument)
 {
   /* Infinite loop */
   bool ret;
@@ -125,10 +213,11 @@ void StartDefaultTask(void const * argument)
   uint8_t i;
   uint8_t reg_9;
   
-   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
+  BspCom1Init(256000);
+ 
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
    //HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET);  
   BspQmc5883lInit();
-
 
   BspCom1SendData("\r\n--------------QMC5883 self test--------------------------\r\n",
                     sizeof( "\r\n--------------QMC5883 self test--------------------------\r\n"));

@@ -187,7 +187,7 @@ uint32_t DevClockLSIGet( void )
 *****************************************************************************/
 void DevClockMCOEnable( void )
 {
-    HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_LSI, RCC_MCODIV_16);
+    HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1);
 }
 
 /*****************************************************************************

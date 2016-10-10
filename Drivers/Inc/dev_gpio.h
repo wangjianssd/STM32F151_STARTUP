@@ -175,11 +175,13 @@ typedef struct
 typedef void (*DEV_GPIO_INT_FUNC_PTR)(void);
 
 /* Function prototypes -------------------------------------------------------*/
+#pragma inline
 __STATIC_INLINE uint16_t DevGpioGetITFlag(void)
 {   
     return (uint16_t)(EXTI->PR);
 }
 
+#pragma inline
 __STATIC_INLINE void DevGpioClearITFlag(uint16_t flag)
 {   
     (EXTI->PR) = flag;
