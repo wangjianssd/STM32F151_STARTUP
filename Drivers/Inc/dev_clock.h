@@ -1,26 +1,47 @@
 /**
- * @brief       : 
  *
- * @file        : clock.h
- * @author      : WangJian
- * @version     : v0.0.1
- * @date        : 2016/09/20
+ * @brief       :  
+ *
+ * @file        : dev_clock.h
+ * @author      : wangjian
+ * Version      : v0.0.1
+ * Date         : 2016-10-10
  *
  * Change Logs  :
  *
- * Date        Version      Author      Notes
- * 2016/09/20  v0.0.1       WangJian    first version
- */
+ * Date                 Version           Author          Notes
+ * 2016-10-10           v0.1              wangjian        first version 
+*/
+#ifndef  __DEV_CLOCK__
+#define  __DEV_CLOCK__
+    
+#ifdef __cplusplus
+     extern "C" {
+#endif
 
-#ifndef __DEV_CLOCK_H__
-#define __DEV_CLOCK_H__
+/* Includes ------------------------------------------------------------------*/
+
+/* Define --------------------------------------------------------------------*/
 
 /* Exported types ------------------------------------------------------------*/
 
-
-
-/* Exported functions --------------------------------------------------------*/
+/* Function prototypes -------------------------------------------------------*/
 bool DevClockInit(void);
+uint32_t DevClockHSEGet( void );
+uint32_t DevClockHSIGet( void );
+uint32_t DevClockLSEGet( void );
+uint32_t DevClockLSIGet( void );
+void DevClockMCOEnable( void );
+void DevClockMCODisnable( void );
+
+/* Variables -----------------------------------------------------------------*/
+
+
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

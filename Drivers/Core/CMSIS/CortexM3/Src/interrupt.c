@@ -172,7 +172,6 @@ void SysTickISR (void)
 *****************************************************************************/
 void SysTickInit( uint32_t tick )
 {
-    /*Configure the SysTick to have interrupt in 1ms time basis*/
     SysTick_Config(tick);
     
     /*Configure the SysTick IRQ priority */

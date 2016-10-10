@@ -25,6 +25,12 @@
 #include "dev_uart.h"
 #include "dev_gpio.h"
 
+/* Define --------------------------------------------------------------------*/
+#define __DEVICE_HSI_CLK__                      16000000
+#define __DEVICE_HSE_CLK__                      0
+#define __DEVICE_LSI_CLK__                      37000
+#define __DEVICE_LSE_CLK__                      32768
+
 /* Exported functions --------------------------------------------------------*/
 void DeviceInit (void);
 

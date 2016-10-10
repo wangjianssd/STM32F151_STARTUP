@@ -7,7 +7,7 @@
 ; * Version      : v0.0.1
 ; * Date         : 2016-10-09
 ; *
-;* Description        : STM32L151XD Devices vector for EWARM toolchain. 
+;* Description        : CORTEX M3 Devices vector for EWARM toolchain. 
 ;*                      This module performs:
 ;*                      - Set the initial SP
 ;*                      - Set the initial PC == ResetHandler,

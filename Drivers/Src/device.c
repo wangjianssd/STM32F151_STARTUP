@@ -85,23 +85,18 @@ static void MX_GPIO_Init(void)
 *****************************************************************************/
 void DeviceInit (void)
 {
-//初始化vector
+    //初始化vector
     IntInit();
-//
     CM3VectTabSetOffset(SRAM_BASE, INT_VECT_TABLE_OFFSET_ADDR);
-
-
-/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	//HAL_Init();
 
 	/* Configure the system clock */
 	DevClockInit ();
+    
+	/* Configure the MCO */
+    DevClockMCOEnable();
 
 	MX_GPIO_Init();
 
-	/* Initialize all configured peripherals */
-
-	//UART_Init();
    
 }
 

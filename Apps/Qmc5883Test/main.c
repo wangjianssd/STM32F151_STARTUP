@@ -51,11 +51,11 @@ int main(void)
 {
   DeviceInit();
   
-  BspCom1Init(115200);
+  BspCom1Init(256000);
   
   StartTaskCompileTimePrint((void *)0);
 
-  StartTaskSysTickTest((void *)0);
+  //StartTaskSysTickTest((void *)0);
   
   StartTaskGpioIntToggle((void *)0);
 
@@ -96,12 +96,16 @@ void StartTaskGpioIntToggle(void const * argument)
           if (byte == 'c')
           {
               DevGpioToggle(DEV_GPIO_PORTC,  DEV_GPIO_PIN6);
+
+              DevClockMCODisnable();
           }
       }
-    
+      
+      Delay (1000);
+     DevClockMCODisnable();
       BspCom1TxFIFOOut();
-      HAL_Delay (50);
-    
+      
+   
     }
 
 }
@@ -148,7 +152,7 @@ void StartDefaultTask(void const * argument)
 
   // ret = Qmc5883lConfig();
 
-  HAL_Delay(100);
+  Delay(100);
 BspCom1SendData( "\r\n \
 1 -> QMC5883L_REG_09_VALUE    (0x01)  512 2G  10HZ\r\n \
 2 -> QMC5883L_REG_09_VALUE    (0x41)  256 2G  10HZ\r\n \
@@ -161,11 +165,11 @@ BspCom1SendData( "\r\n \
 4 -> QMC5883L_REG_09_VALUE    (0xC1)   64 2G  10HZ \r\n"));      
   //while (DevUartRx(DEV_UART3, &reg_9, 1) != true);
   	BspCom1RxFIFOClear();
- 	while (BspCom1RxFIFOIsEmpty() == true);
+ //	while (BspCom1RxFIFOIsEmpty() == true);
 	
 	reg_9 = BspCom1RxFIFOOut();
  	
-		
+	reg_9 = '1';	
    if(reg_9 == '1')
    {
       reg_9 = 0x01;
@@ -197,7 +201,7 @@ BspCom1SendData( "\r\n \
   
   for(;;)
   {
-    HAL_Delay(100);
+    Delay(100);
     //osDelay(100);
     ret = BspQmc5883lGetData(magnet_raw);
     total_count++;
