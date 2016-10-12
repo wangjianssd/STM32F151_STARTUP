@@ -38,7 +38,7 @@ MultiCoreRunAll=1
 [JLinkDriver]
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=1634313646
+Checksum=-1222570577
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -67,9 +67,9 @@ Bp5=_ 0 "EMUL_CODE" "0x08003B50" 0 0 1 "" 0 "" 0
 Bp6=_ 0 "EMUL_CODE" "0x08003B68" 0 0 1 "" 0 "" 0
 Bp7=_ 0 "EMUL_CODE" "0x08003B7E" 0 0 1 "" 0 "" 0
 Bp8=_ 0 "EMUL_CODE" "0x08003B78" 0 0 1 "" 0 "" 0
-Bp9=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.121.5" 0 0 1 "" 0 "" 0
-Bp10=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.138.13" 0 0 1 "" 0 "" 0
-Bp11=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.134.13" 0 0 1 "" 0 "" 0
+Bp9=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.133.13" 0 0 1 "" 0 "" 0
+Bp10=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.152.13" 0 0 1 "" 0 "" 0
+Bp11=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.177.10" 0 0 1 "" 0 "" 0
 Count=12
 [Log file]
 LoggingEnabled=_ 0
