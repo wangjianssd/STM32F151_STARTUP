@@ -37,6 +37,8 @@
 *****************************************************************************/
 bool_t DevFlashUnlock( void )
 {
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
+
     if (HAL_FLASH_Unlock() != HAL_OK)
     {
         return DEF_FALSE;
@@ -119,15 +121,22 @@ bool_t DevFlashWrite( uint32_t address, uint8_t const *pdata, uint32_t len )
     uint32_t word;
     uint32_t addr;
     uint32_t word_addr;
-    
+    uint32_t temp;
     addr = address;
 
     if (len >= 4 - (address % 4))
     {
         if ((addr % 4) != 0)
         {	
+          //temp = address & 0xFFFFFFFFC;
+           temp = (*(uint32_t *)(address & 0xFFFFFFFFC));
+           
+            temp &=  (0xFFFFFFFF << ((4 - (addr % 4)) * 8));
+                                                              
             word = NToHL(NToHL((*((uint32_t *)pdata))) >> ((addr % 4) * 8) | (0xFFFFFFFF << ((4 - (addr % 4)) * 8)));
-	        word_addr = addr - (addr % 4);
+	        
+            word &= temp;
+            word_addr = addr - (addr % 4);
             
 	        if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, word_addr, word))
             {

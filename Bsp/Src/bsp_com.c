@@ -56,7 +56,7 @@ bool BspCom1Init(uint32_t buad )
 	config.stop_bit     = __COM1_CONFIG_STOP__;
 	config.flow_contrl 	= __COM1_CONFIG_FLOW_CTL__;
 
-    DevUartDeInit(__BSP_COM1__);
+    //DevUartDeInit(__BSP_COM1__);
 	
 	if (DevUartInit(__BSP_COM1__, config) != true)
 	{

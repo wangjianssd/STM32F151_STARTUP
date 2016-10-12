@@ -39,6 +39,8 @@
 /* Public variables ---------------------------------------------------------*/
     
 /* Private variables ---------------------------------------------------------*/
+#pragma location = ".USER_DATA"
+    const uint8_t  ROM1Tab[128] = {0xaa};
 
 /* Private function prototypes -----------------------------------------------*/
 void TaskSysTickTest(void const * argument);
@@ -47,9 +49,11 @@ void TaskQmc5883lTest(void const * argument);
 void TaskMCOTest(void const * argument);
 void TaskDeviceFlashTest(void const * argument);
 
+
 /* Private function prototypes -----------------------------------------------*/
 int main(void)
 {
+  
   DeviceInit();
     
   TaskCompileTimePrint((void *)0);
@@ -62,50 +66,67 @@ int main(void)
   while(1);
 }
 
+extern  uint32_t __RAM_END_FLAG_SIZE__;
 void TaskDeviceFlashTest(void const * argument)
 {
-  uint32_t addr;
-  uint8_t  data[512] = {0};
-  uint32_t len;
-  uint32_t i;
-  uint8_t  temp[512] = {0};
-  
-  BspCom1Init(256000);
-  
-  addr = (uint32_t)ComiledDateGet();
-  
-  len = 20;
+    uint32_t addr;
+    uint8_t  data[512] = {'%'};
+    uint32_t len;
+    uint32_t i;
+    uint8_t  temp[512] = {'@'};
+    uint32_t temp1;
+    BspCom1Init(256000);
+    uint8_t byte = '@';
+    i = sprintf(temp, "Device info:\r\n",ComiledDateGet(), ComiledTimeGet());
 
-  DevFlashRead(addr, data, len);
+    BspCom1SendData(temp,  i);
 
-    i = sprintf(temp, "addr:%02x: %s\r\n", addr, data);
-       
+    i = sprintf(temp, "Flash start:%02x, end:%02x, used:%02x, total::%d kb\r\n", 
+              __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_DUMMY_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
+
+    BspCom1SendData(temp,  i);
+
+    i = sprintf(temp, "Ram start:%02x, end:%02x, used:%02X, total:%d kb \r\n", 
+              __DEVICE_RAM_START_ADDR__, __DEVICE_RAM_END_ADDR__ , __DEVICE_RAM_DUMMY_SIZE__  , __DEVICE_RAM_TOTAL_SIZE__ / 1024);
+      
+    BspCom1SendData(temp,  i);
+
+//flash read
+    addr = (uint32_t)ComiledTimeGet();  
+
+    len = strlen((uint8_t *)addr);
+
+    DevFlashRead(addr, data, strlen((uint8_t *)addr));
+
+    i = sprintf(temp, "Read addr:%02x: %s\r\n", addr, data);
+
+    BspCom1SendData(temp,  i);
+
+//flash erase
+    DevFlashUnlock();
+
+  //  DevFlashErase(addr + 3);
+
+    DevFlashLock();
+
+    DevFlashRead(addr, data, len);
+
+    i = sprintf(temp, "Erase addr:%02x: %s\r\n", addr, data);
+
     BspCom1SendData(temp,  i);
     
+//flash write
     DevFlashUnlock();
-    addr += __DEVICE_FLASH_BANK_SIZE__;
-    DevFlashErase(addr);
+
+    DevFlashWrite(addr + 3, &byte, 1);
 
     DevFlashLock();
-    
+
     DevFlashRead(addr, data, len);
-    
-      i = sprintf(temp, "read addr:%02x: %s\r\n", addr, data);
-         
-      BspCom1SendData(temp,  i);
 
+    i = sprintf(temp, "read addr:%02x: %s\r\n", addr, data);
 
-    DevFlashUnlock();
-    
-    DevFlashWrite(addr, temp, strlen(temp));
-
-    DevFlashLock();
-    
-    DevFlashRead(addr, data, len);
-    
-      i = sprintf(temp, "read addr:%02x: %s\r\n", addr, data);
-         
-      BspCom1SendData(temp,  i);
+    BspCom1SendData(temp,  i);
 }
 
 void TaskSysTickTest(void const * argument)
@@ -131,6 +152,7 @@ void TaskCompileTimePrint(void const * argument)
   i = sprintf(temp, "Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
   
   BspCom1SendData(temp,  i);
+  
 }
 
 void TaskMCOTest(void const * argument)

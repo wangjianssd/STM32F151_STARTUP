@@ -133,6 +133,8 @@ void DebugMonISR (void)
 
 void SysTickISR (void)
 {
+    HAL_IncTick();
+
 //#if APP_OS_EN > 0
 //    
 //#if OS_CRITICAL_METHOD == 3u

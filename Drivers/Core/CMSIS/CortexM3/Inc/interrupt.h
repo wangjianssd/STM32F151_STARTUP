@@ -15,7 +15,7 @@ extern "C" {
 /*************************************************************************************************************
 *                                                 DEFINES                                                    *
 *************************************************************************************************************/
-#define INT_VECT_TABLE_OFFSET_ADDR              0x100UL
+#define INT_VECT_TABLE_OFFSET_ADDR              0UL
 #define INT_VECT_TABLE_ADDR                     (SRAM_BASE + INT_VECT_TABLE_OFFSET_ADDR)
 
 #define CORE_INT_SRC_NBR                        16u    
