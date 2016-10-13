@@ -266,7 +266,7 @@ void DevGpioIrqRegister( DevGpioPort port, DevGpioPin pin, DevGpioIntType type, 
  *   Modification: Created function
 
 *****************************************************************************/
-void DevGpioIrqHander()
+void DevGpioIrqHander(void)
 {
     uint16_t flag;
     uint8_t high;
@@ -320,10 +320,7 @@ void DevGpioIrqHander()
 *****************************************************************************/
 void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin )
 {
-    GPIO_InitTypeDef gpio;
-
     IRQn_Type irq;
-    FNCT_VOID isr;
     
 	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
     
@@ -348,9 +345,6 @@ void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin )
     IntVectRegister(irq, (FNCT_VOID)DevGpioIrqHander);
 
     IntEnable(irq);
-    //HAL_NVIC_EnableIRQ(irq);
-	
-	//__HAL_UART_ENABLE_IT(hander, irq);
 }
 
 /*****************************************************************************

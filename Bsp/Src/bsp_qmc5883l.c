@@ -19,8 +19,8 @@
 
     
 /* Private function prototypes -----------------------------------------------*/ 
-static bool BspQmc5883lPowerOn(void);
-static bool BspQmc5883lPowerOff(void);
+static void BspQmc5883lPowerOn(void);
+static void BspQmc5883lPowerOff(void);
 static bool BspQmc5883lI2cByteRead(uint8_t reg, uint8_t* data);
 static bool BspQmc5883lI2cBytesRead(uint8_t reg, uint8_t* data, uint16_t size);
 static bool BspQmc5883lI2cByteWrite (uint8_t reg, uint8_t  data);
@@ -44,7 +44,7 @@ static uint8_t FilterCount = 0;
  *   Modification: Created function
 
 *****************************************************************************/
-bool BspQmc5883lPowerOn(void)
+void BspQmc5883lPowerOn(void)
 {
   //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
   Delay(2);
@@ -63,7 +63,7 @@ bool BspQmc5883lPowerOn(void)
  *   Modification: Created function
 
 *****************************************************************************/
-bool BspQmc5883lPowerOff(void)
+void BspQmc5883lPowerOff(void)
 {
   //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
   

@@ -67,22 +67,27 @@ int main(void)
 }
 
 extern  uint32_t __RAM_END_FLAG_SIZE__;
+extern  uint32_t __ICFEDIT_region_USER_INFO_ADDR__;
+#pragma location = "USER_INFO"
+const uint8_t UserInfo[256] ={'H'};
+            
 void TaskDeviceFlashTest(void const * argument)
 {
     uint32_t addr;
-    uint8_t  data[512] = {'%'};
+    uint8_t  data[256] = {'%'};
     uint32_t len;
     uint32_t i;
-    uint8_t  temp[512] = {'@'};
+    uint8_t  temp[256] = {'@'};
     uint32_t temp1;
     BspCom1Init(256000);
-    uint8_t byte = '@';
+    uint8_t buffer[] = "BUFFER ARRAY DATA";
+    
     i = sprintf(temp, "Device info:\r\n",ComiledDateGet(), ComiledTimeGet());
 
     BspCom1SendData(temp,  i);
 
-    i = sprintf(temp, "Flash start:%02x, end:%02x, used:%02x, total::%d kb\r\n", 
-              __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_DUMMY_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
+    i = sprintf(temp, "Flash start:%02x, end:%02x, bank size:%d, used:%02x, total::%d kb\r\n", 
+              __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_BANK_SIZE__, __DEVICE_FLASH_DUMMY_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
 
     BspCom1SendData(temp,  i);
 
@@ -91,12 +96,16 @@ void TaskDeviceFlashTest(void const * argument)
       
     BspCom1SendData(temp,  i);
 
+    //i = sprintf(temp, "Flash USER INFO start:%02x,  UserInfo:%02x\r\n",  &__ICFEDIT_region_USER_INFO_ADDR__, UserInfo);
+
+    //BspCom1SendData(temp,  i);
+    
 //flash read
-    addr = (uint32_t)ComiledTimeGet();  
-
-    len = strlen((uint8_t *)addr);
-
-    DevFlashRead(addr, data, strlen((uint8_t *)addr));
+    addr = (uint32_t)&__ICFEDIT_region_USER_INFO_ADDR__;  
+    
+    memset (data, 0, sizeof(data));
+    
+    DevFlashRead(addr, data, sizeof(data) - 1);
 
     i = sprintf(temp, "Read addr:%02x: %s\r\n", addr, data);
 
@@ -105,11 +114,13 @@ void TaskDeviceFlashTest(void const * argument)
 //flash erase
     DevFlashUnlock();
 
-  //  DevFlashErase(addr + 3);
+    DevFlashErase(addr);
 
     DevFlashLock();
+    
+    memset (data, 0, sizeof(data));
 
-    DevFlashRead(addr, data, len);
+    DevFlashRead(addr, data, sizeof(data) - 1);
 
     i = sprintf(temp, "Erase addr:%02x: %s\r\n", addr, data);
 
@@ -118,11 +129,13 @@ void TaskDeviceFlashTest(void const * argument)
 //flash write
     DevFlashUnlock();
 
-    DevFlashWrite(addr + 3, &byte, 1);
+    DevFlashWrite(addr, buffer, sizeof(buffer));
 
     DevFlashLock();
 
-    DevFlashRead(addr, data, len);
+    memset (data, 0, sizeof(data));
+
+    DevFlashRead(addr, data, sizeof(data) - 1);
 
     i = sprintf(temp, "read addr:%02x: %s\r\n", addr, data);
 

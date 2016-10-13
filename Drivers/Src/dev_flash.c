@@ -118,68 +118,77 @@ bool_t DevFlashErase( uint32_t address)
 bool_t DevFlashWrite( uint32_t address, uint8_t const *pdata, uint32_t len )
 {
     uint32_t i;
+    uint32_t j;
     uint32_t word;
     uint32_t addr;
     uint32_t word_addr;
     uint32_t temp;
+    
     uint8_t bank_buffer[__DEVICE_FLASH_BANK_SIZE__];
     addr = address;
-
+    j = len;
+    
     if (len >= 4 - (address % 4))
     {
         if ((addr % 4) != 0)
         {	
             //read bank back
-            addr = (address /__DEVICE_FLASH_BANK_SIZE__) * __DEVICE_FLASH_BANK_SIZE__;
+            //addr = (address /__DEVICE_FLASH_BANK_SIZE__) * __DEVICE_FLASH_BANK_SIZE__;
             
-            DevFlashRead (addr, bank_buffer, __DEVICE_FLASH_BANK_SIZE__);
+            //DevFlashRead (addr, bank_buffer, __DEVICE_FLASH_BANK_SIZE__);
 
             //read modify word
             addr = address;
             
             temp =  (*(uint32_t *)(address & 0xFFFFFFFFC)) & (0xFFFFFFFF << ((4 - (addr % 4)) * 8));
-            word =  *((uint32_t *)pdata) << ((4 - addr % 4) * 8); 
+           // word =  *((uint32_t *)pdata) << ((4 - addr % 4) * 8); 
             word = 0;
             for (i = 0; i < (4 - (addr %4)); i++)
             {
-              word << 8;
+              word <<= 8;
               
               word |= pdata[i];
             }	        
+            
             word |= temp;
+            
+            word = NToHL(word);
             word_addr = addr - (addr % 4);
             
-            addr = (address % __DEVICE_FLASH_BANK_SIZE__) / 4 * 4;
+            //addr = (address % __DEVICE_FLASH_BANK_SIZE__) / 4 * 4;
             
             //fill the bank arrary
-            *((uint32_t *)&bank_buffer[addr]) = word;
+            //*((uint32_t *)&bank_buffer[addr]) = word;
 
             //erase bank
-            if (DEF_TRUE != DevFlashErase (word_addr))
+            //if (DEF_TRUE != DevFlashErase (word_addr))
+            //{
+            //    return DEF_FALSE;
+            //}
+
+            //write bank
+//            for (i = 0; i < (__DEVICE_FLASH_BANK_SIZE__ / 4); i++)
+//            {
+//                word_addr = (address /__DEVICE_FLASH_BANK_SIZE__) * __DEVICE_FLASH_BANK_SIZE__ + i * 4;
+//                
+//                word = *((uint32_t *)&bank_buffer[i * 4]);
+//
+//                if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, word_addr, word))
+//                {
+//                    return DEF_FALSE;
+//                }
+//            }
+
+            if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, word_addr, word))
             {
                 return DEF_FALSE;
             }
-
-            //write bank
-            for (i = 0; i < (__DEVICE_FLASH_BANK_SIZE__ / 4); i++)
-            {
-                word_addr = (address /__DEVICE_FLASH_BANK_SIZE__) * __DEVICE_FLASH_BANK_SIZE__ + i * 4;
-                
-                word = *((uint32_t *)&bank_buffer[i * 4]);
-
-                if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, word_addr, word))
-                {
-                    return DEF_FALSE;
-                }
-            }
-
-
     	    pdata += 4 - (addr % 4);	
-    	    len = len - (4 - (addr % 4));
+    	    j = len - (4 - (addr % 4));
     	    addr = addr - (addr % 4) + 4;		
         }
 
-        for (i = 0; i < len / 4; i++)
+        for (i = 0; i < j / 4; i++)
         {
             word_addr = addr + i * 4;				
             word = *(((uint32_t *)pdata) + i);
@@ -190,10 +199,25 @@ bool_t DevFlashWrite( uint32_t address, uint8_t const *pdata, uint32_t len )
             }
         }
     
-        if ((len % 4) != 0)
+        if ((j % 4) != 0)
         {
             word_addr = addr + i * 4;
-            word = NToHL(NToHL((*((uint32_t *)pdata + i))) | (0xFFFFFFFF >> (((addr + len) % 4) * 8))); 
+            temp = *(uint32_t *)(word_addr);
+                    
+            word = 0;
+            for (i = 0; i < (j % 4); i++)
+            {         
+              word <<= 8;
+
+              word |= pdata[len - i - (4 - address % 4 + 1)];
+              
+            }	        
+            
+            word |= temp;
+            //word_addr = addr - (addr % 4);
+            
+            //word_addr = addr + i * 4;
+            //word = NToHL(NToHL((*((uint32_t *)pdata + i))) | (0xFFFFFFFF >> (((addr + len) % 4) * 8))); 
             
             if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, word_addr, word))
             {

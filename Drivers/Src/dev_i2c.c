@@ -77,9 +77,7 @@ void DevI2cIOInit( DevI2c i2c )
 
 *****************************************************************************/
 void DevI2cIODeInit( DevI2c i2c )
-{
-	GPIO_InitTypeDef GPIO_InitStruct;
-	
+{	
 	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
 	
 	if(i2c == DEV_I2C1)

@@ -632,8 +632,6 @@ void DevUartIOInit( DevUart uart )
 *****************************************************************************/
 void DevUartIODeInit( DevUart uart )
 {
-	GPIO_InitTypeDef GPIO_InitStruct;
-
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
 	if(uart == DEV_UART3)
