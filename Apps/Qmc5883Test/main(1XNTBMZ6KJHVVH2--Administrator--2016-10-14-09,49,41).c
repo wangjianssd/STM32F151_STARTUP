@@ -68,11 +68,10 @@ int main(void)
 
 extern  uint32_t __RAM_END_FLAG_SIZE__;
 extern  uint32_t __ICFEDIT_region_USER_INFO_ADDR__;
-//#pragma location = "USER_INFO"
-__root const uint8_t UserInfo[256] @ "USER_INFO" ={"111111111111"};
-//__root  const uint8_t UserInfo[256] @ "USER_INFO" ={"22222222222222"};
-
-
+#pragma location = "USER_INFO"
+const uint8_t UserInfo[256] ={"abcdefghijklmn"};
+//const uint8_t UserInfo[256] ={"1234567890"};
+            
 void TaskDeviceFlashTest(void const * argument)
 {
     uint32_t addr;
@@ -93,14 +92,14 @@ void TaskDeviceFlashTest(void const * argument)
 
     BspCom1SendData(temp,  i);
 
-    i = sprintf(temp, "Ram start:%02x, end:%02x, used:%d bytes, total:%d kb \r\n", 
-              __DEVICE_RAM_START_ADDR__, __DEVICE_RAM_END_ADDR__ , __DEVICE_RAM_USED_SIZE__, __DEVICE_RAM_TOTAL_SIZE__ / 1024);
+    i = sprintf(temp, "Ram start:%02x, end:%02x, used:%02X, total:%d kb \r\n", 
+              __DEVICE_RAM_START_ADDR__, __DEVICE_RAM_END_ADDR__ , __DEVICE_RAM_DUMMY_SIZE__  , __DEVICE_RAM_TOTAL_SIZE__ / 1024);
       
     BspCom1SendData(temp,  i);
 
-  //  i = sprintf(temp, "Flash USER INFO start:%02x,  UserInfo:%02x\r\n",  &__ICFEDIT_region_USER_INFO_ADDR__, UserInfo);
+    i = sprintf(temp, "Flash USER INFO start:%02x,  UserInfo:%02x\r\n",  &__ICFEDIT_region_USER_INFO_ADDR__, UserInfo);
 
-  //  BspCom1SendData(temp,  i);
+    BspCom1SendData(temp,  i);
     
 //flash read
     addr = (uint32_t)&__ICFEDIT_region_USER_INFO_ADDR__;  

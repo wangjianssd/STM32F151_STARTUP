@@ -2,6 +2,10 @@
 
 "--cpu=Cortex-M3" 
 
+"--log" 
+
+"initialization" 
+
 "--fpu=None" 
 
 "-p" 
