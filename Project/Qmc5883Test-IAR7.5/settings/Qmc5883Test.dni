@@ -38,7 +38,7 @@ MultiCoreRunAll=1
 [JLinkDriver]
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=178142044
+Checksum=1790461123
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -56,6 +56,17 @@ Fmt2={W}1:__ICFEDIT_region_RAM_start__	4	0
 Fmt3={W}1:__ICFEDIT_region_ROM_end__	4	0
 Fmt4={W}1:__ICFEDIT_region_ROM_start__	4	0
 Fmt5={W}1:__ICFEDIT_region_USER_INFO_ADDR__	4	0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"
+[CallStackLog]
+Enabled=0
+[CallStackStripe]
+ShowTiming=1
 [Disassemble mode]
 mode=0
 [Breakpoints2]
@@ -72,17 +83,6 @@ Bp9=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.110.5" 0 0 1 "" 
 Bp10=_ 0 "EMUL_CODE" "0x08003B4C" 0 0 1 "" 0 "" 0
 Bp11=_ 0 "EMUL_CODE" "0x08003B7A" 0 0 1 "" 0 "" 0
 Count=12
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 1
-LogFile=_ "$PROJ_DIR$\TermIO.log"
 [Aliases]
 Count=0
 SuppressDialog=0
-[CallStackLog]
-Enabled=0
-[CallStackStripe]
-ShowTiming=1

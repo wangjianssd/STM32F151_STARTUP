@@ -27,44 +27,30 @@
 #include "dev_flash.h"
 
 /* Golable Variable--------------------------------------------------------------------*/
-#pragma section = ".data"
-#pragma section = ".data_init"
-#pragma section = ".bss"
-#pragma section = "HEAP"
-#pragma section = "CSTACK"
+#pragma section = "ROM_CONTENT"
+#pragma section = "RAM_CONTENT"
 
 extern  uint32_t __ICFEDIT_region_RAM_start__;
 extern  uint32_t __ICFEDIT_region_RAM_end__;
 extern  uint32_t __ICFEDIT_region_ROM_start__;
 extern  uint32_t __ICFEDIT_region_ROM_end__;
-extern  uint32_t __ICFEDIT_size_cstack__;
-extern  uint32_t __ICFEDIT_size_heap__;
-extern  uint32_t Region$$Table$$Base;
-
-typedef struct
-{
-	uint32_t         fun;       /*!< Specifies the function ptr */
-	uint32_t         bss_size;  /*!< Region .bss size */
-	uint32_t         bss_addr;  /*!< Region .bss address */
-	uint32_t         reserve;   /*!< reserve */
-}IarBssRegion;
 
 /* Define --------------------------------------------------------------------*/
 #define __DEVICE_HSI_CLK__                      (16000000ul)
 #define __DEVICE_HSE_CLK__                      (0u)
 #define __DEVICE_LSI_CLK__                      (37000ul)
 #define __DEVICE_LSE_CLK__                      (32768ul)
+
 #define __DEVICE_FLASH_START_ADDR__             ((uint32_t)&__ICFEDIT_region_ROM_start__)
 #define __DEVICE_FLASH_END_ADDR__               ((uint32_t)&__ICFEDIT_region_ROM_end__)
-#define __DEVICE_FLASH_TOTAL_SIZE__             (__DEVICE_FLASH_END_ADDR__ - __DEVICE_FLASH_START_ADDR__ + 1)
-//#define __DEVICE_FLASH_DUMMY_SIZE__             ((uint32_t)__section_begin(".data_init") + __section_size(".data_init") \
-                                                 -__DEVICE_FLASH_START_ADDR__ + 1)
-#define __DEVICE_FLASH_DUMMY_SIZE__             ((uint32_t)__section_end(".data_init") - __DEVICE_FLASH_START_ADDR__ + 1)
+#define __DEVICE_FLASH_TOTAL_SIZE__             (__DEVICE_FLASH_END_ADDR__ - __DEVICE_FLASH_START_ADDR__ + 1)                                             
+#define __DEVICE_FLASH_USED_SIZE__              ((uint32_t)__section_end("ROM_CONTENT") - __DEVICE_FLASH_START_ADDR__)
 #define __DEVICE_FLASH_BANK_SIZE__              (FLASH_PAGE_SIZE)
+
 #define __DEVICE_RAM_START_ADDR__               ((uint32_t)&__ICFEDIT_region_RAM_start__)
 #define __DEVICE_RAM_END_ADDR__                 ((uint32_t)&__ICFEDIT_region_RAM_end__)
 #define __DEVICE_RAM_TOTAL_SIZE__               (__DEVICE_RAM_END_ADDR__ - __DEVICE_RAM_START_ADDR__ + 1)
-#define __DEVICE_RAM_USED_SIZE__                 ((uint32_t)__section_end(".bss") + __section_size("HEAP") + __section_size("CSTACK") - __DEVICE_RAM_START_ADDR__)
+#define __DEVICE_RAM_USED_SIZE__                ((uint32_t)__section_end("RAM_CONTENT") - __DEVICE_RAM_START_ADDR__)
 
 /* Exported functions --------------------------------------------------------*/
 void DeviceInit (void);

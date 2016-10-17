@@ -66,10 +66,10 @@ int main(void)
   while(1);
 }
 
-extern  uint32_t __RAM_END_FLAG_SIZE__;
-extern  uint32_t __ICFEDIT_region_USER_INFO_ADDR__;
+//extern  uint32_t __RAM_END_FLAG_SIZE__;
+//extern  uint32_t __ICFEDIT_region_USER_INFO_ADDR__;
 //#pragma location = "USER_INFO"
-__root const uint8_t UserInfo[256] @ "USER_INFO" ={"111111111111"};
+//__root const uint8_t UserInfo[256] @ "USER_INFO" ={"111111111111"};
 //__root  const uint8_t UserInfo[256] @ "USER_INFO" ={"22222222222222"};
 
 
@@ -88,8 +88,8 @@ void TaskDeviceFlashTest(void const * argument)
 
     BspCom1SendData(temp,  i);
 
-    i = sprintf(temp, "Flash start:%02x, end:%02x, bank size:%d, used:%02x, total::%d kb\r\n", 
-              __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_BANK_SIZE__, __DEVICE_FLASH_DUMMY_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
+    i = sprintf(temp, "Flash start:%02x, end:%02x, bank size:%d, used:%d, total::%d kb\r\n", 
+              __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_BANK_SIZE__, __DEVICE_FLASH_USED_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
 
     BspCom1SendData(temp,  i);
 
@@ -103,7 +103,7 @@ void TaskDeviceFlashTest(void const * argument)
   //  BspCom1SendData(temp,  i);
     
 //flash read
-    addr = (uint32_t)&__ICFEDIT_region_USER_INFO_ADDR__;  
+   // addr = (uint32_t)&__ICFEDIT_region_USER_INFO_ADDR__;  
     
     memset (data, 0, sizeof(data));
     
