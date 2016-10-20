@@ -9,8 +9,13 @@ extern "C" {
 #endif
 #include "lib.h"
 //#include <stdint.h>
-#include "stm32l151xd.h"
+#ifdef STM32L151xB
+#include "stm32l151xb.h"
+#endif
 
+#ifdef STM32L151xD
+#include "stm32l151xd.h"
+#endif
 
 /*************************************************************************************************************
 *                                                 DEFINES                                                    *

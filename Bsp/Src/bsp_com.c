@@ -55,6 +55,11 @@ bool BspCom1Init(uint32_t buad )
 	config.parity 		= __COM1_CONFIG_PARITY__;
 	config.stop_bit     = __COM1_CONFIG_STOP__;
 	config.flow_contrl 	= __COM1_CONFIG_FLOW_CTL__;
+    config.uart_pin.rx_port = DEV_UART1_PIN_AF0_TX_PORT;
+    config.uart_pin.rx_pin  = DEV_UART1_PIN_AF0_TX_PIN;
+    config.uart_pin.tx_port = DEV_UART1_PIN_AF0_RX_PORT;
+    config.uart_pin.tx_pin  = DEV_UART1_PIN_AF0_RX_PIN;
+    config.uart_pin.rx_port = DEV_UART_PIN_AF0;
 
     //DevUartDeInit(__BSP_COM1__);
 	

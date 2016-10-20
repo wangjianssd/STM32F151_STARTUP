@@ -22,7 +22,7 @@
 /* Includes ------------------------------------------------------------------*/
 
 /* Define --------------------------------------------------------------------*/
-#define	__BSP_COM1__                                DEV_UART3
+#define	__BSP_COM1__                                DEV_UART1
 #define	__BSP_COM2__                                DEV_UART2
 #define	__BSP_COM3__                                DEV_UART1
 
@@ -31,8 +31,14 @@
 #define	__COM1_CONFIG_BIT__                         DEV_UART_WORDLENGTH_8B
 #define	__COM1_CONFIG_PARITY__                      DEV_UART_PARITY_NONE
 #define	__COM1_CONFIG_FLOW_CTL__                    UART_HWCONTROL_NONE
-#define	__COM1_TX_FIFO_SIZE__                       512
-#define	__COM1_RX_FIFO_SIZE__                       512
+#define	__COM1_TX_FIFO_SIZE__                       256
+#define	__COM1_RX_FIFO_SIZE__                       256
+#define	__COM1_TX_PORT__                            DEV_UART1_PIN_AF0_TX_PORT
+#define	__COM1_TX_PIN__                             DEV_UART1_PIN_AF0_TX_PIN
+#define	__COM1_RX_PORT__                            DEV_UART1_PIN_AF0_RX_PORT
+#define	__COM1_RX_PIN__                             DEV_UART1_PIN_AF0_RX_PIN
+#define	__COM1_RX_PIN_AF__                          DEV_UART_PIN_AF0
+
 
 /* Exported types ------------------------------------------------------------*/
 

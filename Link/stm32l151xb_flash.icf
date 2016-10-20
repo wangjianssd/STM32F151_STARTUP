@@ -5,23 +5,23 @@
 define symbol __ICFEDIT_intvec_start__ = 0x08000000;
 /*-Memory Regions-*/
 define exported symbol __ICFEDIT_region_ROM_start__ = 0x08000000 ;
-define exported symbol __ICFEDIT_region_ROM_end__   = 0x0805FFFF;
+define exported symbol __ICFEDIT_region_ROM_end__   = 0x0801FFFF;
 define exported symbol __ICFEDIT_region_RAM_start__ = 0x20000000;
-define exported symbol __ICFEDIT_region_RAM_end__   = 0x2000BFFF;
-
+define exported symbol __ICFEDIT_region_RAM_end__   = 0x20003FFF;
 /*-Sizes-*/
-define exported symbol __ICFEDIT_size_cstack__ = 0x500;
-define exported symbol __ICFEDIT_size_heap__   = 0x200;
+define symbol __ICFEDIT_size_cstack__ = 0x400;
+define symbol __ICFEDIT_size_heap__   = 0x200;
 /**** End of ICF editor section. ###ICF###*/
+
 
 define memory mem with size = 4G;
 define region ROM_region   = mem:[from __ICFEDIT_region_ROM_start__   to __ICFEDIT_region_ROM_end__];
 define region RAM_region   = mem:[from __ICFEDIT_region_RAM_start__   to __ICFEDIT_region_RAM_end__];
 
-define block CSTACK      with alignment = 8, size = __ICFEDIT_size_cstack__   { };
-define block HEAP        with alignment = 8, size = __ICFEDIT_size_heap__     { };
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
 
-define exported symbol __ICFEDIT_region_USER_INFO_ADDR__   = __ICFEDIT_region_ROM_end__ + 1 - 256;
+define exported symbol __ICFEDIT_region_USER_INFO_ADDR__   = __ICFEDIT_region_ROM_start__  + ((__ICFEDIT_region_ROM_end__ - __ICFEDIT_region_ROM_start__ )/ 2) + 1 - 256;
 place at address mem:__ICFEDIT_region_USER_INFO_ADDR__ { readonly section USER_INFO };
 
 //define symbol __ICFEDIT_region_USER_DATA_ADDR__   = 0x08050000;

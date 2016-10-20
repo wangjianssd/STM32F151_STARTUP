@@ -2117,6 +2117,9 @@
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_com.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_hmc5983.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_qmc5883l.h</name>
       </file>
     </group>
@@ -2127,6 +2130,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_com.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_hmc5983.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_qmc5883l.c</name>
@@ -2162,6 +2168,9 @@
         </group>
         <group>
           <name>Device</name>
+          <file>
+            <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\Device\stm32l151xb.h</name>
+          </file>
           <file>
             <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\Device\stm32l151xd.h</name>
           </file>
@@ -2591,6 +2600,9 @@
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_i2c.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_spi.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_uart.h</name>
       </file>
       <file>
@@ -2610,6 +2622,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_i2c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_spi.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_uart.c</name>

@@ -30,8 +30,10 @@ static GPIO_TypeDef *GpioPortTab[DEV_GPIO_PORT_NUM] =
     GPIOC,
     GPIOD,
     GPIOE,
+#ifdef STM32L151xD    
     GPIOF,
     GPIOG
+#endif       
 };
 
 static const uint16_t GpioPinTab[DEV_GPIO_PIN_NUM] =
@@ -363,7 +365,7 @@ void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin )
 *****************************************************************************/
 void DevGpioIrqDisable( DevGpioPort port, DevGpioPin pin )
 {
-    GPIO_InitTypeDef gpio;
+    //GPIO_InitTypeDef gpio;
 
     IRQn_Type irq;
     
@@ -374,7 +376,7 @@ void DevGpioIrqDisable( DevGpioPort port, DevGpioPin pin )
 	/* Peripheral interrupt init */
     if (pin < DEV_GPIO_PIN5)
     {
-        irq = pin + EXTI0_IRQn;
+        irq = (IRQn_Type)((IRQn_Type)pin + EXTI0_IRQn);
     }
     else if (pin < DEV_GPIO_PIN10)
     {

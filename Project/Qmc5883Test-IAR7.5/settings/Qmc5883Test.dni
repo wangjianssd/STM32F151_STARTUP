@@ -38,7 +38,7 @@ MultiCoreRunAll=1
 [JLinkDriver]
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=1790461123
+Checksum=1884891461
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -46,9 +46,11 @@ StopOnThrow=_ 0
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[struct_types]
+Fmt0=SPI_TypeDef-CR1	4	0
 [array_types]
 Fmt0=uint8_t[13]	4	0
-Fmt1=uint8_t[6]	4	0
+Fmt1=uint8_t[6]	3	0
 [watch_formats]
 Fmt0={W}1:DevGpioRegisterFlag	1	0
 Fmt1={W}1:__ICFEDIT_region_RAM_end__	4	0
@@ -56,17 +58,6 @@ Fmt2={W}1:__ICFEDIT_region_RAM_start__	4	0
 Fmt3={W}1:__ICFEDIT_region_ROM_end__	4	0
 Fmt4={W}1:__ICFEDIT_region_ROM_start__	4	0
 Fmt5={W}1:__ICFEDIT_region_USER_INFO_ADDR__	4	0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 1
-LogFile=_ "$PROJ_DIR$\TermIO.log"
-[CallStackLog]
-Enabled=0
-[CallStackStripe]
-ShowTiming=1
 [Disassemble mode]
 mode=0
 [Breakpoints2]
@@ -75,14 +66,21 @@ Bp1=_ 0 "EMUL_CODE" "{}.687.11" 0 0 1 "" 0 "" 0
 Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_i2c.c}.4586.7" 0 0 1 "" 0 "" 0
 Bp3=_ 0 "EMUL_DATA" "FilterArrary" 2 0 0 0 4294967295
 Bp4=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_flash.c}.675.3" 0 0 1 "" 0 "" 0
-Bp5=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.212.15" 0 0 1 "" 0 "" 0
-Bp6=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.207.13" 0 0 1 "" 0 "" 0
-Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.169.3" 0 0 1 "" 0 "" 0
-Bp8=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.134.5" 0 0 1 "" 0 "" 0
-Bp9=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.110.5" 0 0 1 "" 0 "" 0
-Bp10=_ 0 "EMUL_CODE" "0x08003B4C" 0 0 1 "" 0 "" 0
-Bp11=_ 0 "EMUL_CODE" "0x08003B7A" 0 0 1 "" 0 "" 0
-Count=12
+Bp5=_ 0 "EMUL_CODE" "0x08003B4C" 0 0 1 "" 0 "" 0
+Bp6=_ 0 "EMUL_CODE" "0x08003B7A" 0 0 1 "" 0 "" 0
+Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.45.5" 0 0 1 "" 0 "" 0
+Count=8
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"
 [Aliases]
 Count=0
 SuppressDialog=0
+[CallStackLog]
+Enabled=0
+[CallStackStripe]
+ShowTiming=1

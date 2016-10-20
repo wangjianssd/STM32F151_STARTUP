@@ -25,6 +25,7 @@
 #include "dev_uart.h"
 #include "dev_gpio.h"
 #include "dev_flash.h"
+#include "dev_spi.h"
 
 /* Golable Variable--------------------------------------------------------------------*/
 #pragma section = "ROM_CONTENT"
@@ -36,6 +37,14 @@ extern  uint32_t __ICFEDIT_region_ROM_start__;
 extern  uint32_t __ICFEDIT_region_ROM_end__;
 
 /* Define --------------------------------------------------------------------*/
+#ifdef  STM32L151xD
+#define __STM32L151xD__
+#endif
+
+#ifdef  STM32L151xB
+#define __STM32L151xDB__
+#endif
+
 #define __DEVICE_HSI_CLK__                      (16000000ul)
 #define __DEVICE_HSE_CLK__                      (0u)
 #define __DEVICE_LSI_CLK__                      (37000ul)

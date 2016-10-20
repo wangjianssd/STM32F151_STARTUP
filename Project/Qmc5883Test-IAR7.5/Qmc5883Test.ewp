@@ -89,7 +89,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STM32L151xD	ST STM32L151xD</state>
+          <state>STM32L151xB	ST STM32L151xB</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -149,7 +149,7 @@
         </option>
         <option>
           <name>GFPUDeviceSlave</name>
-          <state>STM32L151xD	ST STM32L151xD</state>
+          <state>STM32L151xB	ST STM32L151xB</state>
         </option>
         <option>
           <name>FPU2</name>
@@ -186,7 +186,7 @@
         <option>
           <name>CCDefines</name>
           <state>USE_HAL_DRIVER</state>
-          <state>STM32L151xD</state>
+          <state>STM32L151xB</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -214,7 +214,7 @@
         </option>
         <option>
           <name>CCListAssFile</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCListAssSource</name>
@@ -499,7 +499,7 @@
         </option>
         <option>
           <name>AList</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>AListHeader</name>
@@ -744,7 +744,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$/../../Link/stm32l151xd_flash.icf</state>
+          <state>$PROJ_DIR$/../../Link/stm32l151xb_flash.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -813,7 +813,7 @@
         </option>
         <option>
           <name>FillerByte</name>
-          <state>0xFF</state>
+          <state>0x55</state>
         </option>
         <option>
           <name>FillerStart</name>
@@ -821,7 +821,7 @@
         </option>
         <option>
           <name>FillerEnd</name>
-          <state>0x0</state>
+          <state>0x001fffe</state>
         </option>
         <option>
           <name>CrcSize</name>
@@ -1955,6 +1955,9 @@
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_com.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_hmc5983.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_qmc5883l.h</name>
       </file>
     </group>
@@ -1965,6 +1968,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_com.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_hmc5983.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_qmc5883l.c</name>
@@ -2000,6 +2006,9 @@
         </group>
         <group>
           <name>Device</name>
+          <file>
+            <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\Device\stm32l151xb.h</name>
+          </file>
           <file>
             <name>$PROJ_DIR$\..\..\Drivers\Core\CMSIS\Device\stm32l151xd.h</name>
           </file>
@@ -2429,6 +2438,9 @@
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_i2c.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_spi.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_uart.h</name>
       </file>
       <file>
@@ -2448,6 +2460,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_i2c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_spi.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_uart.c</name>

@@ -46,6 +46,7 @@
 void TaskSysTickTest(void const * argument);
 void TaskCompileTimePrint(void const * argument);
 void TaskQmc5883lTest(void const * argument);
+void Taskhmc5983Test(void const * argument);
 void TaskMCOTest(void const * argument);
 void TaskDeviceFlashTest(void const * argument);
 
@@ -55,61 +56,52 @@ int main(void)
 {
   
   DeviceInit();
-    
+  
   TaskCompileTimePrint((void *)0);
-
   //StartTaskSysTickTest((void *)0);
   TaskDeviceFlashTest((void *)0);
   //TaskMCOTest((void *)0);
 
   //TaskQmc5883lTest((void *)0);
+  Taskhmc5983Test((void *)0);
   while(1);
 }
 
-//extern  uint32_t __RAM_END_FLAG_SIZE__;
-//extern  uint32_t __ICFEDIT_region_USER_INFO_ADDR__;
-//#pragma location = "USER_INFO"
-//__root const uint8_t UserInfo[256] @ "USER_INFO" ={"111111111111"};
-//__root  const uint8_t UserInfo[256] @ "USER_INFO" ={"22222222222222"};
 
+#pragma location = "USER_INFO"
+__root const uint8_t UserInfo[256] @ "USER_INFO" ={"12345678910a"};
 
 void TaskDeviceFlashTest(void const * argument)
 {
     uint32_t addr;
-    uint8_t  data[256] = {'%'};
-    uint32_t len;
     uint32_t i;
-    uint8_t  temp[256] = {'@'};
-    uint32_t temp1;
+    uint8_t  data[256];
+    uint8_t  temp[256];
+    uint32_t a;
+    extern  uint32_t __ICFEDIT_region_USER_INFO_ADDR__;
+    
     BspCom1Init(256000);
-    uint8_t buffer[] = "BUFFER ARRAY DATA";
+    uint8_t buffer[] = "BUFFER ARRAY DATA.";
     
     i = sprintf(temp, "Device info:\r\n",ComiledDateGet(), ComiledTimeGet());
-
     BspCom1SendData(temp,  i);
 
     i = sprintf(temp, "Flash start:%02x, end:%02x, bank size:%d, used:%d, total::%d kb\r\n", 
               __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_BANK_SIZE__, __DEVICE_FLASH_USED_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
-
     BspCom1SendData(temp,  i);
 
     i = sprintf(temp, "Ram start:%02x, end:%02x, used:%d bytes, total:%d kb \r\n", 
               __DEVICE_RAM_START_ADDR__, __DEVICE_RAM_END_ADDR__ , __DEVICE_RAM_USED_SIZE__, __DEVICE_RAM_TOTAL_SIZE__ / 1024);
-      
     BspCom1SendData(temp,  i);
-
-  //  i = sprintf(temp, "Flash USER INFO start:%02x,  UserInfo:%02x\r\n",  &__ICFEDIT_region_USER_INFO_ADDR__, UserInfo);
-
-  //  BspCom1SendData(temp,  i);
     
 //flash read
-   // addr = (uint32_t)&__ICFEDIT_region_USER_INFO_ADDR__;  
     
+    addr = (uint32_t)&__ICFEDIT_region_USER_INFO_ADDR__;  
     memset (data, 0, sizeof(data));
-    
-    DevFlashRead(addr, data, sizeof(data) - 1);
 
-    i = sprintf(temp, "Read addr:%02x: %s\r\n", addr, data);
+    DevFlashRead(addr, data, sizeof(data));
+
+    i = sprintf(temp, "Read  addr:%02x: %s\r\n", addr, data);
 
     BspCom1SendData(temp,  i);
 
@@ -134,7 +126,11 @@ void TaskDeviceFlashTest(void const * argument)
     DevFlashWrite(addr, buffer, sizeof(buffer));
 
     DevFlashLock();
+    
+    i = sprintf(temp, "write addr:%02x: %s\r\n", addr, buffer);
 
+    BspCom1SendData(temp,  i);
+    
     memset (data, 0, sizeof(data));
 
     DevFlashRead(addr, data, sizeof(data) - 1);
@@ -234,6 +230,53 @@ void TaskMCOTest(void const * argument)
    
     }
 
+}
+void Taskhmc5983Test(void const * argument)
+{
+    bool ret;
+    int16_t x;
+    int16_t y;
+    int16_t z; 
+    uint8_t temp[64];
+    uint8_t i;
+    
+    BspCom1Init(256000);
+
+    ret = BspHmc5983Init();
+    
+    BspCom1SendData("\r\n--------------HMC5983 Init--------------------------\r\n",
+                       sizeof( "\r\n--------------HMC5983 Init--------------------------\r\n"));
+
+    if(true == ret)
+    {
+        BspCom1SendData("\r\n--------------HMC5983 Init success--------------------------\r\n",
+                           sizeof( "\r\n--------------HMC5983 Init success--------------------------\r\n"));
+    }
+    else
+    {
+        BspCom1SendData("\r\n--------------HMC5983 Init fail--------------------------\r\n",
+                           sizeof( "\r\n--------------HMC5983 Init fail--------------------------\r\n"));
+
+    }
+
+    while(1)
+    {
+        if (BspHmc5983SensorDetect(&x, &y , &z) == true)
+        {
+            i = sprintf(temp, "Magnet X:%d, Y:%d, Z:%d\r\n", x, y, z);
+
+            BspCom1SendData(temp,  i);
+
+        }
+        else
+        {
+             BspCom1SendData("Magnet get failed\r\n",  sizeof("Magnet get failed\r\n"));
+        }
+        
+        Delay(50);
+
+    }
+    
 }
 
 void TaskQmc5883lTest(void const * argument)

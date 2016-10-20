@@ -37,8 +37,13 @@
 *****************************************************************************/
 bool_t DevFlashUnlock( void )
 {
+#ifdef  STM32L151xD
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR | FLASH_FLAG_OPTVERRUSR);
-
+#endif
+    
+#ifdef  STM32L151xB
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR | FLASH_FLAG_OPTVERR);
+#endif
     if (HAL_FLASH_Unlock() != HAL_OK)
     {
         return DEF_FALSE;
@@ -209,7 +214,7 @@ bool_t DevFlashWrite( uint32_t address, uint8_t const *pdata, uint32_t len )
             {         
               word <<= 8;
 
-              word |= pdata[len - i - (4 - address % 4 + 1)];
+              word |= pdata[j - i - 1];
               
             }	        
             
@@ -265,7 +270,7 @@ void DevFlashRead( uint32_t address, uint8_t *pdata, uint32_t len )
 {
     for (uint32_t i = 0; i < len; i++)
     {
-        pdata[i] = (uint8_t)(*(DEF_IO uint32_t*)(address + i));
+        pdata[i] = *((DEF_IO uint8_t*)(address + i));
     }
 
 }
