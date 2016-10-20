@@ -15,12 +15,59 @@
 #ifndef __DEV_I2C_H__
 #define __DEV_I2C_H__
 
+/* Includes ------------------------------------------------------------------*/
+#include "dev_gpio.h"
+
+/* Define --------------------------------------------------------------------*/
+
+/*              |I2C1		 |I2C2	      |
+DEV_I2C_PIN_AF0 |SDA	SCL	 |SDA	SCL   |
+DEV_I2C_PIN_AF1 |PB7	PB8	 |PB11	PB10  |
+                |PB9	PB6	 |            |
+*/
+//I2C1
+//SDA
+#define DEV_I2C1_PIN_AF0_SDA_PORT                   DEV_GPIO_PORTB
+#define DEV_I2C1_PIN_AF0_SDA_PIN                    DEV_GPIO_PIN7
+#define DEV_I2C1_PIN_AF1_SDA_PORT                   DEV_GPIO_PORTB
+#define DEV_I2C1_PIN_AF1_SDA_PIN                    DEV_GPIO_PIN9
+
+//SCL
+#define DEV_I2C1_PIN_AF0_SCL_PORT                   DEV_GPIO_PORTB
+#define DEV_I2C1_PIN_AF0_SCL_PIN                    DEV_GPIO_PIN8
+#define DEV_I2C1_PIN_AF1_SCL_PORT                   DEV_GPIO_PORTB
+#define DEV_I2C1_PIN_AF1_SCL_PIN                    DEV_GPIO_PIN6
+
+//I2C2
+//SDA
+#define DEV_I2C2_PIN_AF0_SDA_PORT                   DEV_GPIO_PORTB
+#define DEV_I2C2_PIN_AF0_SDA_PIN                    DEV_GPIO_PIN11
+
+//SCL
+#define DEV_I2C2_PIN_AF0_SCL_PORT                   DEV_GPIO_PORTB
+#define DEV_I2C2_PIN_AF0_SCL_PIN                    DEV_GPIO_PIN10
+
 /* Exported types ------------------------------------------------------------*/
 typedef enum
 {
   DEV_I2C1, /*!< I2C1 */
+  DEV_I2C2, /*!< I2C2 */
   DEV_I2C_NUM	
 }DevI2c;
+
+typedef enum
+{
+    DEV_I2C_PIN_AF0 = 0, /*!< I2C_PIN_AF0 */
+    DEV_I2C_PIN_AF1 = 1, /*!< I2C_PIN_AF1 */
+    DEV_I2C_PIN_AF_NUM
+}DevI2cPinAF;
+
+typedef struct
+{
+    DevI2cPinAF  sda_af;
+    DevI2cPinAF  scl_af;
+} DevI2cPin;
+
 
 typedef enum
 {
@@ -32,6 +79,7 @@ typedef struct
 {
 	uint32_t       clock;     /*!< Specifies the clock frequency */
 	DevI2cAddrMode addr_mode; /*!< Specifies the I2C address mode */
+    DevI2cPin      pin;       /*!< Specifies the I2C pin */
 }DevI2cConfig;
 
 

@@ -24,6 +24,8 @@
 /* Function prototypes -------------------------------------------------------*/
 static void BspHmc5983CsSetHigh( void );
 static void BspHmc5983CsSetLow( void );
+static bool BspHmc5983SelfTest(void);
+static bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b);
 
 /*****************************************************************************
  * Function      : BspHmc5983Init
@@ -49,7 +51,7 @@ bool BspHmc5983Init(void)
     config.clock_pol    = DEV_SPI_POLARITY_HIGH;
     config.clock_phase  = DEV_SPI_PHASE_2EDGE;
     config.first_bit    = DEV_SPI_FIRSTBIT_MSB;
-    config.buad_rate    = DEV_SPI_BAUDRATEPRESCALER_32;
+    config.buad_rate    = DEV_SPI_BAUDRATEPRESCALER_2;
     config.pin.miso_af  = DEV_SPI_PIN_AF0;
     config.pin.mosi_af  = DEV_SPI_PIN_AF0;
     config.pin.sck_af   = DEV_SPI_PIN_AF0;
@@ -97,7 +99,7 @@ bool BspHmc5983Init(void)
  *   Modification: Created function
 
 *****************************************************************************/
-bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b)
+static bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b)
 {
 	uint8_t reg_a_r = __BSP_HMC5983_REG_A_DEFAULT_VALUE__;
     uint8_t reg_b_r = __BSP_HMC5983_REG_B_DEFAULT_VALUE__;
@@ -243,7 +245,7 @@ bool BspHmc5983SpiWrite( uint8_t reg, uint8_t data)
  *   Modification: Created function
 
 *****************************************************************************/
-bool BspHmc5983SelfTest( void )
+static bool BspHmc5983SelfTest( void )
 {    
     uint8_t buf[6] = {0};    
     int16_t x = 0;

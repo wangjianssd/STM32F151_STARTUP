@@ -273,7 +273,7 @@ void Taskhmc5983Test(void const * argument)
              BspCom1SendData("Magnet get failed\r\n",  sizeof("Magnet get failed\r\n"));
         }
         
-        Delay(50);
+        Delay(100);
 
     }
     

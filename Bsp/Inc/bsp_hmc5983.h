@@ -56,10 +56,8 @@
 
 /* Function prototypes -------------------------------------------------------*/
 bool BspHmc5983Init(void);
-bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b);
 bool BspHmc5983SpiRead( uint8_t reg, uint8_t *data);
 bool BspHmc5983SpiWrite( uint8_t reg, uint8_t data);
-bool_t hmc5983_sensor_self_test(void);
 bool BspHmc5983SensorDetect( int16_t *x, int16_t *y, int16_t *z );
 
 /* Variables -----------------------------------------------------------------*/
