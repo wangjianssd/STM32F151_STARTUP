@@ -15,7 +15,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "lib.h"
 #include "bsp.h"
-#include <stdarg.h>
+//#include <stdarg.h>
 /* Define --------------------------------------------------------------------*/
 #define __DEBUG_PREFIX_LEN__                           (128)
 
@@ -177,11 +177,12 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...)
     
     fmt = va_arg(args, const int8_t*);
     
-    i += sprintf((char *)pbuf, (char *)fmt, args);
+    //i += sprintf((char *)pbuf, (char *)fmt, args);
+    tfp_vsprintf(pbuf, (char *)fmt, args);
     
     va_end(args);
 
-    DebugTxFIFOIn((uint8_t *)buff, i);
+    DebugTxFIFOIn((uint8_t *)buff, strlen(buff));
 
 #if 1 
     DebugTxFIFOOut();

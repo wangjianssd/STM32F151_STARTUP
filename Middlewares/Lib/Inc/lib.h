@@ -21,6 +21,7 @@
 //#include <data_type_def.h>
 
 #include "cpu.h"
+#include "printf.h"
 //#include <list.h>
 //#include <sqqueue.h>
 #include "debug.h"

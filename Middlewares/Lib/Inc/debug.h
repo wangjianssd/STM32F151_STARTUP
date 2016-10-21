@@ -62,15 +62,6 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...);
         DebugLog(level, __FILENAME__, __LINE__, __VA_ARGS__);      \
     }while(__LINE__ == -1)
 
-    
-#define SPR(dbg_lev, ...) sprintf(__VA_ARGS__)
-
-#define DBG_LOG1(level, ...)                                         \
-    do                                                              \
-    {                                                               \
-        DebugLog(level, __FILENAME__, __LINE__, __VA_ARGS__);      \
-    }while(__LINE__ == -1)
-
 #else
 
 #define _DBG_LINE_  	, uint16_t line

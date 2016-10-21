@@ -74,7 +74,7 @@ void TaskDebugLogTest(void const * argument)
 {
     DebugInit(__DBG_LEVEL_INFO__ | __DBG_LEVEL_WARNING__ | __DBG_LEVEL_ORIGIN__ | __DBG_LEVEL_ERROR__);
 
-    DBG_LOG(__DBG_LEVEL_WARNING__, "Debug level\r\n");
+    DBG_LOG(__DBG_LEVEL_ORIGIN__, "Debug level:INFO WARN ORIGN ERROR\r\n");
 
 }
 
@@ -84,38 +84,27 @@ __root const uint8_t UserInfo[256] @ "USER_INFO" ={"12345678910a"};
 void TaskDeviceFlashTest(void const * argument)
 {
     uint32_t addr;
-    uint32_t i;
     uint8_t  data[256];
-    uint8_t  temp[256];
     uint32_t a;
     extern  uint32_t __ICFEDIT_region_USER_INFO_ADDR__;
-    
-    BspCom1Init(256000);
+    DBG_THIS_MODULE("FLASH")
+        
     uint8_t buffer[] = "BUFFER ARRAY DATA.";
     
+    DBG_LOG(__DBG_LEVEL_INFO__, "Flash start:%02x, end:%02x, bank size:%d, used:%d, total:%d kb\r\n",
+                                __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_BANK_SIZE__, __DEVICE_FLASH_USED_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
        
+   DBG_LOG(__DBG_LEVEL_INFO__, "Ram start:%02x, end:%02x, used:%d bytes, total:%d kb \r\n", 
+                                __DEVICE_RAM_START_ADDR__, __DEVICE_RAM_END_ADDR__ , __DEVICE_RAM_USED_SIZE__, __DEVICE_RAM_TOTAL_SIZE__ / 1024);
 
-    i = sprintf(temp, "Device info:\r\n",ComiledDateGet(), ComiledTimeGet());
-    BspCom1SendData(temp,  i);
-
-    i = sprintf(temp, "Flash start:%02x, end:%02x, bank size:%d, used:%d, total::%d kb\r\n", 
-              __DEVICE_FLASH_START_ADDR__, __DEVICE_FLASH_END_ADDR__, __DEVICE_FLASH_BANK_SIZE__, __DEVICE_FLASH_USED_SIZE__, __DEVICE_FLASH_TOTAL_SIZE__ / 1024);
-    BspCom1SendData(temp,  i);
-
-    i = sprintf(temp, "Ram start:%02x, end:%02x, used:%d bytes, total:%d kb \r\n", 
-              __DEVICE_RAM_START_ADDR__, __DEVICE_RAM_END_ADDR__ , __DEVICE_RAM_USED_SIZE__, __DEVICE_RAM_TOTAL_SIZE__ / 1024);
-    BspCom1SendData(temp,  i);
-    
 //flash read
     
     addr = (uint32_t)&__ICFEDIT_region_USER_INFO_ADDR__;  
     memset (data, 0, sizeof(data));
 
     DevFlashRead(addr, data, sizeof(data));
-
-    i = sprintf(temp, "Read  addr:%02x: %s\r\n", addr, data);
-
-    BspCom1SendData(temp,  i);
+    
+    DBG_LOG(__DBG_LEVEL_INFO__, "Read  addr:%02x: %s\r\n", addr, data);
 
 //flash erase
     DevFlashUnlock();
@@ -128,9 +117,7 @@ void TaskDeviceFlashTest(void const * argument)
 
     DevFlashRead(addr, data, sizeof(data) - 1);
 
-    i = sprintf(temp, "Erase addr:%02x: %s\r\n", addr, data);
-
-    BspCom1SendData(temp,  i);
+    DBG_LOG(__DBG_LEVEL_INFO__, "Erase addr:%02x: %s\r\n", addr, data);
     
 //flash write
     DevFlashUnlock();
@@ -139,17 +126,13 @@ void TaskDeviceFlashTest(void const * argument)
 
     DevFlashLock();
     
-    i = sprintf(temp, "write addr:%02x: %s\r\n", addr, buffer);
-
-    BspCom1SendData(temp,  i);
+    DBG_LOG(__DBG_LEVEL_INFO__, "write addr:%02x: %s\r\n", addr, buffer);
     
     memset (data, 0, sizeof(data));
 
     DevFlashRead(addr, data, sizeof(data) - 1);
-
-    i = sprintf(temp, "read addr:%02x: %s\r\n", addr, data);
-
-    BspCom1SendData(temp,  i);
+    
+    DBG_LOG(__DBG_LEVEL_INFO__, "read addr:%02x: %s\r\n", addr, data);
 }
 
 void TaskSysTickTest(void const * argument)
@@ -166,42 +149,25 @@ void TaskSysTickTest(void const * argument)
 }
 
 void TaskCompileTimePrint(void const * argument)
-{
-  uint8_t  temp[64];
-  uint8_t i;
-  
-  BspCom1Init(256000);
-
-  i = sprintf(temp, "Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
-  
-  BspCom1SendData(temp,  i);
-  
-    i = SPR(__DBG_LEVEL_INFO__, temp, "SPR Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
-  
-  BspCom1SendData(temp,  i);
+{ 
   DBG_LOG(__DBG_LEVEL_INFO__, "Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
-
 }
 
 void TaskMCOTest(void const * argument)
 {
     uint8_t byte;
-    
+    DBG_THIS_MODULE("MCO")
+        
     BspCom1Init(256000);
-    BspCom1SendData(( "\r\n \
+        
+    DBG_LOG(__DBG_LEVEL_INFO__, "\r\n \
     s -> stop mco out\r\n \
     1 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1\r\n \
     2 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_16\r\n \
     3 -> 2m-RCC_MCO1SOURCE_MSI, RCC_MCODIV_1\r\n \
     4 -> 37k-RCC_MCO1SOURCE_LSI, RCC_MCODIV_1 \r\n \
-    5 -> 16mRCC_MCO1SOURCE_HSI, RCC_MCODIV_1 \r\n"),
-    sizeof("\r\n \
-    s -> stop mco out\r\n \
-    1 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_1\r\n \
-    2 -> 32m-RCC_MCO1SOURCE_SYSCLK, RCC_MCODIV_16\r\n \
-    3 -> 2m-RCC_MCO1SOURCE_MSI, RCC_MCODIV_1\r\n \
-    4 -> 37k-RCC_MCO1SOURCE_LSI, RCC_MCODIV_1 \r\n \
-    5 -> 16mRCC_MCO1SOURCE_HSI, RCC_MCODIV_1 \r\n")); 
+    5 -> 16mRCC_MCO1SOURCE_HSI, RCC_MCODIV_1 \r\n");
+
 
     while (1)
     {
@@ -254,40 +220,32 @@ void Taskhmc5983Test(void const * argument)
     int16_t x;
     int16_t y;
     int16_t z; 
-    uint8_t temp[64];
-    uint8_t i;
     
-    BspCom1Init(256000);
+    DBG_THIS_MODULE("HMC5983")
 
     ret = BspHmc5983Init();
     
-    BspCom1SendData("\r\n--------------HMC5983 Init--------------------------\r\n",
-                       sizeof( "\r\n--------------HMC5983 Init--------------------------\r\n"));
+    DBG_LOG(__DBG_LEVEL_INFO__, "--------------HMC5983 Init--------------------------\r\n");
 
     if(true == ret)
     {
-        BspCom1SendData("\r\n--------------HMC5983 Init success--------------------------\r\n",
-                           sizeof( "\r\n--------------HMC5983 Init success--------------------------\r\n"));
+        DBG_LOG(__DBG_LEVEL_INFO__, "--------------HMC5983 Init success--------------------------\r\n");
     }
     else
     {
-        BspCom1SendData("\r\n--------------HMC5983 Init fail--------------------------\r\n",
-                           sizeof( "\r\n--------------HMC5983 Init fail--------------------------\r\n"));
-
+        DBG_LOG(__DBG_LEVEL_INFO__, "--------------HMC5983 fail--------------------------\r\n");
     }
 
     while(1)
     {
         if (BspHmc5983SensorDetect(&x, &y , &z) == true)
         {
-            i = sprintf(temp, "Magnet X:%d, Y:%d, Z:%d\r\n", x, y, z);
-
-            BspCom1SendData(temp,  i);
+            DBG_LOG(__DBG_LEVEL_INFO__, "Magnet X:%d, Y:%d, Z:%d\r\n", x, y, z);
 
         }
         else
         {
-             BspCom1SendData("Magnet get failed\r\n",  sizeof("Magnet get failed\r\n"));
+             DBG_LOG(__DBG_LEVEL_INFO__, "Magnet get failed\r\n",  sizeof("Magnet get failed\r\n"));
         }
         
         Delay(100);
@@ -309,46 +267,36 @@ void TaskQmc5883lTest(void const * argument)
   uint8_t  temp[64];
   uint8_t i;
   uint8_t reg_9;
-  
+  DBG_THIS_MODULE("QMC5883")
   BspCom1Init(256000);
  
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
    //HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET);  
   BspQmc5883lInit();
 
-  BspCom1SendData("\r\n--------------QMC5883 self test--------------------------\r\n",
-                    sizeof( "\r\n--------------QMC5883 self test--------------------------\r\n"));
+  DBG_LOG(__DBG_LEVEL_INFO__, "\r\n--------------QMC5883 self test--------------------------\r\n");
     
   ret = BspQmc5883lSelfTest();
 
   if (ret == true)
-    {
-      //HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_RESET); 
-      BspCom1SendData( "\r\n--------------QMC5883 self test--ok----------------------\r\n",
-                      sizeof( "\r\n--------------QMC5883 self test--ok----------------------\r\n"));
-
+  {
+      DBG_LOG(__DBG_LEVEL_INFO__, "\r\n--------------QMC5883 self test--ok----------------------\r\n");
   }
   else
-    {
-     // HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_3, GPIO_PIN_SET); 
-      BspCom1SendData( "\r\n--------------QMC5883 self test--fail----------------------\r\n",
-                      sizeof( "\r\n--------------QMC5883 self test--fail----------------------\r\n"));
-
+  {  
+     DBG_LOG(__DBG_LEVEL_INFO__, "\r\n--------------QMC5883 self test--fail----------------------\r\n");
   }
 
   // ret = Qmc5883lConfig();
 
   Delay(100);
-BspCom1SendData( "\r\n \
+  
+  DBG_LOG(__DBG_LEVEL_INFO__, "\r\n \
 1 -> QMC5883L_REG_09_VALUE    (0x01)  512 2G  10HZ\r\n \
 2 -> QMC5883L_REG_09_VALUE    (0x41)  256 2G  10HZ\r\n \
 3 -> QMC5883L_REG_09_VALUE    (0x81)  128 2G  10HZ\r\n \
-4 -> QMC5883L_REG_09_VALUE    (0xC1)   64 2G  10HZ \r\n",
-                            sizeof("\r\n \
-1 -> QMC5883L_REG_09_VALUE    (0x01)  512 2G  10HZ\r\n \
-2 -> QMC5883L_REG_09_VALUE    (0x41)  256 2G  10HZ\r\n \
-3 -> QMC5883L_REG_09_VALUE    (0x81)  128 2G  10HZ\r\n \
-4 -> QMC5883L_REG_09_VALUE    (0xC1)   64 2G  10HZ \r\n"));      
+4 -> QMC5883L_REG_09_VALUE    (0xC1)   64 2G  10HZ \r\n");
+     
   //while (DevUartRx(DEV_UART3, &reg_9, 1) != true);
   	BspCom1RxFIFOClear();
  //	while (BspCom1RxFIFOIsEmpty() == true);
@@ -378,10 +326,8 @@ BspCom1SendData( "\r\n \
    }
    
    //reg_9 = reg_9 | 0x04;
-   
-   i = sprintf(temp, "Reg9 set:%02X\r\n", reg_9);
-       
-   BspCom1SendData(temp,  i);
+
+   DBG_LOG(__DBG_LEVEL_INFO__, "Reg9 set:%02X\r\n", reg_9);
 
    ret =  BspQmc5883lConfigEx(reg_9);
   
@@ -394,11 +340,9 @@ BspCom1SendData( "\r\n \
     
     if (ret == true)
     {
-         BspQmc5883lFilterGetData (magnet_raw, magnet, filter_magnet);
-
-         i = sprintf(temp, "Magnet X:%f, Y:%f, Z:%f\r\n", magnet[0], magnet[1], magnet[2]);
-       
-        BspCom1SendData(temp,  i);
+        BspQmc5883lFilterGetData (magnet_raw, magnet, filter_magnet);
+        
+        DBG_LOG(__DBG_LEVEL_INFO__, "Magnet X:%f, Y:%f, Z:%f\r\n", magnet[0], magnet[1], magnet[2]);
         
         success_count++;    
         
@@ -409,14 +353,9 @@ BspCom1SendData( "\r\n \
     }
     else
     {
-         i = sprintf(temp, "QMC5883_TEST total count:%d, success:%d\r\n", total_count, success_count);
-
-         BspCom1SendData(temp,  i);
-         
+       DBG_LOG(__DBG_LEVEL_INFO__, "QMC5883_TEST total count:%d, success:%d\r\n", total_count, success_count);
        if ((total_count -  success_count)> 10)
         {
-        
-         
          BspQmc5883lInit();
           
           ret =  BspQmc5883lConfigEx(reg_9);

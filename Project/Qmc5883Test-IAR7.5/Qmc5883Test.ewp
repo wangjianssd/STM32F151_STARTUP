@@ -2497,6 +2497,9 @@
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\lib.h</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\printf.h</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Inc\queue.h</name>
         </file>
         <file>
@@ -2513,6 +2516,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\fifo.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\printf.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\Middlewares\Lib\Src\queue.c</name>
