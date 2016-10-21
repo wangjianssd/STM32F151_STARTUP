@@ -38,7 +38,7 @@ MultiCoreRunAll=1
 [JLinkDriver]
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=1818094713
+Checksum=1497960863
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -69,14 +69,13 @@ Bp4=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm
 Bp5=_ 0 "EMUL_CODE" "0x08003B4C" 0 0 1 "" 0 "" 0
 Bp6=_ 0 "EMUL_CODE" "0x08003B7A" 0 0 1 "" 0 "" 0
 Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.45.5" 0 0 1 "" 0 "" 0
-Count=8
+Bp8=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.260.5" 0 0 1 "" 0 "" 0
+Bp9=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.181.3" 0 0 1 "" 0 "" 0
+Count=10
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 1
-LogFile=_ "$PROJ_DIR$\TermIO.log"
 [Aliases]
 Count=0
 SuppressDialog=0
@@ -84,3 +83,6 @@ SuppressDialog=0
 Enabled=0
 [CallStackStripe]
 ShowTiming=1
+[TermIOLog]
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"

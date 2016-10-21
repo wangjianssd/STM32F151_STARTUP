@@ -18,110 +18,65 @@
 #include "dev_gpio.h"
 
 /* Define --------------------------------------------------------------------*/
-/*UART0	 |UART1     |UART2		  |UART3		|UART4		  |
-TX_AF	 |RX_AF	    |TX_AF	RX_AF |TX_AF  RX_AF	|TX_AF	RX_AF |
-PA9	PA10 |PA2	PA3	|PB10	PB11  |PC10	  PC11	|PC12	PD2   |
-PB6	PB7	 |PD5	PD6	|PC10	PC11  |				|             |
-				    |PD8	PD9	  |			    |             |
+/*        |UART1	   |UART2       |UART3		 |UART4		  |UART5	   |
+          |TX_AF  RX_AF|TX_AF  RX_AF|TX_AF  RX_AF|TX_AF  RX_AF|TX_AF  RX_AF|
+UART_AF0  |PA9	  PA10 |PA2	   PA3	|PB10	PB11 |PC10	PC11  |PC12   PD2  |
+UART_AF1  |PB6	  PB7  |PD5	   PD6	|PC10	PC11 |			  |            |
+UART_AF2  |			   |       	    |PD8	PD9  |            |            |
 */
-//UART1 AFIO
+//UART1 
+//TX
 #define DEV_UART1_PIN_AF0_TX_PORT                   DEV_GPIO_PORTA
 #define DEV_UART1_PIN_AF0_TX_PIN                    DEV_GPIO_PIN9
+#define DEV_UART1_PIN_AF1_TX_PORT                   DEV_GPIO_PORTB
+#define DEV_UART1_PIN_AF1_TX_PIN                    DEV_GPIO_PIN6
+//RX
 #define DEV_UART1_PIN_AF0_RX_PORT                   DEV_GPIO_PORTA
 #define DEV_UART1_PIN_AF0_RX_PIN                    DEV_GPIO_PIN10
-
-#define DEV_UART1_PIN_AF1_TX_PORT                   DEV_GPIO_PORTA
-#define DEV_UART1_PIN_AF1_TX_PIN                    DEV_GPIO_PIN9
 #define DEV_UART1_PIN_AF1_RX_PORT                   DEV_GPIO_PORTB
 #define DEV_UART1_PIN_AF1_RX_PIN                    DEV_GPIO_PIN7
 
-#define DEV_UART1_PIN_AF2_TX_PORT                   DEV_GPIO_PORTB
-#define DEV_UART1_PIN_AF2_TX_PIN                    DEV_GPIO_PIN6
-#define DEV_UART1_PIN_AF2_RX_PORT                   DEV_GPIO_PORTA
-#define DEV_UART1_PIN_AF2_RX_PIN                    DEV_GPIO_PIN10
-
-#define DEV_UART1_PIN_AF3_TX_PORT                   DEV_GPIO_PORTB
-#define DEV_UART1_PIN_AF3_TX_PIN                    DEV_GPIO_PIN6
-#define DEV_UART1_PIN_AF3_RX_PORT                   DEV_GPIO_PORTB
-#define DEV_UART1_PIN_AF3_RX_PIN                    DEV_GPIO_PIN7
-
-
-//UART1 AFIO
+//UART2
+//TX
 #define DEV_UART2_PIN_AF0_TX_PORT                   DEV_GPIO_PORTA
 #define DEV_UART2_PIN_AF0_TX_PIN                    DEV_GPIO_PIN2
+#define DEV_UART2_PIN_AF1_TX_PORT                   DEV_GPIO_PORTD
+#define DEV_UART2_PIN_AF1_TX_PIN                    DEV_GPIO_PIN5
+//RX
 #define DEV_UART2_PIN_AF0_RX_PORT                   DEV_GPIO_PORTA
 #define DEV_UART2_PIN_AF0_RX_PIN                    DEV_GPIO_PIN3
-
-#define DEV_UART2_PIN_AF1_TX_PORT                   DEV_GPIO_PORTA
-#define DEV_UART2_PIN_AF1_TX_PIN                    DEV_GPIO_PIN2
 #define DEV_UART2_PIN_AF1_RX_PORT                   DEV_GPIO_PORTD
 #define DEV_UART2_PIN_AF1_RX_PIN                    DEV_GPIO_PIN6
 
-#define DEV_UART2_PIN_AF2_TX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART2_PIN_AF2_TX_PIN                    DEV_GPIO_PIN5
-#define DEV_UART2_PIN_AF2_RX_PORT                   DEV_GPIO_PORTA
-#define DEV_UART2_PIN_AF2_RX_PIN                    DEV_GPIO_PIN3
-
-#define DEV_UART2_PIN_AF3_TX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART2_PIN_AF3_TX_PIN                    DEV_GPIO_PIN5
-#define DEV_UART2_PIN_AF3_RX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART2_PIN_AF3_RX_PIN                    DEV_GPIO_PIN6
-
-//UART3 AFIO
+//UART3
+//TX
 #define DEV_UART3_PIN_AF0_TX_PORT                   DEV_GPIO_PORTB
 #define DEV_UART3_PIN_AF0_TX_PIN                    DEV_GPIO_PIN10
+#define DEV_UART3_PIN_AF1_TX_PORT                   DEV_GPIO_PORTC
+#define DEV_UART3_PIN_AF1_TX_PIN                    DEV_GPIO_PIN10
+#define DEV_UART3_PIN_AF2_TX_PORT                   DEV_GPIO_PORTD
+#define DEV_UART3_PIN_AF2_TX_PIN                    DEV_GPIO_PIN8
+//RX
 #define DEV_UART3_PIN_AF0_RX_PORT                   DEV_GPIO_PORTB
 #define DEV_UART3_PIN_AF0_RX_PIN                    DEV_GPIO_PIN11
-
-#define DEV_UART3_PIN_AF1_TX_PORT                   DEV_GPIO_PORTB
-#define DEV_UART3_PIN_AF1_TX_PIN                    DEV_GPIO_PIN10
 #define DEV_UART3_PIN_AF1_RX_PORT                   DEV_GPIO_PORTC
 #define DEV_UART3_PIN_AF1_RX_PIN                    DEV_GPIO_PIN11
-
-#define DEV_UART3_PIN_AF2_TX_PORT                   DEV_GPIO_PORTB
-#define DEV_UART3_PIN_AF2_TX_PIN                    DEV_GPIO_PIN10
 #define DEV_UART3_PIN_AF2_RX_PORT                   DEV_GPIO_PORTD
 #define DEV_UART3_PIN_AF2_RX_PIN                    DEV_GPIO_PIN9
 
-#define DEV_UART3_PIN_AF3_TX_PORT                   DEV_GPIO_PORTC
-#define DEV_UART3_PIN_AF3_TX_PIN                    DEV_GPIO_PIN10
-#define DEV_UART3_PIN_AF3_RX_PORT                   DEV_GPIO_PORTB
-#define DEV_UART3_PIN_AF3_RX_PIN                    DEV_GPIO_PIN11
-
-#define DEV_UART3_PIN_AF4_TX_PORT                   DEV_GPIO_PORTC
-#define DEV_UART3_PIN_AF4_TX_PIN                    DEV_GPIO_PIN10
-#define DEV_UART3_PIN_AF4_RX_PORT                   DEV_GPIO_PORTC
-#define DEV_UART3_PIN_AF4_RX_PIN                    DEV_GPIO_PIN11
-
-#define DEV_UART3_PIN_AF5_TX_PORT                   DEV_GPIO_PORTC
-#define DEV_UART3_PIN_AF5_TX_PIN                    DEV_GPIO_PIN10
-#define DEV_UART3_PIN_AF5_RX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART3_PIN_AF5_RX_PIN                    DEV_GPIO_PIN9
-
-#define DEV_UART3_PIN_AF6_TX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART3_PIN_AF6_TX_PIN                    DEV_GPIO_PIN8
-#define DEV_UART3_PIN_AF6_RX_PORT                   DEV_GPIO_PORTB
-#define DEV_UART3_PIN_AF6_RX_PIN                    DEV_GPIO_PIN11
-
-#define DEV_UART3_PIN_AF7_TX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART3_PIN_AF7_TX_PIN                    DEV_GPIO_PIN8
-#define DEV_UART3_PIN_AF7_RX_PORT                   DEV_GPIO_PORTC
-#define DEV_UART3_PIN_AF7_RX_PIN                    DEV_GPIO_PIN11
-
-#define DEV_UART3_PIN_AF8_TX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART3_PIN_AF8_TX_PIN                    DEV_GPIO_PIN8
-#define DEV_UART3_PIN_AF8_RX_PORT                   DEV_GPIO_PORTD
-#define DEV_UART3_PIN_AF8_RX_PIN                    DEV_GPIO_PIN9
-
-//UART4 AFIO
+//UART4
+//TX
 #define DEV_UART4_PIN_AF0_TX_PORT                   DEV_GPIO_PORTC
 #define DEV_UART4_PIN_AF0_TX_PIN                    DEV_GPIO_PIN10
+//RX
 #define DEV_UART4_PIN_AF0_RX_PORT                   DEV_GPIO_PORTC
 #define DEV_UART4_PIN_AF0_RX_PIN                    DEV_GPIO_PIN11
 
-//UART5 AFIO
+//UART5
+//TX
 #define DEV_UART5_PIN_AF0_TX_PORT                   DEV_GPIO_PORTC
 #define DEV_UART5_PIN_AF0_TX_PIN                    DEV_GPIO_PIN12
+//RX
 #define DEV_UART5_PIN_AF0_RX_PORT                   DEV_GPIO_PORTD
 #define DEV_UART5_PIN_AF0_RX_PIN                    DEV_GPIO_PIN2
 
@@ -141,13 +96,14 @@ typedef enum
 	DEV_UART_PIN_AF0, /*!< UART_PIN_AF0 */
 	DEV_UART_PIN_AF1, /*!< UART_PIN_AF1 */
     DEV_UART_PIN_AF2, /*!< UART_PIN_AF2 */
-    DEV_UART_PIN_AF3, /*!< UART_PIN_AF3 */
-    DEV_UART_PIN_AF4, /*!< UART_PIN_AF4 */
-    DEV_UART_PIN_AF5, /*!< UART_PIN_AF5 */
-    DEV_UART_PIN_AF6, /*!< UART_PIN_AF6 */
-    DEV_UART_PIN_AF7, /*!< UART_PIN_AF7 */
-    DEV_UART_PIN_AF8  /*!< UART_PIN_AF8 */
+    DEV_UART_PIN_AF_NUM
 } DevUartPinAF;
+
+typedef struct
+{
+    DevUartPinAF  tx_af;
+    DevUartPinAF  rx_af;
+} DevUartPin;
 
 typedef enum
 {
@@ -197,23 +153,13 @@ typedef enum
 
 typedef struct
 {
-    DevGpioPort  tx_port;
-    DevGpioPort  rx_port;
-    DevGpioPin   tx_pin;
-    DevGpioPin   rx_pin;
-    DevUartPinAF trx_af;
-} DevUARTPin;
-
-
-typedef struct
-{
 	uint32_t          baud;       /*!< Specifies the UART buad rate    */
 	DevUartWordLen    length;     /*!< Specifies the UART word length */
 	DevUartStopBit    stop_bit;   /*!< Specifies the UART stop bit */
 	DevUartParity     parity;     /*!< Specifies the UART parity */
 	DevUartMode    	  mode;       /*!< Specifies the UART parity */
 	DevUartFlowCtl    flow_contrl;/*!< Specifies the UART flow control */
-    DevUARTPin        uart_pin;   /*!< Specifies the UART trx pin */ 
+    DevUartPin        pin;        /*!< Specifies the UART trx pin */ 
 }DevUartConfig;
 
 typedef void (*DEV_UART_RX_FUNC_PTR)(uint8_t* data, uint16_t size);            

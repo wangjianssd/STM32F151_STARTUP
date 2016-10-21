@@ -1,72 +1,80 @@
 /**
- * @brief       : 
+ *
+ * @brief       :  
  *
  * @file        : debug.h
- * @author      : gang.cheng
- *
+ * @author      : wangjian
  * Version      : v0.0.1
- * Date         : 2015/5/7
+ * Date         : 2016-10-21
+ *
  * Change Logs  :
  *
- * Date        Version      Author      Notes
- * 2015/5/7    v0.0.1      gang.cheng    first version
- */
+ * Date                 Version           Author          Notes
+ * 2016-10-21           v0.1              wangjian        first version 
+*/
+#ifndef  __DEBUG__
+#define  __DEBUG__
 
-#ifndef __DEBUG_H
-#define __DEBUG_H
-
-#include <assert.h>
-
-//#include <printf.h>
+#ifdef __cplusplus
+ extern "C" {
+#endif
+/* Includes ------------------------------------------------------------------*/
 #include <string.h>
-#include <stdio.h>
 
-#include <lib.h>
+/* Define --------------------------------------------------------------------*/
+#define __DEBUG_INFO_PRINT_EN__                     (1)
 
-#define DEBUG_INFO_PRINT_EN                 (1)
+#define __DBG_LEVEL_NONE__		                    (0x00)
+#define __DBG_LEVEL_TRACE__		                    (0x01<<0)
+#define __DBG_LEVEL_INFO__		                    (0x01<<1)
+#define __DBG_LEVEL_WARNING__	                    (0x01<<2)
+#define __DBG_LEVEL_ERROR__		                    (0x01<<3)
+#define __DBG_LEVEL_CRITICAL__	                    (0x01<<4)
+#define __DBG_LEVEL_ORIGIN__                        (0x01<<5)
 
-#define DBG_LEVEL_NONE		                0x00
-#define DBG_LEVEL_TRACE		                (0x01<<0)
-#define DBG_LEVEL_INFO		                (0x01<<1)
-#define DBG_LEVEL_WARNING	                (0x01<<2)
-#define DBG_LEVEL_ERROR		                (0x01<<3)
-#define DBG_LEVEL_CRITICAL	                (0x01<<4)
-#define DBG_LEVEL_ORIGIN                    (0x01<<5)
-/**
- * 调试等级设置,只有消息与更高水平
- */
-extern uint8_t global_debug_level;
+#define	__DEBUG_COM__                                DEV_UART1
+#define	__DEBUG_CONFIG_STOP__                        DEV_UART_STOPBITS_1 
+#define	__DEBUG_CONFIG_BIT__                         DEV_UART_WORDLENGTH_8B
+#define	__DEBUG_CONFIG_PARITY__                      DEV_UART_PARITY_NONE
+#define	__DEBUG_CONFIG_FLOW_CTL__                    UART_HWCONTROL_NONE
+#define	__DEBUG_TX_FIFO_SIZE__                       256
+#define	__DEBUG_TX_PIN_AF__                          DEV_UART_PIN_AF0
 
-bool_t debug_enter_queue(uint8_t *string, uint8_t len);
-void debug_sqqueue_init();
-
-#if DEBUG_INFO_PRINT_EN > 0
+#if __DEBUG_INFO_PRINT_EN__ > 0
 
 #define _DBG_LINE_  	, uint16_t line
 #define __DBG_LINE  	, __LINE__
 
 /** define file name */
 #define DBG_THIS_FILE                                               \
-static char const l_this_file[] = __FILE__;
+char const l_this_file[] = __FILE__;
 
 #define DBG_THIS_MODULE(name_)                                      \
 static char const l_this_file[] = name_;
 
-void debug_log(uint8_t dbg_lev, const char *fn, uint16_t line, ...);
+void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...);
 
 #define __FILENAME__            (l_this_file)
 
 #define DBG_LOG(level, ...)                                         \
     do                                                              \
     {                                                               \
-        debug_log(level, __FILENAME__, __LINE__, __VA_ARGS__);      \
+        DebugLog(level, __FILENAME__, __LINE__, __VA_ARGS__);      \
     }while(__LINE__ == -1)
-     
+
+    
+#define SPR(dbg_lev, ...) sprintf(__VA_ARGS__)
+
+#define DBG_LOG1(level, ...)                                         \
+    do                                                              \
+    {                                                               \
+        DebugLog(level, __FILENAME__, __LINE__, __VA_ARGS__);      \
+    }while(__LINE__ == -1)
+
 #else
 
-/*形参*/
 #define _DBG_LINE_  	, uint16_t line
-/*实参*/
+
 #define __DBG_LINE  	, __LINE__
 
 #define DBG_THIS_FILE
@@ -77,8 +85,19 @@ void debug_log(uint8_t dbg_lev, const char *fn, uint16_t line, ...);
 
 #endif
 
-void DBG_ASSERT(bool_t cond _DBG_LINE_);
+/* Exported types ------------------------------------------------------------*/
 
+/* Function prototypes -------------------------------------------------------*/
+void DBG_ASSERT(bool_t cond _DBG_LINE_);
+//bool_t debug_enter_queue(uint8_t *string, uint8_t len);
+//void debug_sqqueue_init();
+
+/* Variables -----------------------------------------------------------------*/
+//extern uint8_t global_debug_level;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

@@ -12,18 +12,89 @@
  * 2016/09/21    v0.0.1        wangjian    first version
  */
 
-/* Exported incluides --------------------------------------------------------*/
+/*Incluides --------------------------------------------------------*/
 #include "device.h"
 
+/* Exported types ------------------------------------------------------------*/
+typedef struct
+{
+    DevGpioPort      port;
+    DevGpioPin       pin;
+    DevGpioAlternate af;
+}DevUartPinPort;
+
+typedef struct
+{
+    UART_HandleTypeDef  hander;
+    DevUartPin          pin;
+}DevUartHander;
+
 /*Gloable variables ---------------------------------------------------------*/
-UART_HandleTypeDef UartHander[DEV_UART_NUM];
+DevUartHander UartHander[DEV_UART_NUM];
 
 /*Static variables ---------------------------------------------------------*/
 //static uint8_t UartRxByteTab[DEV_UART_NUM] = 0;
 static DEV_UART_RX_FUNC_PTR DevUartRxCbTab[DEV_UART_NUM] = {NULL};
+static DevUartPinPort Uart1TxPinGroup[] = 
+{
+    {DEV_UART1_PIN_AF0_TX_PORT, DEV_UART1_PIN_AF0_TX_PIN, DEV_GPIO_AF7_USART1},\
+    {DEV_UART1_PIN_AF1_TX_PORT, DEV_UART1_PIN_AF1_TX_PIN, DEV_GPIO_AF7_USART1}
+};
+
+static DevUartPinPort Uart1RxPinGroup[] = 
+{
+    {DEV_UART1_PIN_AF0_RX_PORT, DEV_UART1_PIN_AF0_RX_PIN, DEV_GPIO_AF7_USART1},\
+    {DEV_UART1_PIN_AF1_RX_PORT, DEV_UART1_PIN_AF1_RX_PIN, DEV_GPIO_AF7_USART1}
+};
+
+static DevUartPinPort Uart2TxPinGroup[] = 
+{
+    {DEV_UART2_PIN_AF0_TX_PORT, DEV_UART2_PIN_AF0_TX_PIN, DEV_GPIO_AF7_USART2},\
+    {DEV_UART2_PIN_AF1_TX_PORT, DEV_UART2_PIN_AF1_TX_PIN, DEV_GPIO_AF7_USART2}
+};
+
+static DevUartPinPort Uart2RxPinGroup[] = 
+{
+    {DEV_UART2_PIN_AF0_RX_PORT, DEV_UART1_PIN_AF0_RX_PIN, DEV_GPIO_AF7_USART2},\
+    {DEV_UART2_PIN_AF1_RX_PORT, DEV_UART1_PIN_AF1_RX_PIN, DEV_GPIO_AF7_USART2}
+};
+
+static DevUartPinPort Uart3TxPinGroup[] = 
+{
+    {DEV_UART3_PIN_AF0_TX_PORT, DEV_UART3_PIN_AF0_TX_PIN, DEV_GPIO_AF7_USART3},\
+    {DEV_UART3_PIN_AF1_TX_PORT, DEV_UART3_PIN_AF1_TX_PIN, DEV_GPIO_AF7_USART3},\
+    {DEV_UART3_PIN_AF2_TX_PORT, DEV_UART3_PIN_AF2_TX_PIN, DEV_GPIO_AF7_USART3}
+};
+
+static DevUartPinPort Uart3RxPinGroup[] = 
+{
+    {DEV_UART3_PIN_AF0_RX_PORT, DEV_UART3_PIN_AF0_RX_PIN, DEV_GPIO_AF7_USART3},\
+    {DEV_UART3_PIN_AF1_RX_PORT, DEV_UART3_PIN_AF1_RX_PIN, DEV_GPIO_AF7_USART3},\
+    {DEV_UART3_PIN_AF2_RX_PORT, DEV_UART3_PIN_AF2_RX_PIN, DEV_GPIO_AF7_USART3}
+};
+
+static DevUartPinPort Uart4TxPinGroup[] = 
+{
+    {DEV_UART4_PIN_AF0_TX_PORT, DEV_UART4_PIN_AF0_TX_PIN, DEV_GPIO_AF8_UART4},\
+};
+
+static DevUartPinPort Uart4RxPinGroup[] = 
+{
+    {DEV_UART4_PIN_AF0_RX_PORT, DEV_UART4_PIN_AF0_RX_PIN, DEV_GPIO_AF8_UART4},\
+};
+
+static DevUartPinPort Uart5TxPinGroup[] = 
+{
+    {DEV_UART5_PIN_AF0_TX_PORT, DEV_UART5_PIN_AF0_TX_PIN, DEV_GPIO_AF8_UART5},\
+};
+
+static DevUartPinPort Uart5RxPinGroup[] = 
+{
+    {DEV_UART5_PIN_AF0_RX_PORT, DEV_UART5_PIN_AF0_RX_PIN, DEV_GPIO_AF8_UART5},\
+};
 
 /* Exported functions --------------------------------------------------------*/
-static void DevUartIOInit( DevUart uart , DevUARTPin uart_pin );
+static void DevUartIOInit( DevUart uart);
 static void DevUartIODeInit( DevUart uart );
 static void DevUartClockEnable( DevUart uart );
 static void DevUartClockDisable( DevUart uart );
@@ -55,7 +126,7 @@ bool DevUartInit(DevUart uart, DevUartConfig config )
 
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
-	hander = &UartHander[uart];
+	hander = &UartHander[uart].hander;
 
 	if (uart == DEV_UART1)
     {
@@ -89,8 +160,10 @@ bool DevUartInit(DevUart uart, DevUartConfig config )
 	hander->Init.OverSampling = UART_OVERSAMPLING_16;
 
 	DevUartClockEnable(uart);
+    
+    UartHander[uart].pin = config.pin;
 
-	DevUartIOInit(uart, config.uart_pin);
+	DevUartIOInit(uart);
 	
 	if (HAL_UART_Init(hander) != HAL_OK)
 	{
@@ -121,7 +194,7 @@ bool DevUartDeInit(DevUart uart )
 
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
-	hander = &UartHander[uart];
+	hander = &UartHander[uart].hander;
 	
 	DevUartClockDisable(uart);
 
@@ -157,7 +230,7 @@ bool DevUartTx(DevUart uart , uint8_t* data, uint16_t size )
 {
     DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
-    if (HAL_UART_Transmit (&UartHander[uart], data, size, 100) != HAL_OK)
+    if (HAL_UART_Transmit (&UartHander[uart].hander, data, size, 100) != HAL_OK)
     {
         return false;
     }
@@ -183,7 +256,7 @@ bool DevUartRx(DevUart uart, uint8_t* data, uint16_t size )
 {
     DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
-    if (HAL_UART_Receive (&UartHander[uart], data, size, 1000) != HAL_OK)
+    if (HAL_UART_Receive (&UartHander[uart].hander, data, size, 1000) != HAL_OK)
     {
       return false;
     }
@@ -235,7 +308,7 @@ void DevUartRxCbUnregister(DevUart uart)
 {
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 	
-	__HAL_UART_DISABLE_IT(&UartHander[uart], UART_IT_RXNE);
+	__HAL_UART_DISABLE_IT(&UartHander[uart].hander, UART_IT_RXNE);
 
 	DevUartRxCbTab[uart] = NULL;
 }
@@ -259,7 +332,7 @@ void DevUart1IrqHander(void)
 	uint8_t *tmp ;
 	uint8_t  size = 0;
 
-	UART_HandleTypeDef *hander = &UartHander[DEV_UART1];
+	UART_HandleTypeDef *hander = &UartHander[DEV_UART1].hander;
 
 	/* UART in mode Receiver ---------------------------------------------------*/
 	if(	(__HAL_UART_GET_FLAG(hander, UART_FLAG_RXNE) != RESET) 
@@ -333,7 +406,7 @@ void DevUart2IrqHander(void)
 	uint8_t *tmp ;
 	uint8_t  size = 0;
 
-	UART_HandleTypeDef *hander = &UartHander[DEV_UART2];
+	UART_HandleTypeDef *hander = &UartHander[DEV_UART2].hander;
 
 	/* UART in mode Receiver ---------------------------------------------------*/
 	if(	(__HAL_UART_GET_FLAG(hander, UART_FLAG_RXNE) != RESET) 
@@ -407,7 +480,7 @@ void DevUart3IrqHander(void)
 	uint8_t *tmp ;
 	uint8_t  size = 0;
 
-	UART_HandleTypeDef *hander = &UartHander[DEV_UART3];
+	UART_HandleTypeDef *hander = &UartHander[DEV_UART3].hander;
 
 	/* UART in mode Receiver ---------------------------------------------------*/
 	if(	(__HAL_UART_GET_FLAG(hander, UART_FLAG_RXNE) != RESET) 
@@ -631,7 +704,7 @@ void DevUartIrqEnable( DevUart uart, DevUartIrq irq )
 {
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
-	UART_HandleTypeDef *hander = &UartHander[uart];
+	UART_HandleTypeDef *hander = &UartHander[uart].hander;
 
     switch (uart)
     {
@@ -677,7 +750,7 @@ void DevUartIrqDisable( DevUart uart, DevUartIrq irq )
 {
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
 
-	UART_HandleTypeDef *hander = &UartHander[uart];
+	UART_HandleTypeDef *hander = &UartHander[uart].hander;
     
 	HAL_NVIC_ClearPendingIRQ(USART3_IRQn);
     
@@ -767,31 +840,34 @@ void DevUartClockDisable( DevUart uart )
  *   Modification: Created function
 
 *****************************************************************************/
-void DevUartIOInit( DevUart uart , DevUARTPin uart_pin )
+void DevUartIOInit( DevUart uart )
 {
     DevGpioConfig config;
-    //GPIO_InitTypeDef GPIO_InitStruct;
+    DevUartPinPort tx;
+    DevUartPinPort rx;
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
-
-	//UART_HandleTypeDef *hander = &UartHander[uart];
     
     switch (uart)
     {
-        case DEV_UART1: config.alternate = DEV_GPIO_AF7;
+        case DEV_UART1: tx = Uart1TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart1RxPinGroup[UartHander[uart].pin.rx_af];
                         break;
         
-        case DEV_UART2:config.alternate = DEV_GPIO_AF7;
+        case DEV_UART2: tx = Uart2TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart2RxPinGroup[UartHander[uart].pin.rx_af];
                         break;
         
-        case DEV_UART3:config.alternate = DEV_GPIO_AF7;
+        case DEV_UART3: tx = Uart3TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart3RxPinGroup[UartHander[uart].pin.rx_af];
                         break;
         
-        case DEV_UART4:config.alternate = DEV_GPIO_AF8;
+        case DEV_UART4: tx = Uart4TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart4RxPinGroup[UartHander[uart].pin.rx_af];
                         break;
         
-        case DEV_UART5:config.alternate = DEV_GPIO_AF8;
+        case DEV_UART5: tx = Uart5TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart5RxPinGroup[UartHander[uart].pin.rx_af];
                         break;
-
         default:
             break;
 
@@ -800,33 +876,31 @@ void DevUartIOInit( DevUart uart , DevUARTPin uart_pin )
     config.mode = DEV_GPIO_MODE_AF_PP;
     config.pull = DEV_GPIO_PULLUP;
     config.speed = DEV_GPIO_SPEED_FREQ_VERY_HIGH;
-    
-    //rx pin
-    DevGpioInit(  uart_pin.rx_port, uart_pin.rx_pin, config );
 
-    //tx pin
-    DevGpioInit(  uart_pin.tx_port, uart_pin.tx_pin, config );
+    if (UartHander[uart].hander.Init.Mode == UART_MODE_TX_RX)
+    {
+        //rx pin
+        config.alternate = tx.af;
+        DevGpioInit(tx.port, tx.pin, config );
+        
+        //tx pin
+        config.alternate = rx.af;
+        DevGpioInit(rx.port, rx.pin, config );
+    }
+    else if (UartHander[uart].hander.Init.Mode == UART_MODE_TX)
+    {
+        //tx pin
+        config.alternate = tx.af;
+        DevGpioInit(tx.port, tx.pin, config );
+    }
+    else if (UartHander[uart].hander.Init.Mode == UART_MODE_RX)
+    {
+        //rx pin
+        config.alternate = rx.af;
+        DevGpioInit(rx.port, rx.pin, config );
+    }
 
-//	  if(uart == DEV_UART3)
-//	  {
-//		/* Peripheral clock enable */		
-//		// __HAL_RCC_GPIOD_CLK_ENABLE();
-//		 __HAL_RCC_GPIOA_CLK_ENABLE();
-//		
-//		/**USART3 GPIO Configuration	
-//		PD8 	------> USART3_TX
-//		PD9 	------> USART3_RX 
-//		*/
-//		//GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
-//		GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_9;
-//		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-//		GPIO_InitStruct.Pull = GPIO_PULLUP;
-//		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-//		GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-//		//HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-//		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-//
-//	  }
+
 }
 
 /*****************************************************************************
@@ -844,120 +918,50 @@ void DevUartIOInit( DevUart uart , DevUARTPin uart_pin )
 *****************************************************************************/
 void DevUartIODeInit( DevUart uart )
 {
+    DevUartPinPort tx;
+    DevUartPinPort rx;
+    
 	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+    
+    switch (uart)
+    {
+        case DEV_UART1: tx = Uart1TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart1RxPinGroup[UartHander[uart].pin.rx_af];
+                        break;
+        
+        case DEV_UART2: tx = Uart2TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart2RxPinGroup[UartHander[uart].pin.rx_af];
+                        break;
+        
+        case DEV_UART3: tx = Uart3TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart3RxPinGroup[UartHander[uart].pin.rx_af];
+                        break;
+        
+        case DEV_UART4: tx = Uart4TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart4RxPinGroup[UartHander[uart].pin.rx_af];
+                        break;
+        
+        case DEV_UART5: tx = Uart5TxPinGroup[UartHander[uart].pin.tx_af];
+                        rx = Uart5RxPinGroup[UartHander[uart].pin.rx_af];
+                        break;
+        default:
+            break;
 
-	if(uart == DEV_UART3)
-	{
-		/**USART3 GPIO Configuration	
-		PD8 	------> USART3_TX
-		PD9 	------> USART3_RX 
-		*/
-		HAL_GPIO_DeInit(GPIOD, GPIO_PIN_8|GPIO_PIN_9);
-	}
+    }
+
+    if (UartHander[uart].hander.Init.Mode == UART_MODE_TX_RX)
+    {
+        DevGpioDeInit(tx.port, tx.pin);
+        DevGpioDeInit(rx.port, rx.pin);
+    }
+    else if (UartHander[uart].hander.Init.Mode == UART_MODE_TX)
+    {
+        DevGpioDeInit(tx.port, tx.pin);        
+    }
+    else if (UartHander[uart].hander.Init.Mode == UART_MODE_RX)
+    {
+        DevGpioDeInit(rx.port, rx.pin);
+    }
+
 }
-
-
-//void HAL_UART_MspInit(UART_HandleTypeDef* huart)
-//{
-
-//  GPIO_InitTypeDef GPIO_InitStruct;
-//  if(huart->Instance==USART1)
-//  {
-//  /* USER CODE BEGIN USART1_MspInit 0 */
-
-//  /* USER CODE END USART1_MspInit 0 */
-//    /* Peripheral clock enable */
-//    __HAL_RCC_USART1_CLK_ENABLE();
-//  
-//    /**USART1 GPIO Configuration    
-//    PA9     ------> USART1_TX
-//    PA10     ------> USART1_RX 
-//    */
-//    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
-//    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-//    GPIO_InitStruct.Pull = GPIO_PULLUP;
-//    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-//    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-//    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-//  /* USER CODE BEGIN USART1_MspInit 1 */
-
-//  /* USER CODE END USART1_MspInit 1 */
-//  }
-//  else if(huart->Instance==USART3)
-//  {
-//  /* USER CODE BEGIN USART3_MspInit 0 */
-
-//  /* USER CODE END USART3_MspInit 0 */
-//    /* Peripheral clock enable */
-//    __HAL_RCC_USART3_CLK_ENABLE();
-//    
-//     __HAL_RCC_GPIOD_CLK_ENABLE();
-//    /**USART3 GPIO Configuration    
-//    PD8     ------> USART3_TX
-//    PD9     ------> USART3_RX 
-//    */
-//    GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
-//    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-//    GPIO_InitStruct.Pull = GPIO_PULLUP;
-//    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-//    GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
-//    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-//    /* Peripheral interrupt init */
-//    HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
-//    HAL_NVIC_EnableIRQ(USART3_IRQn);
-//  /* USER CODE BEGIN USART3_MspInit 1 */
-//  //__HAL_USART_ENABLE_IT(huart, USART_IT_RXNE);
-
-
-//  /* USER CODE END USART3_MspInit 1 */
-//  }
-
-//}
-
-//void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
-//{
-
-//  if(huart->Instance==USART1)
-//  {
-//  /* USER CODE BEGIN USART1_MspDeInit 0 */
-
-//  /* USER CODE END USART1_MspDeInit 0 */
-//    /* Peripheral clock disable */
-//    __HAL_RCC_USART1_CLK_DISABLE();
-//  
-//    /**USART1 GPIO Configuration    
-//    PA9     ------> USART1_TX
-//    PA10     ------> USART1_RX 
-//    */
-//    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
-
-//  /* USER CODE BEGIN USART1_MspDeInit 1 */
-
-//  /* USER CODE END USART1_MspDeInit 1 */
-//  }
-//  else if(huart->Instance==USART3)
-//  {
-//  /* USER CODE BEGIN USART3_MspDeInit 0 */
-
-//  /* USER CODE END USART3_MspDeInit 0 */
-//    /* Peripheral clock disable */
-//    __HAL_RCC_USART3_CLK_DISABLE();
-//  
-//    /**USART3 GPIO Configuration    
-//    PD8     ------> USART3_TX
-//    PD9     ------> USART3_RX 
-//    */
-//    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_8|GPIO_PIN_9);
-
-//    /* Peripheral interrupt DeInit*/
-//    HAL_NVIC_DisableIRQ(USART3_IRQn);
-
-//  /* USER CODE BEGIN USART3_MspDeInit 1 */
-
-//  /* USER CODE END USART3_MspDeInit 1 */
-//  }
-
-//}
 

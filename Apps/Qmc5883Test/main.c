@@ -35,7 +35,7 @@
 #pragma message("File on " __FILE__ " at " )
 
 #include "config.h"
-
+DBG_THIS_MODULE("TEST")          
 /* Public variables ---------------------------------------------------------*/
     
 /* Private variables ---------------------------------------------------------*/
@@ -49,6 +49,7 @@ void TaskQmc5883lTest(void const * argument);
 void Taskhmc5983Test(void const * argument);
 void TaskMCOTest(void const * argument);
 void TaskDeviceFlashTest(void const * argument);
+void TaskDebugLogTest(void const * argument);
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,6 +57,8 @@ int main(void)
 {
   
   DeviceInit();
+  
+  TaskDebugLogTest((void *)0);
   
   TaskCompileTimePrint((void *)0);
   //StartTaskSysTickTest((void *)0);
@@ -67,6 +70,13 @@ int main(void)
   while(1);
 }
 
+void TaskDebugLogTest(void const * argument)
+{
+    DebugInit(__DBG_LEVEL_INFO__ | __DBG_LEVEL_WARNING__ | __DBG_LEVEL_ORIGIN__ | __DBG_LEVEL_ERROR__);
+
+    DBG_LOG(__DBG_LEVEL_WARNING__, "Debug level\r\n");
+
+}
 
 #pragma location = "USER_INFO"
 __root const uint8_t UserInfo[256] @ "USER_INFO" ={"12345678910a"};
@@ -83,6 +93,8 @@ void TaskDeviceFlashTest(void const * argument)
     BspCom1Init(256000);
     uint8_t buffer[] = "BUFFER ARRAY DATA.";
     
+       
+
     i = sprintf(temp, "Device info:\r\n",ComiledDateGet(), ComiledTimeGet());
     BspCom1SendData(temp,  i);
 
@@ -164,6 +176,11 @@ void TaskCompileTimePrint(void const * argument)
   
   BspCom1SendData(temp,  i);
   
+    i = SPR(__DBG_LEVEL_INFO__, temp, "SPR Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
+  
+  BspCom1SendData(temp,  i);
+  DBG_LOG(__DBG_LEVEL_INFO__, "Compiled on:%s %s\r\n",ComiledDateGet(), ComiledTimeGet());
+
 }
 
 void TaskMCOTest(void const * argument)
