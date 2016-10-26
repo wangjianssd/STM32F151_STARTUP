@@ -249,7 +249,7 @@ void DevGpioIrqRegister( DevGpioPort port, DevGpioPin pin, DevGpioIntType type, 
 
     gpio.Mode = type;
     
-    gpio.Pull= GPIO_NOPULL;
+    gpio.Pull= GPIO_PULLUP;
     HAL_GPIO_Init(GpioPortTab[port], &gpio);
 
     DevGpioIsrTab[pin] = isr;

@@ -2120,6 +2120,9 @@
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_hmc5983.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_m24lr04e.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_qmc5883l.h</name>
       </file>
     </group>
@@ -2133,6 +2136,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_hmc5983.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_m24lr04e.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_qmc5883l.c</name>

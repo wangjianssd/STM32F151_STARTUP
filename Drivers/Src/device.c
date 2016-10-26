@@ -84,10 +84,10 @@ void DeviceInit (void)
     DevGpioInit( port, pin, config );
 
     //PD14 INT 
-    port = DEV_GPIO_PORTD;
-    pin = DEV_GPIO_PIN14;
-    DevGpioIrqRegister(port, pin, DEV_GPIO_MODE_IT_RISING_FALLING, GpioPE3ISR);
-    DevGpioIrqEnable(port, pin);
+//    port = DEV_GPIO_PORTD;
+//    pin = DEV_GPIO_PIN14;
+//    DevGpioIrqRegister(port, pin, DEV_GPIO_MODE_IT_RISING_FALLING, GpioPE3ISR);
+//    DevGpioIrqEnable(port, pin);
 
    
 }

@@ -236,8 +236,15 @@ bool DevI2cInit(DevI2c i2c, DevI2cConfig config)
     {
         hander->Instance = I2C1;
     }
-
+    else
+    {
+      hander->Instance = I2C2;
+    }
+    
     I2cHander[i2c].pin = config.pin;
+    
+	DevI2cIOInit(i2c);
+
     
     hander->Init.ClockSpeed = config.clock;
 
@@ -252,7 +259,6 @@ bool DevI2cInit(DevI2c i2c, DevI2cConfig config)
 
 	DevI2cClockEnable(i2c);
 
-	DevI2cIOInit(i2c);
 
     if (HAL_I2C_Init(hander) != HAL_OK)
     {
@@ -400,6 +406,70 @@ bool  DevI2cBytesRead (DevI2c i2c,  uint8_t addr, uint8_t reg, uint8_t* data, ui
 }
 
 /*****************************************************************************
+ * Function      : DevI2cRead
+ * Description   : I2C read operation
+ * Input         : DevI2c i2c     
+                   DevI2cMsg msg  
+ * Output        : None
+ * Return        : bool
+ * Others        : 
+ * Record
+ * 1.Date        : 20161025
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+bool DevI2cRead (DevI2c i2c, DevI2cMsg msg)
+{
+    uint8_t count = 0;
+	uint8_t temp[2];
+    I2C_HandleTypeDef *hander;
+
+    DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+
+    hander = &I2cHander[i2c].hander;
+    
+    if (msg.reg_len == 1)
+    {
+       temp[0] = msg.reg; 
+
+    }
+    else
+    {
+      temp[0] = msg.reg >> 8;
+      temp[1] = (uint8_t)msg.reg;
+    }  
+    
+    while(HAL_I2C_Master_Transmit(hander, msg.addr, temp, msg.reg_len, 500) != HAL_OK)
+    {
+         if (HAL_I2C_GetError(hander) != HAL_I2C_ERROR_AF)
+        {
+            return false;
+        }
+        
+      count++;
+
+      if (count > 3)
+      {
+        return false;
+      }
+    }
+   
+    if(HAL_I2C_Master_Receive(hander,  (msg.addr | 0x01), msg.data, msg.data_len, (msg.data_len * 500) + 500) != HAL_OK)
+    {
+        if (HAL_I2C_GetError(hander) != HAL_I2C_ERROR_AF)
+        {
+            return false;
+        }
+    }
+	
+    return true;
+
+
+}
+
+
+/*****************************************************************************
  * Function      : DevI2cByteWrite
  * Description   : 
  * Input         : DevI2c i2c  
@@ -441,6 +511,61 @@ bool  DevI2cByteWrite (DevI2c i2c , uint8_t addr, uint8_t reg, uint8_t data)
      }
      
      return true;
+
+}
+
+
+bool DevI2cWrite (DevI2c i2c, DevI2cMsg msg)
+{
+    uint8_t tx_data[64];// = {reg, data};
+    uint8_t count = 0;
+    uint8_t temp[2];
+    uint16_t len;
+    
+	I2C_HandleTypeDef *hander;
+
+	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+
+	hander = &I2cHander[i2c].hander;
+
+    if (msg.reg_len == 1)
+    {
+       temp[0] = msg.reg;
+    }
+    else
+    {
+      temp[0] = msg.reg >> 8;
+      temp[1] = (uint8_t)msg.reg;
+    }
+    
+    len = msg.reg_len + msg.data_len;
+    
+    if (len > sizeof(tx_data))
+    {
+        return false;
+    }
+    else
+    {
+        memcpy(tx_data, temp, msg.reg_len);
+
+        memcpy((uint8_t *)(tx_data + msg.reg_len), msg.data, msg.data_len);
+    }
+    
+     while(HAL_I2C_Master_Transmit(hander, msg.addr, tx_data, len, 1000) != HAL_OK)
+     {
+         if (HAL_I2C_GetError(hander) != HAL_I2C_ERROR_AF)
+         {
+             return false;
+         }
+    
+         if (count > 3)
+         {
+             return false;
+         }
+     }
+     
+     return true;
+
 
 }
 

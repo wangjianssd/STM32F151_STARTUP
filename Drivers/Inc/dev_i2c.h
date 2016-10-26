@@ -21,9 +21,9 @@
 /* Define --------------------------------------------------------------------*/
 
 /*              |I2C1		 |I2C2	      |
-DEV_I2C_PIN_AF0 |SDA	SCL	 |SDA	SCL   |
-DEV_I2C_PIN_AF1 |PB7	PB8	 |PB11	PB10  |
-                |PB9	PB6	 |            |
+                |SDA	SCL	 |SDA	SCL   |
+DEV_I2C_PIN_AF0 |PB7	PB8	 |PB11	PB10  |
+DEV_I2C_PIN_AF1 |PB9	PB6	 |            |
 */
 //I2C1
 //SDA
@@ -82,13 +82,23 @@ typedef struct
     DevI2cPin      pin;       /*!< Specifies the I2C pin */
 }DevI2cConfig;
 
+typedef struct
+{
+    uint16_t addr;
+    uint16_t reg;     
+    uint8_t  reg_len;
+    uint8_t  *data;
+    uint16_t data_len;
+}DevI2cMsg;
 
 /* Exported functions --------------------------------------------------------*/
 bool DevI2cInit(DevI2c i2c, DevI2cConfig config);
 void DevI2cDeInit( DevI2c i2c );
 bool DevI2cByteRead (DevI2c i2c, uint8_t addr, uint8_t reg, uint8_t* data);
+bool DevI2cRead (DevI2c i2c, DevI2cMsg msg);
 bool DevI2cBytesRead (DevI2c i2c, uint8_t addr, uint8_t reg, uint8_t* data, uint16_t size);
 bool DevI2cByteWrite (DevI2c i2c, uint8_t addr, uint8_t reg, uint8_t data);
+bool DevI2cWrite (DevI2c i2c, DevI2cMsg msg);
 
 #endif
 

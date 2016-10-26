@@ -45,7 +45,7 @@ void DebugInit( uint8_t debug_lev )
 {
     DevUartConfig config;
     
-    config.baud 		= 256000;
+    config.baud 		= 2000000;
 	config.length 		= DEV_UART_WORDLENGTH_8B;
 	config.mode 		= DEV_UART_MODE_TX;
 	config.parity 		= __DEBUG_CONFIG_PARITY__;

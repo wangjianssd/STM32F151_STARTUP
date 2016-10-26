@@ -18,6 +18,7 @@
 #include "device.h"
 #include "bsp_qmc5883l.h"
 #include "bsp_hmc5983.h"
+#include "bsp_m24lr04e.h"
 #include "bsp_com.h"
 
 /* Define --------------------------------------------------------------------*/

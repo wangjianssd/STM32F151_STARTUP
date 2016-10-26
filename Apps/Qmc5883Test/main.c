@@ -50,6 +50,7 @@ void Taskhmc5983Test(void const * argument);
 void TaskMCOTest(void const * argument);
 void TaskDeviceFlashTest(void const * argument);
 void TaskDebugLogTest(void const * argument);
+void M24lr04eTest(void const * argument);
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,12 +63,64 @@ int main(void)
   
   TaskCompileTimePrint((void *)0);
   //StartTaskSysTickTest((void *)0);
-  TaskDeviceFlashTest((void *)0);
+ // TaskDeviceFlashTest((void *)0);
   //TaskMCOTest((void *)0);
 
+  M24lr04eTest((void *)0);
+  
   //TaskQmc5883lTest((void *)0);
   Taskhmc5983Test((void *)0);
   while(1);
+}
+void M24lr04eTest(void const * argument)
+{
+    DBG_THIS_MODULE("M24LR04E")
+    bool ret;
+    uint8_t rec[128];
+    uint8_t temp[] = "0123456789abcdefghijklmnopqrstaabbccddeeffgghhiijjkkll";
+    BspM24lr04eSysInfo info = {0};
+    
+    ret = BspM24lr04eInit();
+
+    if (ret == true)
+    {
+        DBG_LOG(__DBG_LEVEL_INFO__, "Init success\r\n");
+    }
+    else
+    {
+        DBG_LOG(__DBG_LEVEL_INFO__, "Init failed\r\n");
+    }
+    
+    ret = BspM24lr04eRead(__BSP_M24LR64E_ADDR_USER__, 0, rec, sizeof(temp));
+    ret = BspM24lr04eWrite(__BSP_M24LR64E_ADDR_USER__, 0, temp, sizeof(temp));
+    Delay(5);
+    ret = BspM24lr04eRead(__BSP_M24LR64E_ADDR_USER__, 0, rec, sizeof(temp));
+
+    if (memcmp(rec, temp, sizeof(temp)) == 0)
+    {
+      DBG_LOG(__DBG_LEVEL_INFO__, "Write Read test success\r\n");
+    }
+    else
+    {
+      DBG_LOG(__DBG_LEVEL_INFO__, "Write Read test failed\r\n");
+    }  
+
+    
+    ret = BspM24lr04eSyetenInfo(&info);
+
+    if (ret == DEF_TRUE)
+    {
+      DBG_LOG(__DBG_LEVEL_INFO__, "UID         :%02X%02X%02X%02X%02X%02X%02X%02X\r\n",
+                                  info.uid[7], info.uid[6], info.uid[5], info.uid[4], 
+                                  info.uid[3], info.uid[2], info.uid[1], info.uid[0]);
+      
+      DBG_LOG(__DBG_LEVEL_INFO__, "DSFID       :%02X\r\n", info.dsfid);
+      DBG_LOG(__DBG_LEVEL_INFO__, "AFI         :%02X\r\n", info.afi);
+      DBG_LOG(__DBG_LEVEL_INFO__, "Memory size :%02X\r\n", info.mem_size);
+      DBG_LOG(__DBG_LEVEL_INFO__, "Block size  :%02X\r\n", info.block_size);
+      DBG_LOG(__DBG_LEVEL_INFO__, "ic_ref      :%02X\r\n", info.ic_ref);
+    }
+ 
 }
 
 void TaskDebugLogTest(void const * argument)
@@ -248,7 +301,7 @@ void Taskhmc5983Test(void const * argument)
              DBG_LOG(__DBG_LEVEL_INFO__, "Magnet get failed\r\n",  sizeof("Magnet get failed\r\n"));
         }
         
-        Delay(100);
+        Delay(1000);
 
     }
     
