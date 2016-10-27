@@ -50,37 +50,42 @@ void Taskhmc5983Test(void const * argument);
 void TaskMCOTest(void const * argument);
 void TaskDeviceFlashTest(void const * argument);
 void TaskDebugLogTest(void const * argument);
-void M24lr04eTest(void const * argument);
+void TaskM24lr04eTest(void const * argument);
+void TaskSeggerSysView(void const * argument);
 
+  uint32_t count = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 int main(void)
 {
-  
   DeviceInit();
   
   TaskDebugLogTest((void *)0);
   
   TaskCompileTimePrint((void *)0);
   //StartTaskSysTickTest((void *)0);
- // TaskDeviceFlashTest((void *)0);
+  TaskDeviceFlashTest((void *)0);
   //TaskMCOTest((void *)0);
 
-  M24lr04eTest((void *)0);
+  TaskM24lr04eTest((void *)0);
   
   //TaskQmc5883lTest((void *)0);
   Taskhmc5983Test((void *)0);
   while(1);
 }
-void M24lr04eTest(void const * argument)
+
+
+void TaskM24lr04eTest(void const * argument)
 {
     DBG_THIS_MODULE("M24LR04E")
     bool ret;
     uint8_t rec[128];
-    uint8_t temp[] = "0123456789abcdefghijklmnopqrstaabbccddeeffgghhiijjkkll";
     BspM24lr04eSysInfo info = {0};
     
     ret = BspM24lr04eInit();
+    DBG_LOG(__DBG_LEVEL_ERROR__, "Init success\r\n");
+    DBG_LOG(__DBG_LEVEL_WARNING__, "Init success\r\n");
+    DBG_LOG(__DBG_LEVEL_INFO__, "Init success\r\n");
 
     if (ret == true)
     {
@@ -91,19 +96,19 @@ void M24lr04eTest(void const * argument)
         DBG_LOG(__DBG_LEVEL_INFO__, "Init failed\r\n");
     }
     
-    ret = BspM24lr04eRead(__BSP_M24LR64E_ADDR_USER__, 0, rec, sizeof(temp));
-    ret = BspM24lr04eWrite(__BSP_M24LR64E_ADDR_USER__, 0, temp, sizeof(temp));
-    Delay(5);
-    ret = BspM24lr04eRead(__BSP_M24LR64E_ADDR_USER__, 0, rec, sizeof(temp));
-
-    if (memcmp(rec, temp, sizeof(temp)) == 0)
-    {
-      DBG_LOG(__DBG_LEVEL_INFO__, "Write Read test success\r\n");
-    }
-    else
-    {
-      DBG_LOG(__DBG_LEVEL_INFO__, "Write Read test failed\r\n");
-    }  
+//    ret = BspM24lr04eRead(__BSP_M24LR64E_ADDR_USER__, 0, rec, sizeof(temp));
+//    ret = BspM24lr04eWrite(__BSP_M24LR64E_ADDR_USER__, 0, temp, sizeof(temp));
+//    Delay(5);
+//    ret = BspM24lr04eRead(__BSP_M24LR64E_ADDR_USER__, 0, rec, sizeof(temp));
+//
+//    if (memcmp(rec, temp, sizeof(temp)) == 0)
+//    {
+//      DBG_LOG(__DBG_LEVEL_INFO__, "Write Read test success\r\n");
+//    }
+//    else
+//    {
+//      DBG_LOG(__DBG_LEVEL_INFO__, "Write Read test failed\r\n");
+//    }  
 
     
     ret = BspM24lr04eSyetenInfo(&info);

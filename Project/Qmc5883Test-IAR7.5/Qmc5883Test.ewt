@@ -2696,6 +2696,51 @@
         </file>
       </group>
     </group>
+    <group>
+      <name>SeggerSystemView</name>
+      <group>
+        <name>Config</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Config\Global.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Config\SEGGER_RTT_Conf.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Config\SEGGER_SYSVIEW_Conf.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Config\SEGGER_SYSVIEW_Config_NoOS.c</name>
+        </file>
+      </group>
+      <group>
+        <name>Segger</name>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER_RTT.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER_RTT.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER_RTT_Printf.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER_SYSVIEW.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER_SYSVIEW.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER_SYSVIEW_ConfDefaults.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\Middlewares\SeggerSystemView\Segger\SEGGER_SYSVIEW_Int.h</name>
+        </file>
+      </group>
+    </group>
   </group>
 </project>
 

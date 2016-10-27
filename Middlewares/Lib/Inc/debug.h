@@ -22,7 +22,13 @@
 #include <string.h>
 
 /* Define --------------------------------------------------------------------*/
-#define __DEBUG_INFO_PRINT_EN__                     (1)
+#define __DEBUG_PORT_SEGGER_RTT__                   (0)
+#define __DEBUG_PORT_SEGGER_COM__                   (1)
+#define __DEBUG_PORT_SEGGER_SYSVIEW__               (2)
+
+
+#define __DEBUG_INFO_PRINT_EN__                     (2)
+#define __DEBUG_PORT__                              (__DEBUG_PORT_SEGGER_SYSVIEW__)
 
 #define __DBG_LEVEL_NONE__		                    (0x00)
 #define __DBG_LEVEL_TRACE__		                    (0x01<<0)

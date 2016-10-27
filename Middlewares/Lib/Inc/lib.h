@@ -29,6 +29,7 @@
 #include "fifo.h"
 #include "queue.h"
 #include "util.h"
+#include "SEGGER_SYSVIEW.h"
 
 //#include <srandom.h>
 //#include <printf.h>
