@@ -52,20 +52,27 @@ void TaskDeviceFlashTest(void const * argument);
 void TaskDebugLogTest(void const * argument);
 void TaskM24lr04eTest(void const * argument);
 void TaskSeggerSysView(void const * argument);
+void TaskSleepTest(void const * argument);
 
-  uint32_t count = 0;
+void TaskSleepTestCb(void)
+{
+    DBG_LOG(__DBG_LEVEL_INFO__, "Sleep cb\r\n");
+}
 
 /* Private function prototypes -----------------------------------------------*/
 int main(void)
 {
   DeviceInit();
-  
+
   TaskDebugLogTest((void *)0);
+  BspWatchdogSet(10000);
   
+  DBG_LOG(__DBG_LEVEL_INFO__, "BspWatchdogSet 10000ms\r\n");
   TaskCompileTimePrint((void *)0);
   //StartTaskSysTickTest((void *)0);
   TaskDeviceFlashTest((void *)0);
   //TaskMCOTest((void *)0);
+  TaskSleepTest((void *)0);
 
   TaskM24lr04eTest((void *)0);
   
@@ -74,6 +81,20 @@ int main(void)
   while(1);
 }
 
+void TaskSleepTest(void const * argument)
+{
+   // while(1)
+   // {
+   //   BspLowPowerEnter();
+
+    //  Delay(100);
+   // }
+    BspLowPowerEnterCbRegister(TaskSleepTestCb);
+    
+    //BspLowPowerEnter();
+
+
+}
 
 void TaskM24lr04eTest(void const * argument)
 {
@@ -279,6 +300,8 @@ void Taskhmc5983Test(void const * argument)
     int16_t y;
     int16_t z; 
     
+    uint8_t buf[6] = {0};
+    
     DBG_THIS_MODULE("HMC5983")
 
     ret = BspHmc5983Init();
@@ -293,12 +316,46 @@ void Taskhmc5983Test(void const * argument)
     {
         DBG_LOG(__DBG_LEVEL_INFO__, "--------------HMC5983 fail--------------------------\r\n");
     }
+    
+#if 0
+    BspHmc5983SensorDetect(&x, &y , &z);
 
+    BspHmc5983Config(0xE4,  
+                     __BSP_HMC5983_REG_B_VALUE_FOR_DETECT__);
+    BspHmc5983SpiWrite(__BSP_HMC5983_MODE_REG_ADDR__, 
+                       __BSP_HMC5983_MODE_REG_VALUE_FOR_CON__);
+    
+
+
+    while(1)
+    {
+        if (BspHmc5983RdyFlagGet() == DEF_TRUE)
+        {
+            for(uint8_t i=0; i<6; i++)
+            {
+                if(false == BspHmc5983SpiRead(__BSP_HMC5983_X_MSB_REG_ADDR__ + i, &buf[i]))
+                {
+                     break;
+                }
+            }
+
+            x = BUILD_UINT16(buf[1], buf[0]);
+            z = BUILD_UINT16(buf[3], buf[2]);
+            y = BUILD_UINT16(buf[5], buf[4]);
+            
+            DBG_LOG(__DBG_LEVEL_WARNING__, "MagnetIsr X:%d, Y:%d, Z:%d\r\n", x, y, z);
+
+        }
+
+      //  BspLowPowerEnter();
+    }
+#endif
+    
     while(1)
     {
         if (BspHmc5983SensorDetect(&x, &y , &z) == true)
         {
-            DBG_LOG(__DBG_LEVEL_INFO__, "Magnet X:%d, Y:%d, Z:%d\r\n", x, y, z);
+            DBG_LOG(__DBG_LEVEL_WARNING__, "Magnet X:%d, Y:%d, Z:%d\r\n", x, y, z);
 
         }
         else
@@ -306,10 +363,15 @@ void Taskhmc5983Test(void const * argument)
              DBG_LOG(__DBG_LEVEL_INFO__, "Magnet get failed\r\n",  sizeof("Magnet get failed\r\n"));
         }
         
+        BspWatchdogClear();
+
         Delay(1000);
+        //BspHmc5983SensorDetect(&x, &y , &z);
+       // BspLowPowerEnter();
+       // Delay(1000);
 
     }
-    
+
 }
 
 void TaskQmc5883lTest(void const * argument)

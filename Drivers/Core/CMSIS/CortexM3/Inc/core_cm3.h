@@ -1641,6 +1641,10 @@ __STATIC_INLINE void NVIC_SystemReset(void)
  */
 
 #if (__Vendor_SysTickConfig == 0U)
+static inline void SysTick_Disable (void)
+{
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+}
 
 /**
   \brief   System Tick Configuration

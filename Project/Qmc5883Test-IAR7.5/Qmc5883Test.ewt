@@ -2120,6 +2120,9 @@
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_hmc5983.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_lowpower.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_m24lr04e.h</name>
       </file>
       <file>
@@ -2136,6 +2139,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_hmc5983.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_lowpower.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_m24lr04e.c</name>
@@ -2606,10 +2612,16 @@
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_i2c.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_sleep.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_spi.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_uart.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_watchdog.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\device.h</name>
@@ -2630,10 +2642,16 @@
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_i2c.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_sleep.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_spi.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_uart.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_watchdog.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\device.c</name>

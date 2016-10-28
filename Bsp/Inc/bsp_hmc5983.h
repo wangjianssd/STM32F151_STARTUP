@@ -24,6 +24,8 @@
 #define __BSP_HMC5983_SPI__    		                (DEV_SPI1)
 #define __BSP_HMC5983_SPI_CS_PORT__                 (DEV_GPIO_PORTB)
 #define __BSP_HMC5983_SPI_CS_PIN__                  (DEV_GPIO_PIN1)
+#define __BSP_HMC5983_RDY_PORT__                    (DEV_GPIO_PORTC)
+#define __BSP_HMC5983_RDY_PIN__                     (DEV_GPIO_PIN13)
 
 /*HMC5983 Command Word Definitions*/ 
 #define __BSP_HMC5983_SPI_R_REGISTER__	            (0x80)
@@ -50,15 +52,18 @@
 #define __BSP_HMC5983_REG_A_VALUE_FOR_SELF_TEST__   (0xF0)//(0x91)
 #define __BSP_HMC5983_REG_B_VALUE_FOR_SELF_TEST__   (0xA0)
 #define __BSP_HMC5983_MODE_REG_VALUE_FOR_SINGLE__   (0x01)
+#define __BSP_HMC5983_MODE_REG_VALUE_FOR_CON__      (0x00)
 #define __BSP_HMC5983_MODE_REG_VALUE_FOR_LP__       (0x03)
 
 /* Exported types ------------------------------------------------------------*/
 
 /* Function prototypes -------------------------------------------------------*/
 bool BspHmc5983Init(void);
+bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b);
 bool BspHmc5983SpiRead( uint8_t reg, uint8_t *data);
 bool BspHmc5983SpiWrite( uint8_t reg, uint8_t data);
 bool BspHmc5983SensorDetect( int16_t *x, int16_t *y, int16_t *z );
+bool BspHmc5983RdyFlagGet (void);
 
 /* Variables -----------------------------------------------------------------*/
 

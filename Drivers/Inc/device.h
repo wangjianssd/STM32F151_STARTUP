@@ -26,6 +26,8 @@
 #include "dev_gpio.h"
 #include "dev_flash.h"
 #include "dev_spi.h"
+#include "dev_sleep.h"
+#include "dev_watchdog.h"
 
 /* Golable Variable--------------------------------------------------------------------*/
 #pragma section = "ROM_CONTENT"

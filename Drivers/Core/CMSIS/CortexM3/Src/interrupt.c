@@ -18,6 +18,7 @@
 #include "core_cm3.h"
 
 /* Define --------------------------------------------------------------------*/
+DBG_THIS_MODULE("INT")
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -156,7 +157,8 @@ void SysTickISR (void)
     {
       SystemTick--;
     }
-
+    
+    //DBG_LOG(__DBG_LEVEL_INFO__, "System Tick:%d\r\n", SystemTick);
 }
 
 /*****************************************************************************
@@ -178,6 +180,24 @@ void SysTickInit( uint32_t tick )
     
     /*Configure the SysTick IRQ priority */
     HAL_NVIC_SetPriority(SysTick_IRQn, 15 ,0);
+}
+
+/*****************************************************************************
+ * Function      : SysTickDisable
+ * Description   : Disable system tick
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161027
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+void SysTickDisable(void)
+{
+    SysTick_Disable();
 }
 
 /*****************************************************************************

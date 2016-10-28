@@ -20,6 +20,7 @@
 #include "bsp_hmc5983.h"
 #include "bsp_m24lr04e.h"
 #include "bsp_com.h"
+#include "bsp_lowpower.h"
 
 /* Define --------------------------------------------------------------------*/
 #define __RTOS_SUPPORT__                           0

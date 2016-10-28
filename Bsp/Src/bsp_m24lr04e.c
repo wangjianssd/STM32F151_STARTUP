@@ -263,6 +263,22 @@ bool BspM24lr04eSendByte(uint8_t mode, uint16_t const addr, uint8_t data)
     return DEF_TRUE;
 }
 
+/*****************************************************************************
+ * Function      : BspM24lr04eWritePage
+ * Description   : Write page
+ * Input         : uint8_t mode   
+                   uint16_t addr  
+                   uint8_t *data  
+                   uint8_t len    
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161027
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool BspM24lr04eWritePage(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t len)
 {
     DevI2cMsg msg;
@@ -285,6 +301,22 @@ bool BspM24lr04eWritePage(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t le
     return DEF_TRUE;
 }
 
+/*****************************************************************************
+ * Function      : BspM24lr04eWriteSection
+ * Description   : Write section
+ * Input         : uint8_t mode   
+                   uint16_t addr  
+                   uint8_t *data  
+                   uint8_t len    
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161027
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool BspM24lr04eWriteSection(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t len)
 {
     uint8_t *data_p;
@@ -357,6 +389,22 @@ bool BspM24lr04eWriteSection(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t
     return DEF_TRUE;
 }
 
+/*****************************************************************************
+ * Function      : BspM24lr04eWrite
+ * Description   : Write device
+ * Input         : uint8_t mode   
+                   uint16_t addr  
+                   uint8_t *data  
+                   uint8_t len    
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161027
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool BspM24lr04eWrite(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t len)
 {
     uint8_t *data_p;

@@ -8,19 +8,6 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[InterruptLog]
-LogEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-SumEnabled=0
-ShowTimeSum=1
-SumSortOrder=0
-[DataLog]
-LogEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-SumEnabled=0
-ShowTimeSum=1
 [Interrupts]
 Enabled=1
 [MemConfig]
@@ -38,7 +25,7 @@ TraceBufferSize=0x00010000
 TraceStallIfFIFOFull=0x00000000
 TracePortSize=0x00000004
 [DebugChecksum]
-Checksum=-975148821
+Checksum=571353856
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -67,9 +54,74 @@ Fmt2={W}1:__ICFEDIT_region_RAM_start__	4	0
 Fmt3={W}1:__ICFEDIT_region_ROM_end__	4	0
 Fmt4={W}1:__ICFEDIT_region_ROM_start__	4	0
 Fmt5={W}1:__ICFEDIT_region_USER_INFO_ADDR__	4	0
+[SWOTraceHWSettings]
+OverrideDefaultClocks=0
+CpuClock=32000000
+ClockAutoDetect=1
+ClockWanted=6000000
+JtagSpeed=2000000
+Prescaler=16
+TimeStampPrescIndex=0
+TimeStampPrescData=0
+PcSampCYCTAP=1
+PcSampPOSTCNT=15
+PcSampIndex=0
+DataLogMode=0
+ITMportsEnable=0
+ITMportsTermIO=0
+ITMportsLogFile=0
+ITMlogFile=$PROJ_DIR$\ITM.log
 [Trace1]
 Enabled=0
 ShowSource=1
+[Trace2]
+Enabled=0
+ShowSource=0
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[PowerLog]
+Title_0=I0
+Symbol_0=0 4 0
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+LiveEnabled=0
+LiveFile=PowerLogLive.log
+[DataLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+[EventLog]
+Title_0=Ch3
+Symbol_0=0 4 1
+Title_1=Ch2
+Symbol_1=0 4 1
+Title_2=Ch1
+Symbol_2=0 4 1
+Title_3=Ch0
+Symbol_3=0 4 1
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+SumSortOrder=0
+[InterruptLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+SumSortOrder=0
 [Disassemble mode]
 mode=0
 [Breakpoints2]
@@ -82,7 +134,9 @@ Bp5=_ 0 "EMUL_CODE" "0x08003B4C" 0 0 1 "" 0 "" 0
 Bp6=_ 0 "EMUL_CODE" "0x08003B7A" 0 0 1 "" 0 "" 0
 Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Src\dev_flash.c}.45.5" 0 0 1 "" 0 "" 0
 Bp8=_ 0 "EMUL_CODE" "{}.108.5" 0 0 1 "" 0 "" 0
-Count=9
+Bp9=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Drivers\Core\STM32L1xx_HAL_Driver\Src\stm32l1xx_hal_pwr.c}.489.1" 0 0 1 "" 0 "" 0
+Bp10=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\Apps\Qmc5883Test\main.c}.68.3" 0 0 1 "" 0 "" 0
+Count=11
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -103,3 +157,7 @@ Exclusions=
 Enabled=0
 [CallStackStripe]
 ShowTiming=1
+[PowerProbe]
+Frequency=10000
+Probe0=I0
+ProbeSetup0=2 1 1 2 0 0

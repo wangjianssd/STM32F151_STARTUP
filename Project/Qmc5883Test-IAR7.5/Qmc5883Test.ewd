@@ -49,7 +49,7 @@
         </option>
         <option>
           <name>RunToEnable</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>RunToName</name>
@@ -57,7 +57,7 @@
         </option>
         <option>
           <name>CExtraOptionsCheck</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CExtraOptions</name>
@@ -799,7 +799,7 @@
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCUSBDevice</name>
@@ -848,7 +848,7 @@
         </option>
         <option>
           <name>CCJLinkInterfaceRadio</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCJLinkAttachSlave</name>
@@ -918,7 +918,7 @@
         </option>
         <option>
           <name>CCCpuClockEdit</name>
-          <state>72.0</state>
+          <state>32.0</state>
         </option>
         <option>
           <name>CCSwoClockAuto</name>

@@ -16,16 +16,19 @@
 #include "bsp.h"
 
 /* Define --------------------------------------------------------------------*/
+DBG_THIS_MODULE("HMC5983")
 
 /* Exported types ------------------------------------------------------------*/
 
 /* Variables -----------------------------------------------------------------*/
+static bool BspHmc5983RdyFlag = DEF_FALSE;
 
 /* Function prototypes -------------------------------------------------------*/
 static void BspHmc5983CsSetHigh( void );
 static void BspHmc5983CsSetLow( void );
 static bool BspHmc5983SelfTest(void);
-static bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b);
+static void BspHmc5983RdyInit(void);
+static void BspHmc5983RdyIsr (void);
 
 /*****************************************************************************
  * Function      : BspHmc5983Init
@@ -81,6 +84,8 @@ bool BspHmc5983Init(void)
         return false;
     }
 
+    BspHmc5983RdyInit();
+
     return true; 
 }
 
@@ -99,7 +104,7 @@ bool BspHmc5983Init(void)
  *   Modification: Created function
 
 *****************************************************************************/
-static bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b)
+bool BspHmc5983Config(uint8_t reg_a, uint8_t reg_b)
 {
 	uint8_t reg_a_r = __BSP_HMC5983_REG_A_DEFAULT_VALUE__;
     uint8_t reg_b_r = __BSP_HMC5983_REG_B_DEFAULT_VALUE__;
@@ -341,3 +346,39 @@ bool BspHmc5983SensorDetect( int16_t *x, int16_t *y, int16_t *z )
     return true;    
 }
 
+static void BspHmc5983RdyInit(void)
+{
+    DevGpioIrqRegister(__BSP_HMC5983_RDY_PORT__, __BSP_HMC5983_RDY_PIN__, 
+                       DEV_GPIO_MODE_IT_RISING, BspHmc5983RdyIsr);
+    
+    DevGpioIrqEnable(__BSP_HMC5983_RDY_PORT__, __BSP_HMC5983_RDY_PIN__);
+
+}
+
+static void BspHmc5983RdyIsr (void)
+{
+    DBG_LOG(__DBG_LEVEL_INFO__, "BspHmc5983RdyIsr\r\n");
+    BspHmc5983RdyFlag = DEF_TRUE;
+}
+
+/*****************************************************************************
+ * Function      : BspHmc5983RdyFlagGet
+ * Description   : Get BspHmc5983RdyFlag
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161028
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
+bool BspHmc5983RdyFlagGet (void)
+{
+    bool ret;
+
+    ret = BspHmc5983RdyFlag;
+    BspHmc5983RdyFlag = DEF_FALSE;
+    return ret;
+}
