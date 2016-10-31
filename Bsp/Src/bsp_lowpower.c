@@ -25,6 +25,19 @@ DBG_THIS_MODULE("LOW_POWER")
 /* Variables -----------------------------------------------------------------*/
 static FNCT_VOID BspLowPowerCb = NULL;
 
+/*****************************************************************************
+ * Function      : BspLowPowerEnter
+ * Description   : Entetr lower power mode
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161028
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void BspLowPowerEnter (void)
 {
     if (BspLowPowerCb != NULL)
@@ -44,11 +57,37 @@ void BspLowPowerEnter (void)
    // DeviceInit();
 }
 
+/*****************************************************************************
+ * Function      : BspLowPowerEnterCbRegister
+ * Description   : Register callback for enter lowpower mode
+ * Input         : FNCT_VOID cb  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161028
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void BspLowPowerEnterCbRegister(FNCT_VOID cb)
 {
     BspLowPowerCb = cb;
 }
 
+/*****************************************************************************
+ * Function      : BspLowPowerEnterCbUnregister
+ * Description   : Unregister callback function for lowpower mode
+ * Input         : FNCT_VOID cb  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161028
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void BspLowPowerEnterCbUnregister(FNCT_VOID cb)
 {
     BspLowPowerCb = NULL;

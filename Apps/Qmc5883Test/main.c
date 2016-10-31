@@ -53,10 +53,22 @@ void TaskDebugLogTest(void const * argument);
 void TaskM24lr04eTest(void const * argument);
 void TaskSeggerSysView(void const * argument);
 void TaskSleepTest(void const * argument);
+void TaskRtcTest(void const * argument);
 
 void TaskSleepTestCb(void)
 {
     DBG_LOG(__DBG_LEVEL_INFO__, "Sleep cb\r\n");
+}
+
+void TaskRtcTestIsr(void)
+{
+    DevRtcTime time_get = {0};
+
+    if (DevRtcGet(&time_get) == DEF_TRUE)
+    {
+        DBG_LOG(__DBG_LEVEL_INFO__, "RTC:%d/%d/%d-%d:%d:%d\r\n", (time_get.year + 2000), time_get.month, time_get.date,
+                                                                  time_get.hour, time_get.minutes, time_get.seconds);
+    }
 }
 
 /* Private function prototypes -----------------------------------------------*/
@@ -65,10 +77,13 @@ int main(void)
   DeviceInit();
 
   TaskDebugLogTest((void *)0);
-  BspWatchdogSet(10000);
-  
-  DBG_LOG(__DBG_LEVEL_INFO__, "BspWatchdogSet 10000ms\r\n");
+  //BspWatchdogSet(10000);
+  //DBG_LOG(__DBG_LEVEL_INFO__, "BspWatchdogSet 10000ms\r\n");
   TaskCompileTimePrint((void *)0);
+
+  TaskRtcTest((void *)0);
+  
+  Delay (1000);
   //StartTaskSysTickTest((void *)0);
   TaskDeviceFlashTest((void *)0);
   //TaskMCOTest((void *)0);
@@ -79,6 +94,54 @@ int main(void)
   //TaskQmc5883lTest((void *)0);
   Taskhmc5983Test((void *)0);
   while(1);
+}
+
+void TaskRtcTest(void const * argument)
+{
+    DevRtcTime time;
+    DevRtcTime time_get = {0};
+
+    DevRtcInit();
+
+    time.hour               = 12;
+    time.minutes            = 13;
+    time.seconds            = 14;
+    time.time_format        = DEV_RTC_TIME_FORMAT_24H;
+    time.daylight_saving    = DEV_RTC_DAYLIGHT_SAVING_NONE;
+
+    time.date       = 28;
+    time.weekday    = DEV_RTC_WEEKDAY_FRIDAY;
+    time.month      = DEV_RTC_MONTH_OCTOBER;
+    time.year       = 16;
+
+    if (DevRtcSet(time) == DEF_TRUE)
+    {
+        DBG_LOG(__DBG_LEVEL_INFO__, "Set RTC success\r\n");
+        DBG_LOG(__DBG_LEVEL_INFO__, "SET:%d/%d/%d-%d:%d:%d\r\n", (time.year + 2000), time.month, time.date,
+                                                                  time.hour, time.minutes, time.seconds);
+    }
+    else
+    {
+        DBG_LOG(__DBG_LEVEL_INFO__, "Set RTC fail\r\n");
+    }
+
+    Delay(1000);
+    
+    if (DevRtcGet(&time_get) == DEF_TRUE)
+    {
+        DBG_LOG(__DBG_LEVEL_INFO__, "Get RTC success\r\n");
+        
+        DBG_LOG(__DBG_LEVEL_INFO__, "Get:%d/%d/%d-%d:%d:%d\r\n", (time_get.year + 2000), time_get.month, time_get.date,
+                                                                  time_get.hour, time_get.minutes, time_get.seconds);
+    }
+    else
+    {
+        DBG_LOG(__DBG_LEVEL_INFO__, "Get RTC fail\r\n");
+    }
+    
+    DevRtcIrqRegister(1, TaskRtcTestIsr);
+
+    DevRtcIrqEnable();
 }
 
 void TaskSleepTest(void const * argument)
@@ -365,7 +428,7 @@ void Taskhmc5983Test(void const * argument)
         
         BspWatchdogClear();
 
-        Delay(1000);
+        Delay(10000);
         //BspHmc5983SensorDetect(&x, &y , &z);
        // BspLowPowerEnter();
        // Delay(1000);

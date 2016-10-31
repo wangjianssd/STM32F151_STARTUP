@@ -37,6 +37,7 @@
 #define __DBG_LEVEL_ERROR__		                    (0x01<<3)
 #define __DBG_LEVEL_CRITICAL__	                    (0x01<<4)
 #define __DBG_LEVEL_ORIGIN__                        (0x01<<5)
+#define __DBG_LEVEL_ASSERT__                        (0x01<<5)
 
 #define	__DEBUG_COM__                                DEV_UART1
 #define	__DEBUG_CONFIG_STOP__                        DEV_UART_STOPBITS_1 
@@ -68,6 +69,15 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...);
         DebugLog(level, __FILENAME__, __LINE__, __VA_ARGS__);      \
     }while(__LINE__ == -1)
 
+
+void DebugAssert(bool_t cond, const char *fn, uint16_t line);
+    
+#define DBG_ASSERT(cond, ...)                               \
+        do                                            \
+        {                                               \
+            DebugAssert(cond, __FILE__, __LINE__);     \
+        }while(__LINE__ == -1)
+
 #else
 
 #define _DBG_LINE_  	, uint16_t line
@@ -80,12 +90,14 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...);
         
 #define DBG_LOG(level, ...)
 
+#define DBG_ASSERT(cond, ...)
+
 #endif
 
 /* Exported types ------------------------------------------------------------*/
 
 /* Function prototypes -------------------------------------------------------*/
-void DBG_ASSERT(bool_t cond _DBG_LINE_);
+//void DBG_ASSERT(bool_t cond _DBG_LINE_);
 //bool_t debug_enter_queue(uint8_t *string, uint8_t len);
 //void debug_sqqueue_init();
 

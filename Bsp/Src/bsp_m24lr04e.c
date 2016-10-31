@@ -161,9 +161,9 @@ bool BspM24lr04eRecvByte(uint8_t mode, uint16_t const addr, uint8_t *data)
 {    
     DevI2cMsg msg;
 
-    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__ __DBG_LINE);
+    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__);
     
-    DBG_ASSERT(data != NULL __DBG_LINE);
+    DBG_ASSERT(data != NULL);
     
     msg.addr = mode;
     msg.data = data;
@@ -199,9 +199,9 @@ bool BspM24lr04eRead(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t len)
 {
     DevI2cMsg msg;
 
-    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__ __DBG_LINE);
+    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__);
     
-    DBG_ASSERT(data != NULL __DBG_LINE);
+    DBG_ASSERT(data != NULL);
 
     if (len == 0)
     {
@@ -247,7 +247,7 @@ bool BspM24lr04eSendByte(uint8_t mode, uint16_t const addr, uint8_t data)
 {    
     DevI2cMsg msg;
 
-    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__ __DBG_LINE);
+    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__);
 
     msg.addr = mode;
     msg.data = &data;
@@ -283,9 +283,9 @@ bool BspM24lr04eWritePage(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t le
 {
     DevI2cMsg msg;
 
-    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__ __DBG_LINE);
-    DBG_ASSERT(data != NULL __DBG_LINE);
-    DBG_ASSERT(len <= __BSP_M24LR04E_PAGE_SIZE__ __DBG_LINE);
+    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__);
+    DBG_ASSERT(data != NULL);
+    DBG_ASSERT(len <= __BSP_M24LR04E_PAGE_SIZE__);
 
     msg.addr = mode;
     msg.data = data;
@@ -324,9 +324,9 @@ bool BspM24lr04eWriteSection(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t
     uint8_t remain_data_pro;
     uint8_t remain_data_end;
 
-    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__ __DBG_LINE);
-    DBG_ASSERT(data != NULL __DBG_LINE);
-    DBG_ASSERT(len <= __BSP_M24LR04E_SECTION_SIZE__ __DBG_LINE);
+    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__);
+    DBG_ASSERT(data != NULL);
+    DBG_ASSERT(len <= __BSP_M24LR04E_SECTION_SIZE__);
     
     data_p = data;
     addr_temp = addr;
@@ -412,8 +412,8 @@ bool BspM24lr04eWrite(uint8_t mode, uint16_t addr, uint8_t *data, uint8_t len)
     uint8_t remain_data_section_pro;
     uint8_t remain_data_section_end;
 
-    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__ __DBG_LINE);
-    DBG_ASSERT(data != NULL __DBG_LINE);
+    DBG_ASSERT(addr <= __BSP_M24LR04E_MAX_ADDR__);
+    DBG_ASSERT(data != NULL);
 
     if ((len == 0 ) || (data == NULL))
     {

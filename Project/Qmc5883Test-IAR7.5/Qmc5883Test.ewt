@@ -2612,6 +2612,9 @@
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_i2c.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_rtc.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_sleep.h</name>
       </file>
       <file>
@@ -2640,6 +2643,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_i2c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_rtc.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_sleep.c</name>

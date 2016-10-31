@@ -83,7 +83,7 @@ void DevI2cIOInit( DevI2c i2c )
     DevI2cPinPort *psda;
     DevI2cPinPort *pscl;
     
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 
     pin = I2cHander[i2c].pin;
 
@@ -149,7 +149,7 @@ void DevI2cIOInit( DevI2c i2c )
 *****************************************************************************/
 void DevI2cIODeInit( DevI2c i2c )
 {	
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 	
 	if(i2c == DEV_I2C1)
 	{
@@ -177,7 +177,7 @@ void DevI2cIODeInit( DevI2c i2c )
 *****************************************************************************/
 void DevI2cClockEnable( DevI2c i2c )
 {
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 
 	if(i2c == DEV_I2C1)
 	{
@@ -201,7 +201,7 @@ void DevI2cClockEnable( DevI2c i2c )
 *****************************************************************************/
 void DevI2cClockDisable( DevI2c i2c )
 {
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 
 	if(i2c == DEV_I2C1)
 	{
@@ -228,7 +228,7 @@ bool DevI2cInit(DevI2c i2c, DevI2cConfig config)
 {
 	I2C_HandleTypeDef *hander;
 
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 
 	hander = &I2cHander[i2c].hander;
 
@@ -285,7 +285,7 @@ void DevI2cDeInit( DevI2c i2c )
 {
 	I2C_HandleTypeDef *hander;
 
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 
 	hander = &I2cHander[i2c].hander;
 
@@ -318,7 +318,7 @@ bool DevI2cByteRead (DevI2c i2c,  uint8_t addr, uint8_t reg, uint8_t* data)
    // HAL_StatusTypeDef temp;
    I2C_HandleTypeDef *hander;
    
-   DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+   DBG_ASSERT(i2c < DEV_I2C_NUM);
    
    hander = &I2cHander[i2c].hander;
    
@@ -374,7 +374,7 @@ bool  DevI2cBytesRead (DevI2c i2c,  uint8_t addr, uint8_t reg, uint8_t* data, ui
 	
     I2C_HandleTypeDef *hander;
 
-    DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+    DBG_ASSERT(i2c < DEV_I2C_NUM);
 
     hander = &I2cHander[i2c].hander;
     
@@ -425,7 +425,7 @@ bool DevI2cRead (DevI2c i2c, DevI2cMsg msg)
 	uint8_t temp[2];
     I2C_HandleTypeDef *hander;
 
-    DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+    DBG_ASSERT(i2c < DEV_I2C_NUM);
 
     hander = &I2cHander[i2c].hander;
     
@@ -493,7 +493,7 @@ bool  DevI2cByteWrite (DevI2c i2c , uint8_t addr, uint8_t reg, uint8_t data)
     
 	I2C_HandleTypeDef *hander;
 
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 
 	hander = &I2cHander[i2c].hander;
     
@@ -524,7 +524,7 @@ bool DevI2cWrite (DevI2c i2c, DevI2cMsg msg)
     
 	I2C_HandleTypeDef *hander;
 
-	DBG_ASSERT(i2c < DEV_I2C_NUM __DBG_LINE);
+	DBG_ASSERT(i2c < DEV_I2C_NUM);
 
 	hander = &I2cHander[i2c].hander;
 

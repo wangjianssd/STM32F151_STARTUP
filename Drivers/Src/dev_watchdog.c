@@ -24,12 +24,37 @@
 /* Variables -----------------------------------------------------------------*/
 static IWDG_HandleTypeDef hiwdg;
 
+/*****************************************************************************
+ * Function      : BspWatchdogClear
+ * Description   : Feed watchdog
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161028
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void BspWatchdogClear (void)
 {
     HAL_IWDG_Refresh(&hiwdg);
 }
 
+/*****************************************************************************
+ * Function      : BspWatchdogSet
+ * Description   : Start watchdog
+ * Input         : uint16_t time_ms  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161028
+ *   Author      : wangjian
+ *   Modification: Created function
 
+*****************************************************************************/
 void BspWatchdogSet (uint16_t time_ms)
 {
     uint16_t count;    
@@ -50,11 +75,24 @@ void BspWatchdogSet (uint16_t time_ms)
 
 }
 
+/*****************************************************************************
+ * Function      : BspWatchdogStop
+ * Description   : Stop watchdog
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161028
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void BspWatchdogStop (void)
 {
     /* write 0x5555,enable access to the IWDG_PR and IWDG_RLR registers*/    
 
-    IWDG_DISABLE_WRITE_ACCESS(&hiwdg);
+    //IWDG_DISABLE_WRITE_ACCESS(&hiwdg);
 
 }
 

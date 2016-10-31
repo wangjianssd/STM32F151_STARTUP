@@ -120,7 +120,7 @@ bool DevSpiInit( DevSpi spi, DevSpiConfig config )
 {
     SPI_HandleTypeDef *hander;
 
-    DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+    DBG_ASSERT(spi < DEV_SPI_NUM);
 
     hander = &SpiHander[spi].hander;
 
@@ -185,7 +185,7 @@ bool DevSpiDeinit( DevSpi spi )
 {
 	SPI_HandleTypeDef *hander;
 
-	DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+	DBG_ASSERT(spi < DEV_SPI_NUM);
 
     hander = &SpiHander[spi].hander;
 	
@@ -225,7 +225,7 @@ static void DevSpiIOInit( DevSpi spi)
     DevGpioConfig config;
     DevSpiPin pin; 
     
-    DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+    DBG_ASSERT(spi < DEV_SPI_NUM);
     
     pin = SpiHander[spi].pin;
     
@@ -302,7 +302,7 @@ static void DevSpiIODeInit( DevSpi spi )
     DevSpiPinPort sck;
     DevSpiPin pin; 
     
-    DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+    DBG_ASSERT(spi < DEV_SPI_NUM);
     
     pin = SpiHander[spi].pin;
     
@@ -365,7 +365,7 @@ static void DevSpiIODeInit( DevSpi spi )
 *****************************************************************************/
 static void DevSpiClockEnable( DevSpi spi )
 {
-    DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+    DBG_ASSERT(spi < DEV_SPI_NUM);
 
     switch (spi)
     {
@@ -398,7 +398,7 @@ static void DevSpiClockEnable( DevSpi spi )
 *****************************************************************************/
 static void DevSpiClockDisable( DevSpi spi )
 {
-    DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+    DBG_ASSERT(spi < DEV_SPI_NUM);
 
     switch (spi)
     {
@@ -437,7 +437,7 @@ bool DevSpiTx( DevSpi spi, uint8_t* data, uint16_t size )
     uint32_t timeout;
 	SPI_HandleTypeDef *hander;
 
-    DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+    DBG_ASSERT(spi < DEV_SPI_NUM);
     
     hander = &SpiHander[spi].hander;
     
@@ -499,7 +499,7 @@ bool DevSpiRx( DevSpi spi, uint8_t* data, uint16_t size )
     uint32_t timeout;
 	SPI_HandleTypeDef *hander;
 
-    DBG_ASSERT(spi < DEV_SPI_NUM __DBG_LINE);
+    DBG_ASSERT(spi < DEV_SPI_NUM);
     
     hander = &SpiHander[spi].hander;
 

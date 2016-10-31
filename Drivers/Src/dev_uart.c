@@ -124,7 +124,7 @@ bool DevUartInit(DevUart uart, DevUartConfig config )
 {
 	UART_HandleTypeDef *hander;
 
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 
 	hander = &UartHander[uart].hander;
 
@@ -192,7 +192,7 @@ bool DevUartDeInit(DevUart uart )
 {
 	UART_HandleTypeDef *hander;
 
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 
 	hander = &UartHander[uart].hander;
 	
@@ -228,7 +228,7 @@ bool DevUartDeInit(DevUart uart )
 *****************************************************************************/
 bool DevUartTx(DevUart uart , uint8_t* data, uint16_t size )
 {
-    DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+    DBG_ASSERT(uart < DEV_UART_NUM);
 
     if (HAL_UART_Transmit (&UartHander[uart].hander, data, size, 100) != HAL_OK)
     {
@@ -254,7 +254,7 @@ bool DevUartTx(DevUart uart , uint8_t* data, uint16_t size )
 *****************************************************************************/
 bool DevUartRx(DevUart uart, uint8_t* data, uint16_t size )
 {
-    DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+    DBG_ASSERT(uart < DEV_UART_NUM);
 
     if (HAL_UART_Receive (&UartHander[uart].hander, data, size, 1000) != HAL_OK)
     {
@@ -280,9 +280,9 @@ bool DevUartRx(DevUart uart, uint8_t* data, uint16_t size )
 *****************************************************************************/
 void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr )
 {
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 	
-	DBG_ASSERT(isr != NULL __DBG_LINE);
+	DBG_ASSERT(isr != NULL);
 	
 	DevUartRxCbTab[uart] = isr;
 
@@ -306,7 +306,7 @@ void DevUartRxCbRegister(DevUart uart, DEV_UART_RX_FUNC_PTR isr )
 *****************************************************************************/
 void DevUartRxCbUnregister(DevUart uart)
 {
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 	
 	__HAL_UART_DISABLE_IT(&UartHander[uart].hander, UART_IT_RXNE);
 
@@ -702,7 +702,7 @@ void DevUart5IrqHander(void)
 *****************************************************************************/
 void DevUartIrqEnable( DevUart uart, DevUartIrq irq )
 {
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 
 	UART_HandleTypeDef *hander = &UartHander[uart].hander;
 
@@ -748,7 +748,7 @@ void DevUartIrqEnable( DevUart uart, DevUartIrq irq )
 *****************************************************************************/
 void DevUartIrqDisable( DevUart uart, DevUartIrq irq )
 {
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 
 	UART_HandleTypeDef *hander = &UartHander[uart].hander;
     
@@ -774,7 +774,7 @@ void DevUartIrqDisable( DevUart uart, DevUartIrq irq )
 *****************************************************************************/
 void DevUartClockEnable( DevUart uart )
 {
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 
 	switch (uart)
 	{
@@ -811,7 +811,7 @@ void DevUartClockEnable( DevUart uart )
 *****************************************************************************/
 void DevUartClockDisable( DevUart uart )
 {
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
 
 	switch (uart)
 	{
@@ -845,7 +845,7 @@ void DevUartIOInit( DevUart uart )
     DevGpioConfig config;
     DevUartPinPort tx;
     DevUartPinPort rx;
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
     
     switch (uart)
     {
@@ -921,7 +921,7 @@ void DevUartIODeInit( DevUart uart )
     DevUartPinPort tx;
     DevUartPinPort rx;
     
-	DBG_ASSERT(uart < DEV_UART_NUM __DBG_LINE);
+	DBG_ASSERT(uart < DEV_UART_NUM);
     
     switch (uart)
     {

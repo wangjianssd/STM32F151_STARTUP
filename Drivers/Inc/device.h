@@ -28,6 +28,7 @@
 #include "dev_spi.h"
 #include "dev_sleep.h"
 #include "dev_watchdog.h"
+#include "dev_rtc.h"
 
 /* Golable Variable--------------------------------------------------------------------*/
 #pragma section = "ROM_CONTENT"

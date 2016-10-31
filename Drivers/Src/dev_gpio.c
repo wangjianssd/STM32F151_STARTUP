@@ -78,9 +78,9 @@ void DevGpioInit( DevGpioPort port, DevGpioPin pin, DevGpioConfig config )
 {
     GPIO_InitTypeDef gpio;
     
-	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM);
     
-	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM);
 
     /* GPIO Ports Clock Enable */
     switch (port)
@@ -152,9 +152,9 @@ void DevGpioDeInit( DevGpioPort port, DevGpioPin pin )
 *****************************************************************************/
 void DevGpioWrite( DevGpioPort port, DevGpioPin pin, DevGpioPinLevel level )
 {
-	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM);
     
-	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM);
 
     HAL_GPIO_WritePin(GpioPortTab[port], GpioPinTab[pin], (GPIO_PinState)level);
 }
@@ -175,9 +175,9 @@ void DevGpioWrite( DevGpioPort port, DevGpioPin pin, DevGpioPinLevel level )
 *****************************************************************************/
 DevGpioPinLevel DevGpioRead( DevGpioPort port, DevGpioPin pin )
 {
-	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM);
     
-	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM);
 
     return (DevGpioPinLevel)HAL_GPIO_ReadPin(GpioPortTab[port], GpioPinTab[pin]);
 }
@@ -198,9 +198,9 @@ DevGpioPinLevel DevGpioRead( DevGpioPort port, DevGpioPin pin )
 *****************************************************************************/
 void DevGpioToggle( DevGpioPort port, DevGpioPin pin )
 {
-	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM);
     
-	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM);
 
     HAL_GPIO_TogglePin(GpioPortTab[port], GpioPinTab[pin]);
 }
@@ -224,9 +224,9 @@ void DevGpioIrqRegister( DevGpioPort port, DevGpioPin pin, DevGpioIntType type, 
 {
     GPIO_InitTypeDef gpio;
     
-	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM);
     
-	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM);
 
     /* GPIO Ports Clock Enable */
     switch (port)
@@ -324,9 +324,9 @@ void DevGpioIrqEnable( DevGpioPort port, DevGpioPin pin )
 {
     IRQn_Type irq;
     
-	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM);
     
-	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM);
 	
 	/* Peripheral interrupt init */
     if (pin < DEV_GPIO_PIN5)
@@ -369,9 +369,9 @@ void DevGpioIrqDisable( DevGpioPort port, DevGpioPin pin )
 
     IRQn_Type irq;
     
-	DBG_ASSERT(port < DEV_GPIO_PORT_NUM __DBG_LINE);
+	DBG_ASSERT(port < DEV_GPIO_PORT_NUM);
     
-	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM __DBG_LINE);
+	DBG_ASSERT(pin < DEV_GPIO_PIN_NUM);
 	
 	/* Peripheral interrupt init */
     if (pin < DEV_GPIO_PIN5)

@@ -15,6 +15,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "lib.h"
 #include "bsp.h"
+
 #if (__DEBUG_PORT__ == __DEBUG_PORT_SEGGER_RTT__)
 #include "SEGGER_RTT.h"
 #endif
@@ -180,7 +181,9 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...)
     	case __DBG_LEVEL_ERROR__:
             i = sprintf((char *)buff, "[%s, %u][ERROR] ", fn, line);
     		break;
-            
+        case __DBG_LEVEL_ASSERT__:
+            i = sprintf((char *)buff, "[ASSERT][%s, %u] ", fn, line);
+    		break;
     	default:
     		break;
 	}
@@ -207,15 +210,15 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...)
 
     if (dbg_lev == __DBG_LEVEL_WARNING__) 
     {
-        SEGGER_SYSVIEW_PrintfTargetEx(buff, SEGGER_SYSVIEW_WARNING);
+        SEGGER_SYSVIEW_PrintfTargetEx((char const*)buff, SEGGER_SYSVIEW_WARNING);
     }
-    else if (dbg_lev == __DBG_LEVEL_ERROR__) 
+    else if ((dbg_lev == __DBG_LEVEL_ERROR__) || (dbg_lev == __DBG_LEVEL_ASSERT__) )
     {
-        SEGGER_SYSVIEW_PrintfTargetEx(buff, SEGGER_SYSVIEW_ERROR);
+        SEGGER_SYSVIEW_PrintfTargetEx((char const*)buff, SEGGER_SYSVIEW_ERROR);
     }
     else  
     {
-        SEGGER_SYSVIEW_PrintfTargetEx(buff, SEGGER_SYSVIEW_LOG);
+        SEGGER_SYSVIEW_PrintfTargetEx((char const*)buff, SEGGER_SYSVIEW_LOG);
     }
 
 
@@ -224,11 +227,24 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...)
 }
 #endif
 
-void DBG_ASSERT(bool_t cond _DBG_LINE_)
-{
+//void DBG_ASSERT(bool_t cond _DBG_LINE_)
+//{
+//    int8_t  buff[__DEBUG_PREFIX_LEN__];
+//    uint16_t i;
+
+//    if (cond == false)
+//    {
+//        while (1);
+//    }
+//}
+
+void DebugAssert(bool_t cond, const char *fn, uint16_t line)
+{         
     if (cond == false)
     {
+        DebugLog(__DBG_LEVEL_ASSERT__, (char const *)strrchr(fn, '\\'), line);
+        
         while (1);
     }
-}
 
+}
