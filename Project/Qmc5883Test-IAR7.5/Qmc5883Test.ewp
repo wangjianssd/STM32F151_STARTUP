@@ -320,7 +320,6 @@
           <state>$PROJ_DIR$/../../Drivers\Core\CMSIS\Device</state>
           <state>$PROJ_DIR$/../../Drivers\Core\CMSIS\CortexM3\Inc</state>
           <state>$PROJ_DIR$/../../Drivers\Core\CMSIS\RTOS\Template</state>
-          <state>$PROJ_DIR$/../../Drivers/Core/CMSIS/Device/ST/STM32L1xx/Include</state>
           <state>$PROJ_DIR$/../../Drivers/Core/STM32L1xx_HAL_Driver/Config</state>
           <state>$PROJ_DIR$/../../Drivers/Core/STM32L1xx_HAL_Driver/Inc</state>
           <state>$PROJ_DIR$/../../Drivers/Core/STM32L1xx_HAL_Driver/Inc/Legacy</state>
@@ -335,7 +334,6 @@
           <state>$PROJ_DIR$/../../Drivers/Core/RTT</state>
           <state>$PROJ_DIR$/../../Drivers</state>
           <state>$PROJ_DIR$/../../BSP/Inc/</state>
-          <state>$PROJ_DIR$/../../Drivers/Core/CMSIS/Device/ST/STM32L1xx/Include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1966,6 +1964,9 @@
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_m24lr04e.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_power.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Bsp\Inc\bsp_qmc5883l.h</name>
       </file>
     </group>
@@ -1985,6 +1986,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_m24lr04e.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_power.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Bsp\Src\bsp_qmc5883l.c</name>
@@ -2440,6 +2444,9 @@
     <group>
       <name>Inc</name>
       <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_adc.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Drivers\Inc\dev_clock.h</name>
       </file>
       <file>
@@ -2472,6 +2479,9 @@
     </group>
     <group>
       <name>Src</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\Drivers\Src\dev_adc.c</name>
+      </file>
       <file>
         <name>$PROJ_DIR$\..\..\Drivers\Src\dev_clock.c</name>
       </file>

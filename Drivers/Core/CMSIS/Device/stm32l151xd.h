@@ -786,6 +786,11 @@ typedef struct
 #define FSMC_BANK1E_R_BASE    (FSMC_R_BASE + 0x0104U)    /*!< FSMC Bank1E registers base address */
 #define DBGMCU_BASE           ((uint32_t)0xE0042000U)     /*!< Debug MCU registers base address */
 
+
+#define TS_CAL1_BASE          ((uint32_t)0x1FF800FAU)       
+#define TS_CAL2_BASE          ((uint32_t)0x1FF800FEU)        
+#define VREF_INTCAL_BASE      ((uint32_t)0x1FF800F8U)      
+
 /**
   * @}
   */

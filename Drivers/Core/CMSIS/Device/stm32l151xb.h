@@ -649,6 +649,9 @@ typedef struct
 #define DMA1_Channel6_BASE    (DMA1_BASE + 0x0000006CU)
 #define DMA1_Channel7_BASE    (DMA1_BASE + 0x00000080U)
 #define DBGMCU_BASE           ((uint32_t)0xE0042000U)     /*!< Debug MCU registers base address */
+#define TS_CAL1_BASE          ((uint32_t)0x1FF8007AU)       
+#define TS_CAL2_BASE          ((uint32_t)0x1FF8007EU)        
+#define VREF_INTCAL_BASE      ((uint32_t)0x1FF80078U)     
 
 /**
   * @}

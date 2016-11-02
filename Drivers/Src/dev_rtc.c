@@ -27,6 +27,19 @@ static FNCT_VOID DevRtcIsr = NULL;
 /* Function prototypes -------------------------------------------------------*/
 static void DevRtcIrqHander(void);
 
+/*****************************************************************************
+ * Function      : DevRtcInit
+ * Description   : Init rtc
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void DevRtcInit(void)
 {
    // RCC_PeriphCLKInitTypeDef PeriphClkInit;
@@ -42,13 +55,39 @@ void DevRtcInit(void)
 
 
 }
+
+/*****************************************************************************
+ * Function      : DevRtcDeinit
+ * Description   : Deinit rtc
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void DevRtcDeinit(void)
 {
     __HAL_RCC_RTC_DISABLE();
 
 }
 
+/*****************************************************************************
+ * Function      : DevRtcSet
+ * Description   : Set rtc time
+ * Input         : DevRtcTime time  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
 
+*****************************************************************************/
 bool DevRtcSet(DevRtcTime time)
 {
     RTC_TimeTypeDef sTime;
@@ -89,6 +128,19 @@ bool DevRtcSet(DevRtcTime time)
 
 }
 
+/*****************************************************************************
+ * Function      : DevRtcGet
+ * Description   : Get rtc time
+ * Input         : DevRtcTime *time  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 bool DevRtcGet(DevRtcTime *time)
 {
     RTC_TimeTypeDef sTime;
@@ -117,6 +169,20 @@ bool DevRtcGet(DevRtcTime *time)
     return DEF_TRUE;
 }
 
+/*****************************************************************************
+ * Function      : DevRtcIrqRegister
+ * Description   : Register rtc isr
+ * Input         : uint8_t second  
+                FNCT_VOID isr   
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void DevRtcIrqRegister( uint8_t second, FNCT_VOID isr )
 {
 	DBG_ASSERT(second > 0);
@@ -127,6 +193,19 @@ void DevRtcIrqRegister( uint8_t second, FNCT_VOID isr )
     }
 }
 
+/*****************************************************************************
+ * Function      : DevRtcIrqEnable
+ * Description   : Enable rtc irq
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void DevRtcIrqEnable( void )
 {
     IntVectRegister(RTC_WKUP_IRQn, (FNCT_VOID)DevRtcIrqHander);
@@ -134,6 +213,19 @@ void DevRtcIrqEnable( void )
     IntEnable(RTC_WKUP_IRQn);
 }
 
+/*****************************************************************************
+ * Function      : DevRtcIrqDisable
+ * Description   : Disable rtc irq
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void DevRtcIrqDisable( void )
 {
     //HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
@@ -143,6 +235,19 @@ void DevRtcIrqDisable( void )
     IntVectUnregister(RTC_WKUP_IRQn);
 }
 
+/*****************************************************************************
+ * Function      : DevRtcIrqHander
+ * Description   : RTC irq wakerup timer hander
+ * Input         : void  
+ * Output        : None
+ * Return        : 
+ * Others        : 
+ * Record
+ * 1.Date        : 20161031
+ *   Author      : wangjian
+ *   Modification: Created function
+
+*****************************************************************************/
 void DevRtcIrqHander(void)
 {
 	    /* Get the pending status of the WAKEUPTIMER Interrupt */

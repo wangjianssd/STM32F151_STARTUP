@@ -54,6 +54,7 @@ void TaskM24lr04eTest(void const * argument);
 void TaskSeggerSysView(void const * argument);
 void TaskSleepTest(void const * argument);
 void TaskRtcTest(void const * argument);
+void TaskAdcTest(void const * argument);
 
 void TaskSleepTestCb(void)
 {
@@ -82,7 +83,7 @@ int main(void)
   TaskCompileTimePrint((void *)0);
 
   TaskRtcTest((void *)0);
-  
+  TaskAdcTest((void *)0);
   Delay (1000);
   //StartTaskSysTickTest((void *)0);
   TaskDeviceFlashTest((void *)0);
@@ -94,6 +95,34 @@ int main(void)
   //TaskQmc5883lTest((void *)0);
   Taskhmc5983Test((void *)0);
   while(1);
+}
+
+void TaskAdcTest(void const * argument)
+{
+    uint16_t vol;
+    float temp;
+    while(1)
+    {
+        if (BspDeviceVoltageGet(&vol) == DEF_TRUE)
+        {
+            DBG_LOG(__DBG_LEVEL_INFO__, "vol : %d mv\r\n", vol);
+        }
+        else
+        {
+            DBG_LOG(__DBG_LEVEL_INFO__, "Get vol fail\r\n");
+        }
+        
+        if (BspDeviceTemperatureGet(&temp) == DEF_TRUE)
+        {
+            DBG_LOG(__DBG_LEVEL_INFO__, "Temp sensor: %f C\r\n", temp);
+        }
+        else
+        {
+            DBG_LOG(__DBG_LEVEL_INFO__, "Get Temp fail\r\n");
+        }
+        Delay(1000);
+    }
+
 }
 
 void TaskRtcTest(void const * argument)
@@ -116,7 +145,7 @@ void TaskRtcTest(void const * argument)
 
     if (DevRtcSet(time) == DEF_TRUE)
     {
-        DBG_LOG(__DBG_LEVEL_INFO__, "Set RTC success\r\n");
+        //DBG_LOG(__DBG_LEVEL_INFO__, "Set RTC success\r\n");
         DBG_LOG(__DBG_LEVEL_INFO__, "SET:%d/%d/%d-%d:%d:%d\r\n", (time.year + 2000), time.month, time.date,
                                                                   time.hour, time.minutes, time.seconds);
     }
@@ -129,7 +158,7 @@ void TaskRtcTest(void const * argument)
     
     if (DevRtcGet(&time_get) == DEF_TRUE)
     {
-        DBG_LOG(__DBG_LEVEL_INFO__, "Get RTC success\r\n");
+        //DBG_LOG(__DBG_LEVEL_INFO__, "Get RTC success\r\n");
         
         DBG_LOG(__DBG_LEVEL_INFO__, "Get:%d/%d/%d-%d:%d:%d\r\n", (time_get.year + 2000), time_get.month, time_get.date,
                                                                   time_get.hour, time_get.minutes, time_get.seconds);
@@ -139,19 +168,15 @@ void TaskRtcTest(void const * argument)
         DBG_LOG(__DBG_LEVEL_INFO__, "Get RTC fail\r\n");
     }
     
-    DevRtcIrqRegister(1, TaskRtcTestIsr);
+    DevRtcIrqRegister(60, TaskRtcTestIsr);
+    
+        //DevRtcIrqRegister(1, (FNCT_VOID )TaskAdcTest);
 
     DevRtcIrqEnable();
 }
 
 void TaskSleepTest(void const * argument)
 {
-   // while(1)
-   // {
-   //   BspLowPowerEnter();
-
-    //  Delay(100);
-   // }
     BspLowPowerEnterCbRegister(TaskSleepTestCb);
     
     //BspLowPowerEnter();
@@ -167,9 +192,6 @@ void TaskM24lr04eTest(void const * argument)
     BspM24lr04eSysInfo info = {0};
     
     ret = BspM24lr04eInit();
-    DBG_LOG(__DBG_LEVEL_ERROR__, "Init success\r\n");
-    DBG_LOG(__DBG_LEVEL_WARNING__, "Init success\r\n");
-    DBG_LOG(__DBG_LEVEL_INFO__, "Init success\r\n");
 
     if (ret == true)
     {
@@ -214,7 +236,7 @@ void TaskM24lr04eTest(void const * argument)
 
 void TaskDebugLogTest(void const * argument)
 {
-    DebugInit(__DBG_LEVEL_INFO__ | __DBG_LEVEL_WARNING__ | __DBG_LEVEL_ORIGIN__ | __DBG_LEVEL_ERROR__);
+    DebugInit(__DBG_LEVEL_INFO__ | __DBG_LEVEL_WARNING__ | __DBG_LEVEL_ORIGIN__ | __DBG_LEVEL_ERROR__ | __DBG_LEVEL_ASSERT__);
 
     DBG_LOG(__DBG_LEVEL_ORIGIN__, "Debug level:INFO WARN ORIGN ERROR\r\n");
 
@@ -428,7 +450,7 @@ void Taskhmc5983Test(void const * argument)
         
         BspWatchdogClear();
 
-        Delay(10000);
+        Delay(30000);
         //BspHmc5983SensorDetect(&x, &y , &z);
        // BspLowPowerEnter();
        // Delay(1000);

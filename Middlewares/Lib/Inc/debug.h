@@ -27,7 +27,7 @@
 #define __DEBUG_PORT_SEGGER_SYSVIEW__               (2)
 
 
-#define __DEBUG_INFO_PRINT_EN__                     (2)
+#define __DEBUG_INFO_PRINT_EN__                     (1)
 #define __DEBUG_PORT__                              (__DEBUG_PORT_SEGGER_SYSVIEW__)
 
 #define __DBG_LEVEL_NONE__		                    (0x00)
@@ -37,7 +37,7 @@
 #define __DBG_LEVEL_ERROR__		                    (0x01<<3)
 #define __DBG_LEVEL_CRITICAL__	                    (0x01<<4)
 #define __DBG_LEVEL_ORIGIN__                        (0x01<<5)
-#define __DBG_LEVEL_ASSERT__                        (0x01<<5)
+#define __DBG_LEVEL_ASSERT__                        (0x01<<6)
 
 #define	__DEBUG_COM__                                DEV_UART1
 #define	__DEBUG_CONFIG_STOP__                        DEV_UART_STOPBITS_1 
@@ -75,7 +75,7 @@ void DebugAssert(bool_t cond, const char *fn, uint16_t line);
 #define DBG_ASSERT(cond, ...)                               \
         do                                            \
         {                                               \
-            DebugAssert(cond, __FILE__, __LINE__);     \
+            DebugAssert(cond, __FILENAME__, __LINE__);     \
         }while(__LINE__ == -1)
 
 #else

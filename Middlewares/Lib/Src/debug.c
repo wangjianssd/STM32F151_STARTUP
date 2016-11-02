@@ -182,7 +182,7 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...)
             i = sprintf((char *)buff, "[%s, %u][ERROR] ", fn, line);
     		break;
         case __DBG_LEVEL_ASSERT__:
-            i = sprintf((char *)buff, "[ASSERT][%s, %u] ", fn, line);
+            i = sprintf((char *)buff, "[%s, %u][ASSERT] ", fn, line);
     		break;
     	default:
     		break;
@@ -195,7 +195,7 @@ void DebugLog(uint8_t dbg_lev, const char *fn, uint16_t line, ...)
     fmt = va_arg(args, const int8_t*);
     
     tfp_vsprintf(pbuf, (char *)fmt, args);
-    
+    //i = sprintf(pbuf, (char *)fmt, args);
 #if (__DEBUG_PORT__ == __DEBUG_PORT_SEGGER_COM__)
 
     DebugTxFIFOIn((uint8_t *)buff, strlen(buff));
@@ -242,7 +242,7 @@ void DebugAssert(bool_t cond, const char *fn, uint16_t line)
 {         
     if (cond == false)
     {
-        DebugLog(__DBG_LEVEL_ASSERT__, (char const *)strrchr(fn, '\\'), line);
+        DebugLog(__DBG_LEVEL_ASSERT__, fn, line);
         
         while (1);
     }

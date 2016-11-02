@@ -154,6 +154,32 @@ static void putchw(void *putp, putcf putf, int n, char z, char *bf)
         putf(putp, ch);
 }
 
+static void printfloat(void *putp, putcf putf, const float flt)  
+{  
+    int tmpint = (int)flt;  
+    int tmpflt = (int)(100000 * (flt - tmpint));  
+    char bf[12];
+    
+    if(tmpflt % 10 >= 5)  
+    {  
+        tmpflt = tmpflt / 10 + 1;  
+    }  
+    else  
+    {  
+        tmpflt = tmpflt / 10;  
+    }  
+
+    i2a(tmpint, bf);
+    putchw(putp, putf, 0, 0, bf);
+    
+    putf(putp, '.');
+    
+    i2a(tmpflt, bf);
+    putchw(putp, putf, 0, 0, bf);
+    
+} 
+
+
 void tfp_format(void *putp, putcf putf, char *fmt, va_list va)
 {
     char bf[12];
@@ -232,6 +258,10 @@ void tfp_format(void *putp, putcf putf, char *fmt, va_list va)
                 break;
             case '%' :
                 putf(putp, ch);
+                 break;
+            case 'f' :
+                printfloat(putp, putf, va_arg(va, float));
+                 break;
             default:
                 break;
             }

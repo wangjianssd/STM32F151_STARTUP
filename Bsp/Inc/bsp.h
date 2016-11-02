@@ -21,6 +21,7 @@
 #include "bsp_m24lr04e.h"
 #include "bsp_com.h"
 #include "bsp_lowpower.h"
+#include "bsp_power.h"
 
 /* Define --------------------------------------------------------------------*/
 #define __RTOS_SUPPORT__                           0

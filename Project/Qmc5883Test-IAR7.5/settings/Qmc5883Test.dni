@@ -25,7 +25,7 @@ TraceBufferSize=0x00010000
 TraceStallIfFIFOFull=0x00000000
 TracePortSize=0x00000004
 [DebugChecksum]
-Checksum=-734354166
+Checksum=1547195100
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -34,7 +34,7 @@ ShowArgs=0
 [Disassembly]
 MixedMode=1
 [CodeCoverage]
-Enabled=_ 1
+Enabled=_ 0
 [SWOTraceHWSettings]
 OverrideDefaultClocks=0
 CpuClock=32000000
@@ -55,10 +55,13 @@ ITMlogFile=$PROJ_DIR$\ITM.log
 [struct_types]
 Fmt0=BspM24lr04eSysInfo-afi	4	0
 Fmt1=BspM24lr04eSysInfo-dsfid	4	0
-Fmt2=GPIO_InitTypeDef-Mode	4	0
-Fmt3=RTC_TimeTypeDef-Hours	3	0
-Fmt4=RTC_TimeTypeDef-Minutes	3	0
-Fmt5=RTC_TimeTypeDef-Seconds	3	0
+Fmt2=DevAdcCal-tscal1	4	0
+Fmt3=DevAdcCal-tscal2	4	0
+Fmt4=DevAdcCal-vref_intcal	3	0
+Fmt5=GPIO_InitTypeDef-Mode	4	0
+Fmt6=RTC_TimeTypeDef-Hours	3	0
+Fmt7=RTC_TimeTypeDef-Minutes	3	0
+Fmt8=RTC_TimeTypeDef-Seconds	3	0
 [array_types]
 Fmt0=uint8_t[128]	4	0
 Fmt1=uint8_t[13]	4	0
